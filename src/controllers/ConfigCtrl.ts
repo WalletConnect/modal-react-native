@@ -6,24 +6,15 @@ import type { ConfigCtrlState } from '../types/controllerTypes';
 const state = proxy<ConfigCtrlState>({
   projectId: '',
   recentWalletDeepLink: undefined,
-  metadata: undefined,
+  providerMetadata: undefined,
+  customWallets: undefined,
+  explorerRecommendedWalletIds: undefined,
+  explorerExcludedWalletIds: undefined,
 });
 
 // -- controller --------------------------------------------------- //
 export const ConfigCtrl = {
   state,
-
-  setProjectId(projectId: ConfigCtrlState['projectId']) {
-    if (projectId !== state.projectId) {
-      state.projectId = projectId;
-    }
-  },
-
-  setMetadata(metadata: ConfigCtrlState['metadata']) {
-    if (metadata && state.metadata !== metadata) {
-      state.metadata = metadata;
-    }
-  },
 
   setRecentWalletDeepLink(deepLink?: string) {
     state.recentWalletDeepLink = deepLink;
@@ -34,10 +25,25 @@ export const ConfigCtrl = {
   },
 
   getMetadata() {
-    if (!state.metadata) {
+    if (!state.providerMetadata) {
       throw new Error('Metadata not set');
     }
-    return state.metadata;
+    return state.providerMetadata;
+  },
+
+  setConfig(config: Partial<ConfigCtrlState>) {
+    const { projectId, providerMetadata } = config;
+    if (projectId && projectId !== state.projectId) {
+      state.projectId = projectId;
+    }
+
+    if (providerMetadata && state.providerMetadata !== providerMetadata) {
+      state.providerMetadata = providerMetadata;
+    }
+
+    state.customWallets = config.customWallets;
+    state.explorerRecommendedWalletIds = config.explorerRecommendedWalletIds;
+    state.explorerExcludedWalletIds = config.explorerExcludedWalletIds;
   },
 
   resetConfig() {
