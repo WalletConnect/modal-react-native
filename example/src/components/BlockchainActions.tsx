@@ -1,4 +1,4 @@
-import { useWeb3Modal, Web3Button } from '@web3modal/react-native';
+import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 import { ethers } from 'ethers';
 import { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
@@ -19,10 +19,14 @@ import {
 } from '../utils/MethodUtil';
 import { RequestModal } from './RequestModal';
 
-export function BlockchainActions() {
+interface Props {
+  onButtonPress: () => void;
+}
+
+export function BlockchainActions({ onButtonPress }: Props) {
   const [rpcResponse, setRpcResponse] = useState<FormattedRpcResponse>();
   const [rpcError, setRpcError] = useState<FormattedRpcError>();
-  const { provider } = useWeb3Modal();
+  const { provider, isConnected } = useWalletConnectModal();
 
   const web3Provider = useMemo(
     () => (provider ? new ethers.providers.Web3Provider(provider) : undefined),
@@ -105,7 +109,13 @@ export function BlockchainActions() {
     <>
       <FlatList
         data={getEthereumActions()}
-        ListHeaderComponent={<Web3Button style={styles.web3Button} />}
+        ListHeaderComponent={
+          <TouchableOpacity style={styles.button} onPress={onButtonPress}>
+            <Text style={styles.buttonText}>
+              {isConnected ? 'Disconnect' : 'Connect Wallet'}
+            </Text>
+          </TouchableOpacity>
+        }
         style={styles.list}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
@@ -169,8 +179,5 @@ const styles = StyleSheet.create({
   },
   listContent: {
     alignItems: 'center',
-  },
-  web3Button: {
-    width: 200,
   },
 });

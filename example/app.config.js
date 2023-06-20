@@ -1,11 +1,11 @@
 export default () => ({
   expo: {
-    name: 'web3modal-rn-example',
-    slug: 'web3modal-rn-example',
+    name: 'walletconnect-modal-rn-example',
+    slug: 'walletconnect-modal-rn-example',
     version: '1.0.0',
     orientation: 'default',
     icon: './assets/icon.png',
-    scheme: 'rnweb3modalexpo',
+    scheme: 'rnwalletconnectmodalexpo',
     userInterfaceStyle: 'automatic',
     splash: {
       image: './assets/splash.png',

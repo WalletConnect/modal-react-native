@@ -4,7 +4,7 @@ import { ModalCtrl } from '../controllers/ModalCtrl';
 import { ClientCtrl } from '../controllers/ClientCtrl';
 import { AccountCtrl } from '../controllers/AccountCtrl';
 
-export function useWeb3Modal() {
+export function useWalletConnectModal() {
   const modalState = useSnapshot(ModalCtrl.state);
   const accountState = useSnapshot(AccountCtrl.state);
   const clientState = useSnapshot(ClientCtrl.state);

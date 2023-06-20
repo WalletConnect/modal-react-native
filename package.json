@@ -1,6 +1,6 @@
 {
-  "name": "@web3modal/react-native",
-  "version": "1.0.0-alpha.8",
+  "name": "@walletconnect/modal-react-native",
+  "version": "1.0.0-alpha.9",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
@@ -38,18 +38,18 @@
     "web3",
     "crypto",
     "ethereum",
-    "web3modal",
+    "modal",
     "walletconnect",
     "web3auth",
     "react-native"
   ],
-  "repository": "https://github.com/WalletConnect/web3modal-react-native",
-  "author": "WalletConnect <support@walletconnect.com> (https://web3modal.com)",
+  "repository": "https://github.com/WalletConnect/modal-react-native",
+  "author": "WalletConnect <support@walletconnect.com> (https://walletconnect.com)",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/WalletConnect/web3modal-react-native/issues"
+    "url": "https://github.com/WalletConnect/modal-react-native/issues"
   },
-  "homepage": "https://github.com/WalletConnect/web3modal-react-native",
+  "homepage": "https://github.com/WalletConnect/modal-react-native",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"

@@ -1,4 +1,4 @@
-import type { IProviderMetadata } from '@web3modal/react-native';
+import type { IProviderMetadata } from '@walletconnect/modal-react-native';
 
 export const providerMetadata: IProviderMetadata = {
   name: 'React Native V2 dApp',
@@ -6,7 +6,7 @@ export const providerMetadata: IProviderMetadata = {
   url: 'https://walletconnect.com/',
   icons: ['https://avatars.githubusercontent.com/u/37784886'],
   redirect: {
-    native: 'rnweb3modalexpo://',
+    native: 'rnwalletconnectmodalexpo://',
   },
 };
 
