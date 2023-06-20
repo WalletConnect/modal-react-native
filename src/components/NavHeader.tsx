@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { StyleSheet, Text, View, ViewStyle, StyleProp } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useSnapshot } from 'valtio';
 
 import useTheme from '../hooks/useTheme';
@@ -13,7 +13,6 @@ interface Props {
   onActionPress?: () => void;
   actionIcon?: ReactNode;
   actionDisabled?: boolean;
-  actionStyle?: StyleProp<ViewStyle>;
 }
 
 function NavHeader({
@@ -22,7 +21,6 @@ function NavHeader({
   onActionPress,
   actionIcon,
   actionDisabled,
-  actionStyle,
 }: Props) {
   const Theme = useTheme();
   const routerState = useSnapshot(RouterCtrl.state);
@@ -44,7 +42,7 @@ function NavHeader({
       <Text style={[styles.title, { color: Theme.foreground1 }]}>{title}</Text>
       {actionIcon && onActionPress ? (
         <Touchable
-          style={[styles.button, actionStyle]}
+          style={styles.button}
           onPress={onActionPress}
           disabled={actionDisabled}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}

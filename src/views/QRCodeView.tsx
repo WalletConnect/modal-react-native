@@ -43,12 +43,6 @@ function QRCodeView({
             fill={!pairingUri ? Theme.foreground3 : Theme.accent}
           />
         }
-        actionStyle={[
-          styles.iconStyle,
-          {
-            backgroundColor: Theme.overlayThin,
-          },
-        ]}
         onActionPress={onCopyClipboard ? onCopy : undefined}
         actionDisabled={!pairingUri}
       />
@@ -70,11 +64,6 @@ const styles = StyleSheet.create({
   container: {
     paddingBottom: 12,
     width: '100%',
-  },
-  iconStyle: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
   },
 });
 
