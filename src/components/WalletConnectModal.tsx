@@ -4,9 +4,9 @@ import Modal from 'react-native-modal';
 import { useSnapshot } from 'valtio';
 import type { SessionTypes } from '@walletconnect/types';
 
-import Web3ModalHeader from './Web3ModalHeader';
+import ModalHeader from './ModalHeader';
 import { ModalCtrl } from '../controllers/ModalCtrl';
-import { Web3ModalRouter } from './Web3ModalRouter';
+import { ModalRouter } from './ModalRouter';
 import { AccountCtrl } from '../controllers/AccountCtrl';
 import { ClientCtrl } from '../controllers/ClientCtrl';
 import { ToastCtrl } from '../controllers/ToastCtrl';
@@ -17,9 +17,9 @@ import { defaultSessionParams } from '../constants/Config';
 import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import { setDeepLinkWallet } from '../utils/StorageUtil';
 import useTheme from '../hooks/useTheme';
-import ModalToast from './ModalToast';
+import Toast from './Toast';
 
-interface Web3ModalProps {
+interface Props {
   projectId: string;
   providerMetadata: IProviderMetadata;
   sessionParams?: ISessionParams;
@@ -28,14 +28,14 @@ interface Web3ModalProps {
   themeMode?: 'dark' | 'light';
 }
 
-export function Web3Modal({
+export function WalletConnectModal({
   projectId,
   providerMetadata,
   sessionParams = defaultSessionParams,
   relayUrl,
   onCopyClipboard,
   themeMode,
-}: Web3ModalProps) {
+}: Props) {
   useConfigure({ projectId, providerMetadata, relayUrl, themeMode });
   const { open } = useSnapshot(ModalCtrl.state);
   const { isConnected } = useSnapshot(AccountCtrl.state);
@@ -99,15 +99,15 @@ export function Web3Modal({
       <View
         style={[styles.container, { width, backgroundColor: Theme.accent }]}
       >
-        <Web3ModalHeader onClose={ModalCtrl.close} />
+        <ModalHeader onClose={ModalCtrl.close} />
         <SafeAreaView
           style={[
             styles.connectWalletContainer,
             { backgroundColor: Theme.background1 },
           ]}
         >
-          <Web3ModalRouter onCopyClipboard={onCopyClipboard} />
-          <ModalToast />
+          <ModalRouter onCopyClipboard={onCopyClipboard} />
+          <Toast />
         </SafeAreaView>
       </View>
     </Modal>
