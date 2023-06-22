@@ -33,7 +33,11 @@ function ViewAllExplorer({
 
   return (
     <>
-      <NavHeader title="Connect your wallet" onBackPress={RouterCtrl.goBack} />
+      <NavHeader
+        title="Connect your wallet"
+        onBackPress={RouterCtrl.goBack}
+        shadow
+      />
       {loading ? (
         <ActivityIndicator
           style={{ height: Math.round(windowHeight * 0.6) }}
