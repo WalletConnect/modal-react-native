@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { useSnapshot } from 'valtio';
 
 import useTheme from '../hooks/useTheme';
@@ -13,6 +13,7 @@ interface Props {
   onActionPress?: () => void;
   actionIcon?: ReactNode;
   actionDisabled?: boolean;
+  shadow?: boolean;
 }
 
 function NavHeader({
@@ -21,12 +22,25 @@ function NavHeader({
   onActionPress,
   actionIcon,
   actionDisabled,
+  shadow,
 }: Props) {
   const Theme = useTheme();
   const routerState = useSnapshot(RouterCtrl.state);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        shadow &&
+          StyleSheet.flatten([
+            styles.shadow,
+            {
+              backgroundColor: Theme.background1,
+              shadowColor: Theme.background1,
+            },
+          ]),
+      ]}
+    >
       {onBackPress && routerState.history.length > 1 ? (
         <Touchable
           style={styles.button}
@@ -63,6 +77,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 16,
     paddingHorizontal: 24,
+  },
+  shadow: {
+    zIndex: 1,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    ...Platform.select({
+      ios: {
+        shadowOpacity: 1,
+        shadowOffset: { width: 0, height: 6 },
+      },
+    }),
   },
   button: {
     width: 24,
