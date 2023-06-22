@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { StyleSheet, Alert, SafeAreaView, View } from 'react-native';
+import { StyleSheet, Alert, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { useSnapshot } from 'valtio';
 import type { SessionTypes } from '@walletconnect/types';
@@ -100,7 +100,7 @@ export function WalletConnectModal({
         style={[styles.container, { width, backgroundColor: Theme.accent }]}
       >
         <ModalHeader onClose={ModalCtrl.close} />
-        <SafeAreaView
+        <View
           style={[
             styles.connectWalletContainer,
             { backgroundColor: Theme.background1 },
@@ -108,7 +108,7 @@ export function WalletConnectModal({
         >
           <ModalRouter onCopyClipboard={onCopyClipboard} />
           <Toast />
-        </SafeAreaView>
+        </View>
       </View>
     </Modal>
   );
@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
   },
   connectWalletContainer: {
+    paddingBottom: 16,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
   },
