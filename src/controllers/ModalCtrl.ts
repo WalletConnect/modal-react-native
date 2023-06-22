@@ -8,7 +8,7 @@ import { RouterCtrl } from './RouterCtrl';
 
 // -- types -------------------------------------------------------- //
 export interface OpenOptions {
-  route?: 'ConnectWallet' | 'Qrcode' | 'WalletExplorer' | 'Account';
+  route?: 'ConnectWallet' | 'Qrcode' | 'WalletExplorer';
 }
 
 // -- initial state ------------------------------------------------ //
@@ -26,14 +26,11 @@ export const ModalCtrl = {
       const { isConnected } = AccountCtrl.state;
       const { initialized } = ClientCtrl.state;
 
-      if (options?.route) {
-        if (!isConnected && options.route === 'Account') {
-          RouterCtrl.replace('ConnectWallet');
-        } else {
-          RouterCtrl.replace(options.route);
-        }
-      } else if (isConnected) {
-        RouterCtrl.replace('Account');
+      if (isConnected) {
+        // If already connected, do nothing
+        return;
+      } else if (options?.route) {
+        RouterCtrl.replace(options.route);
       } else {
         RouterCtrl.replace('ConnectWallet');
       }

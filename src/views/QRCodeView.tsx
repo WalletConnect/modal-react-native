@@ -19,7 +19,7 @@ function QRCodeView({
 }: RouterProps) {
   const Theme = useTheme();
   const QRSize = isPortrait
-    ? Math.round(windowWidth * 0.9)
+    ? Math.round(windowWidth * 0.8)
     : Math.round(windowHeight * 0.6);
   const themeState = useSnapshot(ThemeCtrl.state);
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
@@ -32,7 +32,7 @@ function QRCodeView({
   };
 
   return (
-    <View style={[styles.container]}>
+    <View style={styles.container}>
       <NavHeader
         title="Scan the code"
         onBackPress={RouterCtrl.goBack}
@@ -43,12 +43,6 @@ function QRCodeView({
             fill={!pairingUri ? Theme.foreground3 : Theme.accent}
           />
         }
-        actionStyle={[
-          styles.iconStyle,
-          {
-            backgroundColor: Theme.overlayThin,
-          },
-        ]}
         onActionPress={onCopyClipboard ? onCopy : undefined}
         actionDisabled={!pairingUri}
       />
@@ -70,11 +64,6 @@ const styles = StyleSheet.create({
   container: {
     paddingBottom: 12,
     width: '100%',
-  },
-  iconStyle: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
   },
 });
 

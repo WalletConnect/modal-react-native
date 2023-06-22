@@ -1,26 +1,26 @@
 import { useEffect } from 'react';
-import { StyleSheet, Alert, SafeAreaView, View } from 'react-native';
+import { StyleSheet, Alert, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { useSnapshot } from 'valtio';
 import type { SessionTypes } from '@walletconnect/types';
 
-import Web3ModalHeader from './Web3ModalHeader';
+import ModalHeader from './ModalHeader';
 import { ModalCtrl } from '../controllers/ModalCtrl';
-import { Web3ModalRouter } from './Web3ModalRouter';
+import { ModalRouter } from './ModalRouter';
 import { AccountCtrl } from '../controllers/AccountCtrl';
 import { ClientCtrl } from '../controllers/ClientCtrl';
 import { ToastCtrl } from '../controllers/ToastCtrl';
 import { useOrientation } from '../hooks/useOrientation';
+import type { ConfigCtrlState, ThemeCtrlState } from '../types/controllerTypes';
 import type { IProviderMetadata, ISessionParams } from '../types/coreTypes';
 import { useConfigure } from '../hooks/useConfigure';
 import { defaultSessionParams } from '../constants/Config';
 import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import { setDeepLinkWallet } from '../utils/StorageUtil';
 import useTheme from '../hooks/useTheme';
-import ModalToast from './ModalToast';
-import type { ConfigCtrlState, ThemeCtrlState } from '../types/controllerTypes';
+import Toast from './Toast';
 
-export type Web3ModalProps = Omit<ConfigCtrlState, 'recentWalletDeepLink'> &
+export type Props = Omit<ConfigCtrlState, 'recentWalletDeepLink'> &
   ThemeCtrlState & {
     providerMetadata: IProviderMetadata;
     sessionParams?: ISessionParams;
@@ -28,7 +28,7 @@ export type Web3ModalProps = Omit<ConfigCtrlState, 'recentWalletDeepLink'> &
     onCopyClipboard?: (value: string) => void;
   };
 
-export function Web3Modal(config: Web3ModalProps) {
+export function WalletConnectModal(config: Props) {
   useConfigure(config);
   const { open } = useSnapshot(ModalCtrl.state);
   const { isConnected } = useSnapshot(AccountCtrl.state);
@@ -94,16 +94,16 @@ export function Web3Modal(config: Web3ModalProps) {
       <View
         style={[styles.container, { width, backgroundColor: Theme.accent }]}
       >
-        <Web3ModalHeader onClose={ModalCtrl.close} />
-        <SafeAreaView
+        <ModalHeader onClose={ModalCtrl.close} />
+        <View
           style={[
             styles.connectWalletContainer,
             { backgroundColor: Theme.background1 },
           ]}
         >
-          <Web3ModalRouter onCopyClipboard={config.onCopyClipboard} />
-          <ModalToast />
-        </SafeAreaView>
+          <ModalRouter onCopyClipboard={config.onCopyClipboard} />
+          <Toast />
+        </View>
       </View>
     </Modal>
   );
@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
   },
   connectWalletContainer: {
+    paddingBottom: 16,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
   },

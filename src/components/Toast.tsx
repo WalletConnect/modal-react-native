@@ -6,9 +6,9 @@ import useTheme from '../hooks/useTheme';
 import { ToastCtrl } from '../controllers/ToastCtrl';
 import Checkmark from '../assets/Checkmark';
 import Warning from '../assets/Warning';
-import Web3Text from './Web3Text';
+import Text from './Text';
 
-function ModalToast() {
+function Toast() {
   const Theme = useTheme();
   const { open, message, variant } = useSnapshot(ToastCtrl.state);
   const toastOpacity = useMemo(() => new Animated.Value(0), []);
@@ -46,9 +46,9 @@ function ModalToast() {
       ]}
     >
       <Icon width={16} fill={iconColor} style={styles.icon} />
-      <Web3Text style={styles.text} numberOfLines={1}>
+      <Text style={styles.text} numberOfLines={1}>
         {message}
-      </Web3Text>
+      </Text>
     </Animated.View>
   ) : null;
 }
@@ -87,4 +87,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ModalToast;
+export default Toast;
