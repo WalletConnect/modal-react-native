@@ -87,6 +87,9 @@ const styles = StyleSheet.create({
         shadowOpacity: 1,
         shadowOffset: { width: 0, height: 6 },
       },
+      android: {
+        elevation: 20,
+      },
     }),
   },
   button: {
