@@ -1,5 +1,5 @@
 export const CoreUtil = {
-  RECOMMENDED_WALLET_AMOUNT: 12,
+  RECOMMENDED_WALLET_AMOUNT: 11,
 
   isHttpUrl(url: string) {
     return url.startsWith('http://') || url.startsWith('https://');

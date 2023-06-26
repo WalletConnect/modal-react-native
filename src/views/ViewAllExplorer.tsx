@@ -16,6 +16,7 @@ import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 import type { RouterProps } from '../types/routerTypes';
 import useTheme from '../hooks/useTheme';
 import { ThemeCtrl } from '../controllers/ThemeCtrl';
+import { UiUtil } from '../utils/UiUtil';
 
 function ViewAllExplorer({
   isPortrait,
@@ -30,6 +31,12 @@ function ViewAllExplorer({
   const [walletsLoading, setWalletsLoading] = useState(false);
   const loading = !isDataLoaded || !pairingUri || walletsLoading;
   const _wallets = [...recommendedWallets, ...wallets.listings];
+
+  useEffect(() => {
+    if (!loading) {
+      UiUtil.layoutAnimation();
+    }
+  }, [loading]);
 
   useEffect(() => {
     async function getWallets() {

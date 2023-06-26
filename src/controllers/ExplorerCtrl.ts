@@ -51,7 +51,6 @@ export const ExplorerCtrl = {
       const params = {
         page: 1,
         entries: CoreUtil.RECOMMENDED_WALLET_AMOUNT,
-        version: 2,
         excludedIds: isExcluded
           ? explorerExcludedWalletIds.join(',')
           : undefined,
