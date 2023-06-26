@@ -7,7 +7,6 @@ const state = proxy<ConfigCtrlState>({
   projectId: '',
   recentWalletDeepLink: undefined,
   providerMetadata: undefined,
-  customWallets: undefined,
   explorerRecommendedWalletIds: undefined,
   explorerExcludedWalletIds: undefined,
 });
@@ -41,7 +40,6 @@ export const ConfigCtrl = {
       state.providerMetadata = providerMetadata;
     }
 
-    state.customWallets = config.customWallets;
     state.explorerRecommendedWalletIds = config.explorerRecommendedWalletIds;
     state.explorerExcludedWalletIds = config.explorerExcludedWalletIds;
   },

@@ -23,6 +23,7 @@ interface Props {
 export function useConfigure(config: Props) {
   const colorScheme = useColorScheme();
   const { projectId, providerMetadata, relayUrl } = config;
+
   const resetApp = useCallback(() => {
     ClientCtrl.resetSession();
     AccountCtrl.resetAccount();
@@ -67,7 +68,7 @@ export function useConfigure(config: Props) {
     async function fetchWallets() {
       try {
         if (!ExplorerCtrl.state.wallets.total) {
-          await ExplorerCtrl.getRecomendedWallets();
+          await ExplorerCtrl.getRecommendedWallets();
           OptionsCtrl.setIsDataLoaded(true);
         }
       } catch (error) {

@@ -14,18 +14,8 @@ export interface ConfigCtrlState {
   projectId: string;
   recentWalletDeepLink?: string;
   providerMetadata?: IProviderMetadata;
-  customWallets?: CustomWallet[];
   explorerRecommendedWalletIds?: string[] | 'NONE';
   explorerExcludedWalletIds?: string[] | 'ALL';
-}
-
-export interface CustomWallet {
-  id: string;
-  name: string;
-  links: {
-    universal?: string;
-    native: string;
-  };
 }
 
 // -- ModalCtrl --------------------------------------- //

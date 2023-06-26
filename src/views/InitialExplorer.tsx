@@ -20,6 +20,7 @@ function InitialExplorer({ windowHeight, isPortrait }: RouterProps) {
   const { isDataLoaded } = useSnapshot(OptionsCtrl.state);
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
   const { recommendedWallets } = useSnapshot(ExplorerCtrl.state);
+
   const loading = useMemo(
     () => !isDataLoaded || !pairingUri,
     [isDataLoaded, pairingUri]
@@ -36,7 +37,7 @@ function InitialExplorer({ windowHeight, isPortrait }: RouterProps) {
   }, [recommendedWallets]);
 
   const viewAllButtonWallets = useMemo(() => {
-    return recommendedWallets.slice(7, 11);
+    return recommendedWallets.slice(-4);
   }, [recommendedWallets]);
 
   return (

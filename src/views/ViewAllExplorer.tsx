@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import {
   StyleSheet,
   FlatList,
@@ -23,13 +23,24 @@ function ViewAllExplorer({
   windowWidth,
 }: RouterProps) {
   const Theme = useTheme();
-  const optionsState = useSnapshot(OptionsCtrl.state);
-  const wcConnectionState = useSnapshot(WcConnectionCtrl.state);
-  const themeState = useSnapshot(ThemeCtrl.state);
-  const loading = !optionsState.isDataLoaded || !wcConnectionState.pairingUri;
-  const wallets = useMemo(() => {
-    return ExplorerCtrl.state.wallets.listings;
-  }, []);
+  const { isDataLoaded } = useSnapshot(OptionsCtrl.state);
+  const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
+  const { themeMode } = useSnapshot(ThemeCtrl.state);
+  const { wallets, recommendedWallets } = useSnapshot(ExplorerCtrl.state);
+  const [walletsLoading, setWalletsLoading] = useState(false);
+  const loading = !isDataLoaded || !pairingUri || walletsLoading;
+  const _wallets = [...recommendedWallets, ...wallets.listings];
+
+  useEffect(() => {
+    async function getWallets() {
+      if (wallets.listings.length === 0) {
+        setWalletsLoading(true);
+        await ExplorerCtrl.getWallets();
+        setWalletsLoading(false);
+      }
+    }
+    getWallets();
+  }, [wallets]);
 
   return (
     <>
@@ -45,13 +56,13 @@ function ViewAllExplorer({
         />
       ) : (
         <FlatList
-          data={wallets || []}
+          data={_wallets}
           style={{
             maxHeight:
               Math.round(windowHeight * 0.6) - (StatusBar.currentHeight || 0),
           }}
           contentContainerStyle={styles.listContentContainer}
-          indicatorStyle={themeState.themeMode === 'dark' ? 'white' : 'black'}
+          indicatorStyle={themeMode === 'dark' ? 'white' : 'black'}
           showsVerticalScrollIndicator
           numColumns={isPortrait ? 4 : 6}
           key={isPortrait ? 'portrait' : 'landscape'}
@@ -62,7 +73,7 @@ function ViewAllExplorer({
           })}
           renderItem={({ item }) => (
             <WalletItem
-              currentWCURI={wcConnectionState.pairingUri}
+              currentWCURI={pairingUri}
               walletInfo={item}
               style={{
                 width: isPortrait

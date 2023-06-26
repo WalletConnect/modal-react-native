@@ -37,15 +37,20 @@ async function fetchListings(
 
 // -- Utility -------------------------------------------------------
 export const ExplorerUtil = {
-  async getListings(params: ListingParams) {
+  async getListings(params?: ListingParams) {
     const headers = this.getCustomHeaders();
+    const extendedParams: ListingParams = { ...params, version: 2 };
     const platform = Platform.select({
       ios: 'iOS',
       android: 'Android',
       default: 'Mobile',
     });
 
-    return fetchListings(`/w3m/v1/get${platform}Listings`, params, headers);
+    return fetchListings(
+      `/w3m/v1/get${platform}Listings`,
+      extendedParams,
+      headers
+    );
   },
 
   getWalletImageUrl(imageId: string) {

@@ -18,7 +18,7 @@ const state = proxy<ExplorerCtrlState>({
 export const ExplorerCtrl = {
   state,
 
-  async getRecomendedWallets() {
+  async getRecommendedWallets() {
     const { explorerRecommendedWalletIds, explorerExcludedWalletIds } =
       ConfigCtrl.state;
 
@@ -33,7 +33,7 @@ export const ExplorerCtrl = {
     // Fetch only recomended wallets defined in config
     if (CoreUtil.isArray(explorerRecommendedWalletIds)) {
       const recommendedIds = explorerRecommendedWalletIds.join(',');
-      const params = { recommendedIds, version: 2 };
+      const params = { recommendedIds };
       const { listings } = await ExplorerUtil.getListings(params);
       const listingsArr = Object.values(listings);
       listingsArr.sort((a, b) => {
@@ -63,9 +63,40 @@ export const ExplorerCtrl = {
     return state.recommendedWallets;
   },
 
-  async getMobileWallets(params: ListingParams) {
-    const { listings, total } = await ExplorerUtil.getListings(params);
-    state.wallets = { listings: Object.values(listings), page: 1, total };
+  async getWallets(params?: ListingParams) {
+    const extendedParams: ListingParams = { ...params };
+    const { explorerRecommendedWalletIds, explorerExcludedWalletIds } =
+      ConfigCtrl.state;
+    const { recommendedWallets } = state;
+
+    // Don't fetch any wallets if all are excluded
+    if (explorerExcludedWalletIds === 'ALL') {
+      return state.wallets;
+    }
+
+    // Don't fetch recommended wallets, as we already have these
+    if (recommendedWallets.length) {
+      extendedParams.excludedIds = recommendedWallets
+        .map((wallet) => wallet.id)
+        .join(',');
+    } else if (CoreUtil.isArray(explorerRecommendedWalletIds)) {
+      extendedParams.excludedIds = explorerRecommendedWalletIds.join(',');
+    }
+
+    // Don't fetch user defined excluded wallets
+    if (CoreUtil.isArray(explorerExcludedWalletIds)) {
+      extendedParams.excludedIds = [
+        extendedParams.excludedIds,
+        explorerExcludedWalletIds,
+      ]
+        .filter(Boolean)
+        .join(',');
+    }
+
+    const { listings, total } = await ExplorerUtil.getListings(extendedParams);
+    const _listings = Object.values(listings);
+    state.wallets = { listings: _listings, page: 1, total };
+    return _listings;
   },
 
   getWalletImageUrl(imageId: string) {
