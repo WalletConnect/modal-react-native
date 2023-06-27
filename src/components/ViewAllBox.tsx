@@ -11,6 +11,7 @@ import { ExplorerCtrl } from '../controllers/ExplorerCtrl';
 import useTheme from '../hooks/useTheme';
 import type { Listing } from '../types/controllerTypes';
 import Touchable from './Touchable';
+import WalletIcon from '../assets/WalletIcon';
 
 interface Props {
   onPress: any;
@@ -20,26 +21,36 @@ interface Props {
 
 function ViewAllBox({ onPress, wallets, style }: Props) {
   const Theme = useTheme();
+  const _wallets = wallets.slice(0, 4);
+  const _emptyBoxes = Array.from(Array(4 - _wallets.length).keys());
 
   return (
     <Touchable onPress={onPress} style={[styles.container, style]}>
       <View style={[styles.icons, { borderColor: Theme.overlayThin }]}>
         <View style={styles.row}>
-          {wallets.slice(0, 2).map((wallet) => (
+          {_wallets.map((wallet) => (
             <Image
               key={wallet.id}
-              source={{ uri: ExplorerCtrl.getWalletImageUrl(wallet.image_id) }}
+              source={{
+                uri: ExplorerCtrl.getWalletImageUrl(wallet.image_id),
+              }}
               style={[styles.icon, { borderColor: Theme.overlayThin }]}
             />
           ))}
-        </View>
-        <View style={styles.row}>
-          {wallets.slice(2, 4).map((wallet) => (
-            <Image
-              key={wallet.id}
-              source={{ uri: ExplorerCtrl.getWalletImageUrl(wallet.image_id) }}
-              style={[styles.icon, { borderColor: Theme.overlayThin }]}
-            />
+          {_emptyBoxes.map((_, i) => (
+            <View
+              key={i}
+              style={[
+                styles.icon,
+                styles.placeholderIcon,
+                {
+                  borderColor: Theme.overlayThin,
+                  backgroundColor: Theme.background2,
+                },
+              ]}
+            >
+              <WalletIcon height={15} width={15} />
+            </View>
           ))}
         </View>
       </View>
@@ -77,8 +88,16 @@ const styles = StyleSheet.create({
     margin: 1,
     borderWidth: 1,
   },
+  placeholderIcon: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderStyle: 'dashed',
+  },
   row: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   text: {
     marginTop: 5,

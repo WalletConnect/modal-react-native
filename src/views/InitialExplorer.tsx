@@ -19,6 +19,8 @@ function InitialExplorer({ windowHeight, isPortrait }: RouterProps) {
   const Theme = useTheme();
   const { isDataLoaded } = useSnapshot(OptionsCtrl.state);
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
+  const { recommendedWallets } = useSnapshot(ExplorerCtrl.state);
+
   const loading = useMemo(
     () => !isDataLoaded || !pairingUri,
     [isDataLoaded, pairingUri]
@@ -31,12 +33,12 @@ function InitialExplorer({ windowHeight, isPortrait }: RouterProps) {
   }, [loading]);
 
   const wallets = useMemo(() => {
-    return ExplorerCtrl.state.wallets.listings.slice(0, 7);
-  }, []);
+    return recommendedWallets.slice(0, 7);
+  }, [recommendedWallets]);
 
-  const viewAllWallets = useMemo(() => {
-    return ExplorerCtrl.state.wallets.listings.slice(7, 11);
-  }, []);
+  const viewAllButtonWallets = useMemo(() => {
+    return recommendedWallets.slice(-4);
+  }, [recommendedWallets]);
 
   return (
     <>
@@ -62,7 +64,7 @@ function InitialExplorer({ windowHeight, isPortrait }: RouterProps) {
           ))}
           <ViewAllBox
             onPress={() => RouterCtrl.push('WalletExplorer')}
-            wallets={viewAllWallets}
+            wallets={viewAllButtonWallets}
             style={isPortrait && styles.wallet}
           />
         </View>

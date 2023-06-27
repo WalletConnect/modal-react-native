@@ -11,6 +11,7 @@ import { AccountCtrl } from '../controllers/AccountCtrl';
 import { ClientCtrl } from '../controllers/ClientCtrl';
 import { ToastCtrl } from '../controllers/ToastCtrl';
 import { useOrientation } from '../hooks/useOrientation';
+import type { ConfigCtrlState, ThemeCtrlState } from '../types/controllerTypes';
 import type { IProviderMetadata, ISessionParams } from '../types/coreTypes';
 import { useConfigure } from '../hooks/useConfigure';
 import { defaultSessionParams } from '../constants/Config';
@@ -19,24 +20,16 @@ import { setDeepLinkWallet } from '../utils/StorageUtil';
 import useTheme from '../hooks/useTheme';
 import Toast from './Toast';
 
-interface Props {
-  projectId: string;
-  providerMetadata: IProviderMetadata;
-  sessionParams?: ISessionParams;
-  relayUrl?: string;
-  onCopyClipboard?: (value: string) => void;
-  themeMode?: 'dark' | 'light';
-}
+export type Props = Omit<ConfigCtrlState, 'recentWalletDeepLink'> &
+  ThemeCtrlState & {
+    providerMetadata: IProviderMetadata;
+    sessionParams?: ISessionParams;
+    relayUrl?: string;
+    onCopyClipboard?: (value: string) => void;
+  };
 
-export function WalletConnectModal({
-  projectId,
-  providerMetadata,
-  sessionParams = defaultSessionParams,
-  relayUrl,
-  onCopyClipboard,
-  themeMode,
-}: Props) {
-  useConfigure({ projectId, providerMetadata, relayUrl, themeMode });
+export function WalletConnectModal(config: Props) {
+  useConfigure(config);
   const { open } = useSnapshot(ModalCtrl.state);
   const { isConnected } = useSnapshot(AccountCtrl.state);
   const { width } = useOrientation();
@@ -69,7 +62,9 @@ export function WalletConnectModal({
       if (!provider) throw new Error('Provider not initialized');
 
       if (!isConnected) {
-        const session = await provider.connect(sessionParams);
+        const session = await provider.connect(
+          config?.sessionParams || defaultSessionParams
+        );
         if (session) {
           onSessionCreated(session);
         }
@@ -80,10 +75,10 @@ export function WalletConnectModal({
   };
 
   useEffect(() => {
-    if (!projectId) {
+    if (!config.projectId) {
       Alert.alert('Error', 'projectId not found');
     }
-  }, [projectId]);
+  }, [config.projectId]);
 
   return (
     <Modal
@@ -106,7 +101,7 @@ export function WalletConnectModal({
             { backgroundColor: Theme.background1 },
           ]}
         >
-          <ModalRouter onCopyClipboard={onCopyClipboard} />
+          <ModalRouter onCopyClipboard={config.onCopyClipboard} />
           <Toast />
         </View>
       </View>

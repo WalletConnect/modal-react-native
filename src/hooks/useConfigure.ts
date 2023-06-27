@@ -20,13 +20,10 @@ interface Props {
   themeMode?: 'light' | 'dark';
 }
 
-export function useConfigure({
-  projectId,
-  relayUrl,
-  providerMetadata,
-  themeMode,
-}: Props) {
+export function useConfigure(config: Props) {
   const colorScheme = useColorScheme();
+  const { projectId, providerMetadata, relayUrl } = config;
+
   const resetApp = useCallback(() => {
     ClientCtrl.resetSession();
     AccountCtrl.resetAccount();
@@ -53,16 +50,16 @@ export function useConfigure({
    * Set theme mode
    */
   useEffect(() => {
-    ThemeCtrl.setThemeMode(themeMode || colorScheme);
-  }, [themeMode, colorScheme]);
+    ThemeCtrl.setThemeMode(config.themeMode || colorScheme);
+  }, [config.themeMode, colorScheme]);
 
   /**
    * Set config
    */
   useEffect(() => {
-    ConfigCtrl.setProjectId(projectId);
-    ConfigCtrl.setMetadata(providerMetadata);
-  }, [projectId, providerMetadata]);
+    ConfigCtrl.setConfig(config);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /**
    * Fetch wallet list
@@ -71,7 +68,7 @@ export function useConfigure({
     async function fetchWallets() {
       try {
         if (!ExplorerCtrl.state.wallets.total) {
-          await ExplorerCtrl.getMobileWallets({ version: 2 });
+          await ExplorerCtrl.getRecommendedWallets();
           OptionsCtrl.setIsDataLoaded(true);
         }
       } catch (error) {

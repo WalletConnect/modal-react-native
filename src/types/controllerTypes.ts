@@ -13,7 +13,9 @@ export interface ClientCtrlState {
 export interface ConfigCtrlState {
   projectId: string;
   recentWalletDeepLink?: string;
-  metadata?: IProviderMetadata;
+  providerMetadata?: IProviderMetadata;
+  explorerRecommendedWalletIds?: string[] | 'NONE';
+  explorerExcludedWalletIds?: string[] | 'ALL';
 }
 
 // -- ModalCtrl --------------------------------------- //
@@ -38,14 +40,9 @@ export interface WcConnectionCtrlState {
   pairingError: boolean;
 }
 
-// -- ExplorerCtrl ------------------------------------------- //
-export interface ExplorerCtrlState {
-  wallets: ListingResponse & { page: number };
-}
-
 // -- ThemeCtrl --------------------------------------------- //
 export interface ThemeCtrlState {
-  themeMode: 'dark' | 'light';
+  themeMode?: 'dark' | 'light';
 }
 
 // -- ToastCtrl ------------------------------------------ //
@@ -55,12 +52,20 @@ export interface ToastCtrlState {
   variant: 'error' | 'success';
 }
 
+// -- ExplorerCtrl ------------------------------------------- //
+export interface ExplorerCtrlState {
+  wallets: ListingResponse & { page: number };
+  recommendedWallets: Listing[];
+}
+
 export interface ListingParams {
   page?: number;
   search?: string;
   entries?: number;
   version?: number;
   chains?: string;
+  recommendedIds?: string;
+  excludedIds?: string;
 }
 
 export interface PlatformInfo {
