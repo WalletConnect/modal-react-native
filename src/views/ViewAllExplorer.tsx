@@ -28,6 +28,7 @@ function ViewAllExplorer({
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
   const { themeMode } = useSnapshot(ThemeCtrl.state);
   const { wallets, recommendedWallets } = useSnapshot(ExplorerCtrl.state);
+  const shouldLoadWallets = wallets.listings.length === 0;
   const [walletsLoading, setWalletsLoading] = useState(false);
   const loading = !isDataLoaded || !pairingUri || walletsLoading;
   const _wallets = [...recommendedWallets, ...wallets.listings];
@@ -40,14 +41,14 @@ function ViewAllExplorer({
 
   useEffect(() => {
     async function getWallets() {
-      if (wallets.listings.length === 0) {
+      if (shouldLoadWallets) {
         setWalletsLoading(true);
         await ExplorerCtrl.getWallets();
         setWalletsLoading(false);
       }
     }
     getWallets();
-  }, [wallets]);
+  }, [shouldLoadWallets]);
 
   return (
     <>
