@@ -15,18 +15,19 @@ import { OptionsCtrl } from '../controllers/OptionsCtrl';
 import type { SessionTypes } from '@walletconnect/types';
 import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 
-const deepLink = (currentWCURI: string | undefined, walletInfo: Listing) => {
-  if (currentWCURI) {
-    ConfigCtrl.setRecentWalletDeepLink(
-      walletInfo.mobile?.native || walletInfo.mobile?.universal
-    );
-    ExplorerUtil.navigateDeepLink(
-      walletInfo.mobile.universal,
-      walletInfo.mobile.native,
-      currentWCURI
-    );
-  }
-};
+const makeDeepLink =
+  (currentWCURI: string | undefined, walletInfo: Listing) => () => {
+    if (currentWCURI) {
+      ConfigCtrl.setRecentWalletDeepLink(
+        walletInfo.mobile?.native || walletInfo.mobile?.universal
+      );
+      ExplorerUtil.navigateDeepLink(
+        walletInfo.mobile.universal,
+        walletInfo.mobile.native,
+        currentWCURI
+      );
+    }
+  };
 
 const getImageURL = (walletInfo: Listing) =>
   ExplorerCtrl.getWalletImageUrl(walletInfo.image_id);
@@ -100,7 +101,7 @@ export function useWalletConnectModal(config: Config) {
     address: accountState.address,
     recommendedWallets: recommendedWallets.map((wallet) => ({
       imageURL: getImageURL(wallet),
-      deepLink: deepLink(pairingUri, wallet),
+      deepLink: makeDeepLink(pairingUri, wallet),
       ...wallet,
     })),
   };
