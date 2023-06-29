@@ -1,5 +1,4 @@
 import { useCallback, useEffect } from 'react';
-import { Alert, useColorScheme } from 'react-native';
 import { SUBSCRIBER_EVENTS } from '@walletconnect/core';
 import { ExplorerCtrl } from '../controllers/ExplorerCtrl';
 import { OptionsCtrl } from '../controllers/OptionsCtrl';
@@ -10,18 +9,14 @@ import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 import type { IProviderMetadata } from '../types/coreTypes';
 import { createUniversalProvider } from '../utils/ProviderUtil';
 import { removeDeepLinkWallet } from '../utils/StorageUtil';
-import { ThemeCtrl } from '../controllers/ThemeCtrl';
-import { ToastCtrl } from '../controllers/ToastCtrl';
 
 interface Props {
   projectId: string;
   providerMetadata: IProviderMetadata;
   relayUrl?: string;
-  themeMode?: 'light' | 'dark';
 }
 
 export function useConfigure(config: Props) {
-  const colorScheme = useColorScheme();
   const { projectId, providerMetadata, relayUrl } = config;
 
   const resetApp = useCallback(() => {
@@ -47,13 +42,6 @@ export function useConfigure(config: Props) {
   }, []);
 
   /**
-   * Set theme mode
-   */
-  useEffect(() => {
-    ThemeCtrl.setThemeMode(config.themeMode || colorScheme);
-  }, [config.themeMode, colorScheme]);
-
-  /**
    * Set config
    */
   useEffect(() => {
@@ -72,7 +60,7 @@ export function useConfigure(config: Props) {
           OptionsCtrl.setIsDataLoaded(true);
         }
       } catch (error) {
-        ToastCtrl.openToast('Network error', 'error');
+        throw new Error('Network error while fetching wallet list');
       }
     }
     fetchWallets();
@@ -105,7 +93,7 @@ export function useConfigure(config: Props) {
           ClientCtrl.setInitialized(true);
         }
       } catch (error) {
-        Alert.alert('Error', 'Error initializing WalletConnect SDK');
+        throw new Error('Error initializing WalletConnect Provider SDK');
       }
     }
     if (!ClientCtrl.provider() && projectId && providerMetadata) {
