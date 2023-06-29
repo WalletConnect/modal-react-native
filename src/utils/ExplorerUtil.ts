@@ -5,7 +5,6 @@ import { version as providerVersion } from '@walletconnect/universal-provider/pa
 import type { ListingParams, ListingResponse } from '../types/controllerTypes';
 import { CoreUtil } from './CoreUtil';
 import { ConfigCtrl } from '../controllers/ConfigCtrl';
-import { ToastCtrl } from '../controllers/ToastCtrl';
 
 // -- Helpers -------------------------------------------------------
 const W3M_API = 'https://explorer-api.walletconnect.com';
@@ -75,16 +74,16 @@ export const ExplorerUtil = {
           if (universalUrl) {
             Linking.openURL(universalUrl);
           } else {
-            ToastCtrl.openToast('Unable to open the wallet', 'error');
+            console.error('Unable to open the wallet', 'error');
           }
         });
       } else if (universalUrl) {
         await Linking.openURL(universalUrl);
       } else {
-        ToastCtrl.openToast('Unable to open the wallet', 'error');
+        console.error('Unable to open the wallet', 'error');
       }
     } catch (error) {
-      ToastCtrl.openToast('Unable to open the wallet', 'error');
+      console.error('Unable to open the wallet', 'error');
     }
   },
   getCustomHeaders() {

@@ -18,11 +18,6 @@ export interface ConfigCtrlState {
   explorerExcludedWalletIds?: string[] | 'ALL';
 }
 
-// -- ModalCtrl --------------------------------------- //
-export interface ModalCtrlState {
-  open: boolean;
-}
-
 // -- OptionsCtrl --------------------------------------- //
 export interface OptionsCtrlState {
   isDataLoaded: boolean;
@@ -38,18 +33,6 @@ export interface AccountCtrlState {
 export interface WcConnectionCtrlState {
   pairingUri: string;
   pairingError: boolean;
-}
-
-// -- ThemeCtrl --------------------------------------------- //
-export interface ThemeCtrlState {
-  themeMode?: 'dark' | 'light';
-}
-
-// -- ToastCtrl ------------------------------------------ //
-export interface ToastCtrlState {
-  open: boolean;
-  message: string;
-  variant: 'error' | 'success';
 }
 
 // -- ExplorerCtrl ------------------------------------------- //
