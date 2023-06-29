@@ -93,7 +93,7 @@ export function useWalletConnectModal(config: Config) {
 
   useEffect(() => {
     if (!config.projectId) {
-      console.error('Error', 'projectId not found');
+      throw new Error('projectId not found');
     }
   }, [config.projectId]);
 

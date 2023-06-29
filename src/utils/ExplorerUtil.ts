@@ -74,16 +74,20 @@ export const ExplorerUtil = {
           if (universalUrl) {
             Linking.openURL(universalUrl);
           } else {
-            console.error('Unable to open the wallet', 'error');
+            throw new Error(
+              'Unable to open the wallet - native url failed and universal url missing'
+            );
           }
         });
       } else if (universalUrl) {
         await Linking.openURL(universalUrl);
       } else {
-        console.error('Unable to open the wallet', 'error');
+        throw new Error(
+          'Unable to open the wallet - no native or universal url provided'
+        );
       }
     } catch (error) {
-      console.error('Unable to open the wallet', 'error');
+      throw new Error(`Unable to open the wallet: ${error}`);
     }
   },
   getCustomHeaders() {

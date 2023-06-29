@@ -60,7 +60,7 @@ export function useConfigure(config: Props) {
           OptionsCtrl.setIsDataLoaded(true);
         }
       } catch (error) {
-        console.error('Network error', 'error');
+        throw new Error('Network error while fetching wallet list');
       }
     }
     fetchWallets();
@@ -93,7 +93,7 @@ export function useConfigure(config: Props) {
           ClientCtrl.setInitialized(true);
         }
       } catch (error) {
-        console.error('Error', 'Error initializing WalletConnect SDK');
+        throw new Error('Error initializing WalletConnect Provider SDK');
       }
     }
     if (!ClientCtrl.provider() && projectId && providerMetadata) {
