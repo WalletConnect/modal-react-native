@@ -18,11 +18,6 @@ export interface ConfigCtrlState {
   explorerExcludedWalletIds?: string[] | 'ALL';
 }
 
-// -- ModalCtrl --------------------------------------- //
-export interface ModalCtrlState {
-  open: boolean;
-}
-
 // -- OptionsCtrl --------------------------------------- //
 export interface OptionsCtrlState {
   isDataLoaded: boolean;
@@ -38,18 +33,6 @@ export interface AccountCtrlState {
 export interface WcConnectionCtrlState {
   pairingUri: string;
   pairingError: boolean;
-}
-
-// -- ThemeCtrl --------------------------------------------- //
-export interface ThemeCtrlState {
-  themeMode?: 'dark' | 'light';
-}
-
-// -- ToastCtrl ------------------------------------------ //
-export interface ToastCtrlState {
-  open: boolean;
-  message: string;
-  variant: 'error' | 'success';
 }
 
 // -- ExplorerCtrl ------------------------------------------- //
@@ -89,6 +72,11 @@ export interface Listing {
   mobile: PlatformInfo;
   desktop: PlatformInfo;
 }
+
+export type WalletApp = Listing & {
+  deepLink: () => void;
+  imageURL: string;
+};
 
 export interface ListingResponse {
   listings: Listing[];
