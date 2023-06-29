@@ -15,10 +15,7 @@ import { OptionsCtrl } from '../controllers/OptionsCtrl';
 import type { SessionTypes } from '@walletconnect/types';
 import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 
-export const deepLink = (
-  currentWCURI: string | undefined,
-  walletInfo: Listing
-) => {
+const deepLink = (currentWCURI: string | undefined, walletInfo: Listing) => {
   if (currentWCURI) {
     ConfigCtrl.setRecentWalletDeepLink(
       walletInfo.mobile?.native || walletInfo.mobile?.universal
@@ -31,7 +28,7 @@ export const deepLink = (
   }
 };
 
-export const getImageURL = (walletInfo: Listing) =>
+const getImageURL = (walletInfo: Listing) =>
   ExplorerCtrl.getWalletImageUrl(walletInfo.image_id);
 
 export type Config = Omit<ConfigCtrlState, 'recentWalletDeepLink'> & {
@@ -101,7 +98,10 @@ export function useWalletConnectModal(config: Config) {
     provider: clientState.initialized ? ClientCtrl.provider() : undefined,
     isConnected: accountState.isConnected,
     address: accountState.address,
-    pairingUri,
-    recommendedWallets,
+    recommendedWallets: recommendedWallets.map((wallet) => ({
+      imageURL: getImageURL(wallet),
+      deepLink: deepLink(pairingUri, wallet),
+      ...wallet,
+    })),
   };
 }

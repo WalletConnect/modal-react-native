@@ -73,6 +73,11 @@ export interface Listing {
   desktop: PlatformInfo;
 }
 
+export type WalletApp = Listing & {
+  deepLink: void;
+  imageURL: string;
+};
+
 export interface ListingResponse {
   listings: Listing[];
   total: number;
