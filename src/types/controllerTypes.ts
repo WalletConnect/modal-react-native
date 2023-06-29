@@ -74,7 +74,7 @@ export interface Listing {
 }
 
 export type WalletApp = Listing & {
-  deepLink: void;
+  deepLink: () => void;
   imageURL: string;
 };
 

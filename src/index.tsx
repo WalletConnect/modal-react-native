@@ -4,3 +4,4 @@ import '@ethersproject/shims';
 
 export { useWalletConnectModal } from './hooks/useWalletConnectModal';
 export { IProvider, IProviderMetadata } from './types/coreTypes';
+export { WalletApp } from './types/controllerTypes';
