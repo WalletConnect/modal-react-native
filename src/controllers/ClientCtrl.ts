@@ -1,4 +1,3 @@
-import { ethers } from 'ethers';
 import { proxy, ref } from 'valtio';
 
 import type { ClientCtrlState } from '../types/controllerTypes';
@@ -7,7 +6,6 @@ import type { ClientCtrlState } from '../types/controllerTypes';
 const state = proxy<ClientCtrlState>({
   initialized: false,
   provider: undefined,
-  web3Provider: undefined,
   sessionTopic: undefined,
 });
 
@@ -28,9 +26,6 @@ export const ClientCtrl = {
   setSessionTopic(topic: ClientCtrlState['sessionTopic']) {
     if (topic && state.provider) {
       state.sessionTopic = topic;
-      state.web3Provider = ref(
-        new ethers.providers.Web3Provider(state.provider)
-      );
     }
   },
 
@@ -43,7 +38,6 @@ export const ClientCtrl = {
   },
 
   resetSession() {
-    state.web3Provider = undefined;
     state.sessionTopic = undefined;
   },
 };

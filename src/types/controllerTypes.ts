@@ -1,11 +1,9 @@
-import type { ethers } from 'ethers';
 import type { IProviderMetadata, IProvider } from './coreTypes';
 
 // -- ClientCtrl ------------------------------------------- //
 export interface ClientCtrlState {
   initialized: boolean;
   provider?: IProvider;
-  web3Provider?: ethers.providers.Web3Provider;
   sessionTopic?: string;
 }
 

@@ -14,11 +14,13 @@ export const AccountCtrl = {
   state,
 
   async getAccount() {
-    const web3Provider = ClientCtrl.state.web3Provider;
-    if (web3Provider) {
-      const signer = web3Provider.getSigner();
-      const currentAddress = await signer.getAddress();
-      state.address = currentAddress;
+    const provider = ClientCtrl.state.provider;
+    const accounts: string[] | undefined = await provider?.request({
+      method: 'eth_accounts',
+    });
+
+    if (accounts) {
+      state.address = accounts[0];
       state.isConnected = true;
     }
   },

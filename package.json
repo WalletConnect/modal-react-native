@@ -148,7 +148,6 @@
     "@walletconnect/core": "2.8.4",
     "@walletconnect/react-native-compat": "2.8.4",
     "@walletconnect/universal-provider": "2.8.4",
-    "ethers": "5.7.2",
     "qrcode": "1.5.3",
     "valtio": "1.10.5"
   }
