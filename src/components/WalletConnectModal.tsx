@@ -10,12 +10,13 @@ import { ModalRouter } from './ModalRouter';
 import { AccountCtrl } from '../controllers/AccountCtrl';
 import { ClientCtrl } from '../controllers/ClientCtrl';
 import { ToastCtrl } from '../controllers/ToastCtrl';
+import { RouterCtrl } from '../controllers/RouterCtrl';
+import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import { useOrientation } from '../hooks/useOrientation';
 import type { ConfigCtrlState, ThemeCtrlState } from '../types/controllerTypes';
 import type { IProviderMetadata, ISessionParams } from '../types/coreTypes';
 import { useConfigure } from '../hooks/useConfigure';
 import { defaultSessionParams } from '../constants/Config';
-import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import { setDeepLinkWallet } from '../utils/StorageUtil';
 import useTheme from '../hooks/useTheme';
 import Toast from './Toast';
@@ -32,6 +33,7 @@ export function WalletConnectModal(config: Props) {
   useConfigure(config);
   const { open } = useSnapshot(ModalCtrl.state);
   const { isConnected } = useSnapshot(AccountCtrl.state);
+  const { history } = useSnapshot(RouterCtrl.state);
   const { width } = useOrientation();
   const Theme = useTheme();
 
@@ -48,6 +50,13 @@ export function WalletConnectModal(config: Props) {
     } catch (error) {
       ToastCtrl.openToast("Couldn't save deeplink", 'error');
     }
+  };
+
+  const onBackButtonPress = () => {
+    if (history.length > 1) {
+      return RouterCtrl.goBack();
+    }
+    return ModalCtrl.close();
   };
 
   const onSessionError = async () => {
@@ -88,6 +97,7 @@ export function WalletConnectModal(config: Props) {
       hideModalContentWhileAnimating
       onBackdropPress={ModalCtrl.close}
       onModalWillShow={onConnect}
+      onBackButtonPress={onBackButtonPress}
       useNativeDriver
       statusBarTranslucent
     >
