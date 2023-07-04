@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, FlatList, ActivityIndicator } from 'react-native';
+import { StyleSheet, FlatList, ActivityIndicator, View } from 'react-native';
 import { useSnapshot } from 'valtio';
 
 import WalletItem, { ITEM_HEIGHT } from '../components/WalletItem';
@@ -14,6 +14,7 @@ import { ThemeCtrl } from '../controllers/ThemeCtrl';
 import { UiUtil } from '../utils/UiUtil';
 import SearchBar from '../components/SearchBar';
 import DataUtil from '../utils/DataUtil';
+import Text from '../components/Text';
 
 function ViewAllExplorer({
   isPortrait,
@@ -78,6 +79,20 @@ function ViewAllExplorer({
           showsVerticalScrollIndicator
           numColumns={isPortrait ? 4 : 7}
           fadingEdgeLength={20}
+          ListEmptyComponent={
+            <View
+              style={[
+                styles.emptyContainer,
+                {
+                  height: Math.round(windowHeight * 0.6),
+                },
+              ]}
+            >
+              <Text style={[styles.emptyText, { color: Theme.foreground2 }]}>
+                No results found
+              </Text>
+            </View>
+          }
           key={isPortrait ? 'portrait' : 'landscape'}
           getItemLayout={(_data, index) => ({
             length: ITEM_HEIGHT,
@@ -104,6 +119,15 @@ function ViewAllExplorer({
 const styles = StyleSheet.create({
   listContentContainer: { paddingBottom: 12 },
   searchbar: { marginLeft: 16 },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
 });
 
 export default ViewAllExplorer;
