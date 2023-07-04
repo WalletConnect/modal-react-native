@@ -18,7 +18,7 @@ export const LightTheme = {
   foreground1: '#141414',
   foreground2: '#798686',
   foreground3: '#9EA9A9',
-  foregroundInverse: '#FFFFFF',
+  foregroundInverse: '#000000',
   negative: '#F05142',
   background1: '#FFFFFF',
   background2: '#F1F3F3',

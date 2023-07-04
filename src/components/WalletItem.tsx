@@ -5,6 +5,7 @@ import { ExplorerUtil } from '../utils/ExplorerUtil';
 import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import useTheme from '../hooks/useTheme';
 import { ExplorerCtrl } from '../controllers/ExplorerCtrl';
+import { UiUtil } from '../utils/UiUtil';
 import Touchable from './Touchable';
 
 interface Props {
@@ -47,7 +48,7 @@ function WalletItem({ currentWCURI, walletInfo, style }: Props) {
         style={[styles.name, { color: Theme.foreground1 }]}
         numberOfLines={1}
       >
-        {walletInfo.name}
+        {UiUtil.getWalletName(walletInfo.name, true)}
       </Text>
     </Touchable>
   );

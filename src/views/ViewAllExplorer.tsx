@@ -1,10 +1,5 @@
-import { useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  FlatList,
-  ActivityIndicator,
-  StatusBar,
-} from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { useSnapshot } from 'valtio';
 
 import WalletItem, { ITEM_HEIGHT } from '../components/WalletItem';
@@ -17,6 +12,8 @@ import type { RouterProps } from '../types/routerTypes';
 import useTheme from '../hooks/useTheme';
 import { ThemeCtrl } from '../controllers/ThemeCtrl';
 import { UiUtil } from '../utils/UiUtil';
+import SearchBar from '../components/SearchBar';
+import DataUtil from '../utils/DataUtil';
 
 function ViewAllExplorer({
   isPortrait,
@@ -27,11 +24,21 @@ function ViewAllExplorer({
   const { isDataLoaded } = useSnapshot(OptionsCtrl.state);
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
   const { themeMode } = useSnapshot(ThemeCtrl.state);
-  const { wallets, recommendedWallets } = useSnapshot(ExplorerCtrl.state);
+  const { wallets } = useSnapshot(ExplorerCtrl.state);
   const shouldLoadWallets = wallets.listings.length === 0;
   const [walletsLoading, setWalletsLoading] = useState(false);
   const loading = !isDataLoaded || !pairingUri || walletsLoading;
-  const _wallets = [...recommendedWallets, ...wallets.listings];
+  const [search, setSearch] = useState('');
+  const timer = useRef<NodeJS.Timeout | null>(null);
+
+  const onChangeText = (value: string) => {
+    if (timer.current) {
+      clearTimeout(timer.current);
+    }
+    timer.current = setTimeout(() => {
+      setSearch(value);
+    }, 200);
+  };
 
   useEffect(() => {
     if (!loading) {
@@ -52,11 +59,9 @@ function ViewAllExplorer({
 
   return (
     <>
-      <NavHeader
-        title="Connect your wallet"
-        onBackPress={RouterCtrl.goBack}
-        shadow
-      />
+      <NavHeader onBackPress={RouterCtrl.goBack} shadow>
+        <SearchBar onChangeText={onChangeText} style={styles.searchbar} />
+      </NavHeader>
       {loading ? (
         <ActivityIndicator
           style={{ height: Math.round(windowHeight * 0.6) }}
@@ -64,15 +69,15 @@ function ViewAllExplorer({
         />
       ) : (
         <FlatList
-          data={_wallets}
+          data={DataUtil.getAllWallets({ search })}
           style={{
-            maxHeight:
-              Math.round(windowHeight * 0.6) - (StatusBar.currentHeight || 0),
+            height: Math.round(windowHeight * 0.6),
           }}
           contentContainerStyle={styles.listContentContainer}
           indicatorStyle={themeMode === 'dark' ? 'white' : 'black'}
           showsVerticalScrollIndicator
-          numColumns={isPortrait ? 4 : 6}
+          numColumns={isPortrait ? 4 : 7}
+          fadingEdgeLength={20}
           key={isPortrait ? 'portrait' : 'landscape'}
           getItemLayout={(_data, index) => ({
             length: ITEM_HEIGHT,
@@ -97,10 +102,8 @@ function ViewAllExplorer({
 }
 
 const styles = StyleSheet.create({
-  listContentContainer: {
-    paddingBottom: 12,
-    alignItems: 'center',
-  },
+  listContentContainer: { paddingBottom: 12 },
+  searchbar: { marginLeft: 16 },
 });
 
 export default ViewAllExplorer;
