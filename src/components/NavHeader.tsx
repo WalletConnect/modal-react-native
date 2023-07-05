@@ -8,12 +8,13 @@ import { RouterCtrl } from '../controllers/RouterCtrl';
 import Touchable from './Touchable';
 
 interface Props {
-  title: string;
+  title?: string;
   onBackPress?: () => void;
   onActionPress?: () => void;
   actionIcon?: ReactNode;
   actionDisabled?: boolean;
   shadow?: boolean;
+  children?: ReactNode;
 }
 
 function NavHeader({
@@ -23,6 +24,7 @@ function NavHeader({
   actionIcon,
   actionDisabled,
   shadow,
+  children,
 }: Props) {
   const Theme = useTheme();
   const routerState = useSnapshot(RouterCtrl.state);
@@ -53,7 +55,12 @@ function NavHeader({
       ) : (
         <View style={styles.button} />
       )}
-      <Text style={[styles.title, { color: Theme.foreground1 }]}>{title}</Text>
+      {children}
+      {title && (
+        <Text style={[styles.title, { color: Theme.foreground1 }]}>
+          {title}
+        </Text>
+      )}
       {actionIcon && onActionPress ? (
         <Touchable
           style={styles.button}
