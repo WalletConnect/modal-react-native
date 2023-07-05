@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, FlatList, ActivityIndicator, View } from 'react-native';
 import { useSnapshot } from 'valtio';
 
@@ -15,6 +15,7 @@ import { UiUtil } from '../utils/UiUtil';
 import SearchBar from '../components/SearchBar';
 import DataUtil from '../utils/DataUtil';
 import Text from '../components/Text';
+import { useDebounceCallback } from '../hooks/useDebounceCallback';
 
 function ViewAllExplorer({
   isPortrait,
@@ -30,16 +31,8 @@ function ViewAllExplorer({
   const [walletsLoading, setWalletsLoading] = useState(false);
   const loading = !isDataLoaded || !pairingUri || walletsLoading;
   const [search, setSearch] = useState('');
-  const timer = useRef<NodeJS.Timeout | null>(null);
 
-  const onChangeText = (value: string) => {
-    if (timer.current) {
-      clearTimeout(timer.current);
-    }
-    timer.current = setTimeout(() => {
-      setSearch(value);
-    }, 200);
-  };
+  const onChangeText = useDebounceCallback({ callback: setSearch });
 
   useEffect(() => {
     if (!loading) {
