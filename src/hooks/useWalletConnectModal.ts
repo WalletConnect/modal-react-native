@@ -11,7 +11,6 @@ import type { IProviderMetadata, ISessionParams } from '../types/coreTypes';
 import { useConfigure } from '../hooks/useConfigure';
 import { defaultSessionParams } from '../constants/Config';
 import { setDeepLinkWallet } from '../utils/StorageUtil';
-import { OptionsCtrl } from '../controllers/OptionsCtrl';
 import type { SessionTypes } from '@walletconnect/types';
 import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 
@@ -64,30 +63,19 @@ const connectToProvider = async (sessionParams: ISessionParams | undefined) => {
     if (session) {
       onSessionCreated(session);
     }
+    return ClientCtrl.state.web3Provider?.getSigner().getAddress();
   } catch (error) {
     onSessionError();
+    return Promise.reject(error);
   }
 };
 
 export function useWalletConnectModal(config: Config) {
-  useConfigure(config);
-  const { isDataLoaded } = useSnapshot(OptionsCtrl.state);
-  const { initialized } = useSnapshot(ClientCtrl.state);
+  const { resetApp } = useConfigure(config);
   const accountState = useSnapshot(AccountCtrl.state);
   const clientState = useSnapshot(ClientCtrl.state);
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
   const { recommendedWallets } = useSnapshot(ExplorerCtrl.state);
-
-  useEffect(() => {
-    if (isDataLoaded && initialized && !accountState.isConnected) {
-      connectToProvider(config.sessionParams);
-    }
-  }, [
-    isDataLoaded,
-    initialized,
-    accountState.isConnected,
-    config.sessionParams,
-  ]);
 
   useEffect(() => {
     if (!config.projectId) {
@@ -96,6 +84,7 @@ export function useWalletConnectModal(config: Config) {
   }, [config.projectId]);
 
   return {
+    connectToProvider: () => connectToProvider(config.sessionParams),
     provider: clientState.initialized ? ClientCtrl.provider() : undefined,
     isConnected: accountState.isConnected,
     address: accountState.address,
@@ -104,5 +93,6 @@ export function useWalletConnectModal(config: Config) {
       deepLink: makeDeepLink(pairingUri, wallet),
       ...wallet,
     })),
+    reset: resetApp,
   };
 }
