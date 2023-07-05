@@ -100,4 +100,8 @@ export function useConfigure(config: Props) {
       initProvider();
     }
   }, [projectId, providerMetadata, relayUrl, onDisplayUri, onSessionDelete]);
+
+  return {
+    resetApp,
+  };
 }
