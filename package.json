@@ -1,6 +1,6 @@
 {
   "name": "@spinamp/walletconnect-react-native",
-  "version": "1.0.0-rc.3",
+  "version": "1.0.0",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/src/index.d.ts",
