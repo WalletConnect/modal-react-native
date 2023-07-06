@@ -94,5 +94,6 @@ export function useWalletConnectModal(config: Config) {
       ...wallet,
     })),
     reset: resetApp,
+    uri: pairingUri,
   };
 }
