@@ -145,9 +145,9 @@
   },
   "dependencies": {
     "@ethersproject/shims": "5.7.0",
-    "@walletconnect/core": "2.8.6",
-    "@walletconnect/react-native-compat": "2.8.6",
-    "@walletconnect/universal-provider": "2.8.6",
+    "@walletconnect/core": "2.9.0",
+    "@walletconnect/react-native-compat": "2.9.0",
+    "@walletconnect/universal-provider": "2.9.0",
     "qrcode": "1.5.3",
     "valtio": "1.10.5"
   }
