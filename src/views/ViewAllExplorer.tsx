@@ -35,7 +35,7 @@ function ViewAllExplorer({
   const onChangeText = useDebounceCallback({ callback: setSearch });
 
   useEffect(() => {
-    if (!loading) {
+    if (loading) {
       UiUtil.layoutAnimation();
     }
   }, [loading]);
