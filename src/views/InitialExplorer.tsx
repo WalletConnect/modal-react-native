@@ -20,6 +20,7 @@ function InitialExplorer({ isPortrait }: RouterProps) {
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
   const { recommendedWallets } = useSnapshot(ExplorerCtrl.state);
   const loading = !isDataLoaded || !pairingUri;
+  const viewHeight = isPortrait ? ITEM_HEIGHT * 2 : ITEM_HEIGHT;
 
   const wallets = useMemo(() => {
     return recommendedWallets.slice(0, 7);
@@ -38,11 +39,11 @@ function InitialExplorer({ isPortrait }: RouterProps) {
       />
       {loading ? (
         <ActivityIndicator
-          style={styles.loadingContainer}
+          style={{ height: viewHeight }}
           color={Theme.accent}
         />
       ) : (
-        <View style={styles.explorerContainer}>
+        <View style={[styles.explorerContainer, { height: viewHeight }]}>
           {wallets.map((item: Listing) => (
             <WalletItem
               walletInfo={item}
@@ -64,14 +65,10 @@ function InitialExplorer({ isPortrait }: RouterProps) {
 
 const styles = StyleSheet.create({
   explorerContainer: {
-    height: ITEM_HEIGHT * 2,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  loadingContainer: {
-    height: ITEM_HEIGHT * 2,
   },
   wallet: {
     width: '25%',
