@@ -1,8 +1,8 @@
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import { useSnapshot } from 'valtio';
 
-import WalletItem from '../components/WalletItem';
+import WalletItem, { ITEM_HEIGHT } from '../components/WalletItem';
 import ViewAllBox from '../components/ViewAllBox';
 import QRIcon from '../assets/QRCode';
 import NavHeader from '../components/NavHeader';
@@ -13,24 +13,13 @@ import { OptionsCtrl } from '../controllers/OptionsCtrl';
 import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 import type { RouterProps } from '../types/routerTypes';
 import useTheme from '../hooks/useTheme';
-import { UiUtil } from '../utils/UiUtil';
 
-function InitialExplorer({ windowHeight, isPortrait }: RouterProps) {
+function InitialExplorer({ isPortrait }: RouterProps) {
   const Theme = useTheme();
   const { isDataLoaded } = useSnapshot(OptionsCtrl.state);
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
   const { recommendedWallets } = useSnapshot(ExplorerCtrl.state);
-
-  const loading = useMemo(
-    () => !isDataLoaded || !pairingUri,
-    [isDataLoaded, pairingUri]
-  );
-
-  useEffect(() => {
-    if (loading) {
-      UiUtil.layoutAnimation();
-    }
-  }, [loading]);
+  const loading = !isDataLoaded || !pairingUri;
 
   const wallets = useMemo(() => {
     return recommendedWallets.slice(0, 7);
@@ -49,7 +38,7 @@ function InitialExplorer({ windowHeight, isPortrait }: RouterProps) {
       />
       {loading ? (
         <ActivityIndicator
-          style={{ height: Math.round(windowHeight * 0.2) }}
+          style={styles.loadingContainer}
           color={Theme.accent}
         />
       ) : (
@@ -75,10 +64,14 @@ function InitialExplorer({ windowHeight, isPortrait }: RouterProps) {
 
 const styles = StyleSheet.create({
   explorerContainer: {
+    height: ITEM_HEIGHT * 2,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  loadingContainer: {
+    height: ITEM_HEIGHT * 2,
   },
   wallet: {
     width: '25%',

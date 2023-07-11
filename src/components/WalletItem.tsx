@@ -14,7 +14,7 @@ interface Props {
   style?: StyleProp<ViewStyle>;
 }
 
-export const ITEM_HEIGHT = 80;
+export const ITEM_HEIGHT = 80 + 16 * 2;
 
 function WalletItem({ currentWCURI, walletInfo, style }: Props) {
   const Theme = useTheme();
