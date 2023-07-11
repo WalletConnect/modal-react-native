@@ -11,7 +11,6 @@ import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 import type { RouterProps } from '../types/routerTypes';
 import useTheme from '../hooks/useTheme';
 import { ThemeCtrl } from '../controllers/ThemeCtrl';
-import { UiUtil } from '../utils/UiUtil';
 import SearchBar from '../components/SearchBar';
 import DataUtil from '../utils/DataUtil';
 import Text from '../components/Text';
@@ -33,12 +32,6 @@ function ViewAllExplorer({
   const [search, setSearch] = useState('');
 
   const onChangeText = useDebounceCallback({ callback: setSearch });
-
-  useEffect(() => {
-    if (loading) {
-      UiUtil.layoutAnimation();
-    }
-  }, [loading]);
 
   useEffect(() => {
     async function getWallets() {

@@ -1,8 +1,8 @@
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import { useSnapshot } from 'valtio';
 
-import WalletItem from '../components/WalletItem';
+import WalletItem, { ITEM_HEIGHT } from '../components/WalletItem';
 import ViewAllBox from '../components/ViewAllBox';
 import QRIcon from '../assets/QRCode';
 import NavHeader from '../components/NavHeader';
@@ -13,24 +13,14 @@ import { OptionsCtrl } from '../controllers/OptionsCtrl';
 import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 import type { RouterProps } from '../types/routerTypes';
 import useTheme from '../hooks/useTheme';
-import { UiUtil } from '../utils/UiUtil';
 
-function InitialExplorer({ windowHeight, isPortrait }: RouterProps) {
+function InitialExplorer({ isPortrait }: RouterProps) {
   const Theme = useTheme();
   const { isDataLoaded } = useSnapshot(OptionsCtrl.state);
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
   const { recommendedWallets } = useSnapshot(ExplorerCtrl.state);
-
-  const loading = useMemo(
-    () => !isDataLoaded || !pairingUri,
-    [isDataLoaded, pairingUri]
-  );
-
-  useEffect(() => {
-    if (loading) {
-      UiUtil.layoutAnimation();
-    }
-  }, [loading]);
+  const loading = !isDataLoaded || !pairingUri;
+  const viewHeight = isPortrait ? ITEM_HEIGHT * 2 : ITEM_HEIGHT;
 
   const wallets = useMemo(() => {
     return recommendedWallets.slice(0, 7);
@@ -49,11 +39,11 @@ function InitialExplorer({ windowHeight, isPortrait }: RouterProps) {
       />
       {loading ? (
         <ActivityIndicator
-          style={{ height: Math.round(windowHeight * 0.2) }}
+          style={{ height: viewHeight }}
           color={Theme.accent}
         />
       ) : (
-        <View style={styles.explorerContainer}>
+        <View style={[styles.explorerContainer, { height: viewHeight }]}>
           {wallets.map((item: Listing) => (
             <WalletItem
               walletInfo={item}
