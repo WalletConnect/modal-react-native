@@ -12,6 +12,7 @@ import { ClientCtrl } from '../controllers/ClientCtrl';
 import { ToastCtrl } from '../controllers/ToastCtrl';
 import { RouterCtrl } from '../controllers/RouterCtrl';
 import { ConfigCtrl } from '../controllers/ConfigCtrl';
+import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 import { useOrientation } from '../hooks/useOrientation';
 import type { ConfigCtrlState, ThemeCtrlState } from '../types/controllerTypes';
 import type { IProviderMetadata, ISessionParams } from '../types/coreTypes';
@@ -60,20 +61,26 @@ export function WalletConnectModal(config: Props) {
   };
 
   const onSessionError = async () => {
+    WcConnectionCtrl.resetConnection();
     ConfigCtrl.setRecentWalletDeepLink(undefined);
-    ModalCtrl.close();
-    ToastCtrl.openToast('Unable to create the session', 'error');
+    ToastCtrl.openToast('Unable to connect', 'error');
+
+    // create a new pairing uri
+    onConnect();
   };
 
   const onConnect = async () => {
     const provider = ClientCtrl.provider();
+    const pairingUri = WcConnectionCtrl.state.pairingUri;
+
     try {
       if (!provider) throw new Error('Provider not initialized');
 
-      if (!isConnected) {
+      if (!isConnected && !pairingUri) {
         const session = await provider.connect(
           config?.sessionParams || defaultSessionParams
         );
+
         if (session) {
           onSessionCreated(session);
         }
