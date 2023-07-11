@@ -27,7 +27,7 @@ function InitialExplorer({ windowHeight, isPortrait }: RouterProps) {
   );
 
   useEffect(() => {
-    if (!loading) {
+    if (loading) {
       UiUtil.layoutAnimation();
     }
   }, [loading]);
