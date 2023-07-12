@@ -1,4 +1,4 @@
-import '../../expo-crypto-shim.js';
+// import '../../expo-crypto-shim.js'; --> Only for Expo 48
 import {
   SafeAreaView,
   StyleSheet,
