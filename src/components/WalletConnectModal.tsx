@@ -1,24 +1,16 @@
-import { useEffect } from 'react';
-import { StyleSheet, Alert, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { useSnapshot } from 'valtio';
-import type { SessionTypes } from '@walletconnect/types';
 
 import ModalHeader from './ModalHeader';
-import { ModalCtrl } from '../controllers/ModalCtrl';
 import { ModalRouter } from './ModalRouter';
-import { AccountCtrl } from '../controllers/AccountCtrl';
-import { ClientCtrl } from '../controllers/ClientCtrl';
-import { ToastCtrl } from '../controllers/ToastCtrl';
+import { ModalCtrl } from '../controllers/ModalCtrl';
 import { RouterCtrl } from '../controllers/RouterCtrl';
-import { ConfigCtrl } from '../controllers/ConfigCtrl';
-import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
+import { useConnectionHandler } from '../hooks/useConnectionHandler';
 import { useOrientation } from '../hooks/useOrientation';
 import type { ConfigCtrlState, ThemeCtrlState } from '../types/controllerTypes';
 import type { IProviderMetadata, ISessionParams } from '../types/coreTypes';
 import { useConfigure } from '../hooks/useConfigure';
-import { defaultSessionParams } from '../constants/Config';
-import { setDeepLinkWallet } from '../utils/StorageUtil';
 import useTheme from '../hooks/useTheme';
 import Toast from './Toast';
 
@@ -32,26 +24,11 @@ export type Props = Omit<ConfigCtrlState, 'recentWalletDeepLink'> &
 
 export function WalletConnectModal(config: Props) {
   useConfigure(config);
+  useConnectionHandler();
   const { open } = useSnapshot(ModalCtrl.state);
-  const { isConnected } = useSnapshot(AccountCtrl.state);
   const { history } = useSnapshot(RouterCtrl.state);
   const { width } = useOrientation();
   const Theme = useTheme();
-
-  const onSessionCreated = async (session: SessionTypes.Struct) => {
-    ClientCtrl.setSessionTopic(session.topic);
-    const deepLink = ConfigCtrl.getRecentWalletDeepLink();
-    try {
-      if (deepLink) {
-        await setDeepLinkWallet(deepLink);
-        ConfigCtrl.setRecentWalletDeepLink(undefined);
-      }
-      AccountCtrl.getAccount();
-      ModalCtrl.close();
-    } catch (error) {
-      ToastCtrl.openToast("Couldn't save deeplink", 'error');
-    }
-  };
 
   const onBackButtonPress = () => {
     if (history.length > 1) {
@@ -60,42 +37,6 @@ export function WalletConnectModal(config: Props) {
     return ModalCtrl.close();
   };
 
-  const onSessionError = async () => {
-    WcConnectionCtrl.resetConnection();
-    ConfigCtrl.setRecentWalletDeepLink(undefined);
-    ToastCtrl.openToast('Unable to connect', 'error');
-
-    // create a new pairing uri
-    onConnect();
-  };
-
-  const onConnect = async () => {
-    const provider = ClientCtrl.provider();
-    const pairingUri = WcConnectionCtrl.state.pairingUri;
-
-    try {
-      if (!provider) throw new Error('Provider not initialized');
-
-      if (!isConnected && !pairingUri) {
-        const session = await provider.connect(
-          config?.sessionParams || defaultSessionParams
-        );
-
-        if (session) {
-          onSessionCreated(session);
-        }
-      }
-    } catch (error) {
-      onSessionError();
-    }
-  };
-
-  useEffect(() => {
-    if (!config.projectId) {
-      Alert.alert('Error', 'projectId not found');
-    }
-  }, [config.projectId]);
-
   return (
     <Modal
       isVisible={open}
@@ -103,7 +44,6 @@ export function WalletConnectModal(config: Props) {
       propagateSwipe
       hideModalContentWhileAnimating
       onBackdropPress={ModalCtrl.close}
-      onModalWillShow={onConnect}
       onBackButtonPress={onBackButtonPress}
       useNativeDriver
       statusBarTranslucent

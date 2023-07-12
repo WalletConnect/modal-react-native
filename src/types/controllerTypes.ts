@@ -1,4 +1,4 @@
-import type { IProviderMetadata, IProvider } from './coreTypes';
+import type { IProviderMetadata, IProvider, ISessionParams } from './coreTypes';
 
 // -- ClientCtrl ------------------------------------------- //
 export interface ClientCtrlState {
@@ -10,6 +10,7 @@ export interface ClientCtrlState {
 // -- ConfigCtrl ------------------------------------------- //
 export interface ConfigCtrlState {
   projectId: string;
+  sessionParams?: ISessionParams;
   recentWalletDeepLink?: string;
   providerMetadata?: IProviderMetadata;
   explorerRecommendedWalletIds?: string[] | 'NONE';
@@ -35,6 +36,7 @@ export interface AccountCtrlState {
 // -- WcConnectionCtrl ------------------------------------- //
 export interface WcConnectionCtrlState {
   pairingUri: string;
+  pairingEnabled: boolean;
   pairingError: boolean;
 }
 

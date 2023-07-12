@@ -1,8 +1,10 @@
+import type { ISessionParams } from '../types/coreTypes';
+
 const DEFAULT_CHAINS = ['eip155:1'];
 const REQUIRED_METHODS = ['eth_sendTransaction', 'personal_sign'];
 const REQUIRED_EVENTS = ['chainChanged', 'accountsChanged'];
 
-export const defaultSessionParams = {
+export const defaultSessionParams: ISessionParams = {
   namespaces: {
     eip155: {
       methods: REQUIRED_METHODS,

@@ -46,6 +46,12 @@ export function useConfigure(config: Props) {
     WcConnectionCtrl.setPairingUri(uri);
   }, []);
 
+  useEffect(() => {
+    if (!projectId) {
+      Alert.alert('Error', 'projectId not found');
+    }
+  }, [projectId]);
+
   /**
    * Set theme mode
    */
