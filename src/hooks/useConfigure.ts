@@ -9,7 +9,7 @@ import { AccountCtrl } from '../controllers/AccountCtrl';
 import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 import type { IProviderMetadata } from '../types/coreTypes';
 import { createUniversalProvider } from '../utils/ProviderUtil';
-import { removeDeepLinkWallet } from '../utils/StorageUtil';
+import { StorageUtil } from '../utils/StorageUtil';
 import { ThemeCtrl } from '../controllers/ThemeCtrl';
 import { ToastCtrl } from '../controllers/ToastCtrl';
 
@@ -28,8 +28,7 @@ export function useConfigure(config: Props) {
     ClientCtrl.resetSession();
     AccountCtrl.resetAccount();
     WcConnectionCtrl.resetConnection();
-    ConfigCtrl.resetConfig();
-    removeDeepLinkWallet();
+    StorageUtil.removeDeepLinkWallet();
   }, []);
 
   const onSessionDelete = useCallback(
@@ -64,6 +63,7 @@ export function useConfigure(config: Props) {
    */
   useEffect(() => {
     ConfigCtrl.setConfig(config);
+    ConfigCtrl.loadRecentWallet();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

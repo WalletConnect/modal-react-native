@@ -11,6 +11,7 @@ import { ExplorerCtrl } from '../controllers/ExplorerCtrl';
 import useTheme from '../hooks/useTheme';
 import type { Listing } from '../types/controllerTypes';
 import Touchable from './Touchable';
+import { WALLET_HEIGHT, WALLET_WIDTH, WALLET_MARGIN } from './WalletItem';
 import WalletIcon from '../assets/WalletIcon';
 
 interface Props {
@@ -68,10 +69,10 @@ function ViewAllBox({ onPress, wallets, style }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    width: 80,
-    height: 80,
+    width: WALLET_WIDTH,
+    height: WALLET_HEIGHT,
     alignItems: 'center',
-    marginVertical: 16,
+    marginVertical: WALLET_MARGIN,
   },
   icons: {
     height: 60,

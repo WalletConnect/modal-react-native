@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, FlatList, ActivityIndicator, View } from 'react-native';
 import { useSnapshot } from 'valtio';
 
-import WalletItem, { ITEM_HEIGHT } from '../components/WalletItem';
+import WalletItem, { WALLET_FULL_HEIGHT } from '../components/WalletItem';
 import NavHeader from '../components/NavHeader';
 import { RouterCtrl } from '../controllers/RouterCtrl';
 import { ExplorerCtrl } from '../controllers/ExplorerCtrl';
@@ -12,7 +12,7 @@ import type { RouterProps } from '../types/routerTypes';
 import useTheme from '../hooks/useTheme';
 import { ThemeCtrl } from '../controllers/ThemeCtrl';
 import SearchBar from '../components/SearchBar';
-import DataUtil from '../utils/DataUtil';
+import { DataUtil } from '../utils/DataUtil';
 import Text from '../components/Text';
 import { useDebounceCallback } from '../hooks/useDebounceCallback';
 
@@ -26,6 +26,7 @@ function ViewAllExplorer({
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
   const { themeMode } = useSnapshot(ThemeCtrl.state);
   const { wallets } = useSnapshot(ExplorerCtrl.state);
+  const recentWallet = DataUtil.getRecentWallet();
   const shouldLoadWallets = wallets.listings.length === 0;
   const [walletsLoading, setWalletsLoading] = useState(false);
   const loading = !isDataLoaded || !pairingUri || walletsLoading;
@@ -81,14 +82,15 @@ function ViewAllExplorer({
           }
           key={isPortrait ? 'portrait' : 'landscape'}
           getItemLayout={(_data, index) => ({
-            length: ITEM_HEIGHT,
-            offset: ITEM_HEIGHT * index,
+            length: WALLET_FULL_HEIGHT,
+            offset: WALLET_FULL_HEIGHT * index,
             index,
           })}
           renderItem={({ item }) => (
             <WalletItem
               currentWCURI={pairingUri}
               walletInfo={item}
+              isRecent={item.id === recentWallet?.id}
               style={{
                 width: isPortrait
                   ? Math.round(windowWidth / 4)

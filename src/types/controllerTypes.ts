@@ -11,7 +11,7 @@ export interface ClientCtrlState {
 export interface ConfigCtrlState {
   projectId: string;
   sessionParams?: ISessionParams;
-  recentWalletDeepLink?: string;
+  recentWallet?: Listing;
   providerMetadata?: IProviderMetadata;
   explorerRecommendedWalletIds?: string[] | 'NONE';
   explorerExcludedWalletIds?: string[] | 'ALL';

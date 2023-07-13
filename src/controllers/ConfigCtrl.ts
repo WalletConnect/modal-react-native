@@ -1,12 +1,13 @@
 import { proxy } from 'valtio';
 
-import type { ConfigCtrlState } from '../types/controllerTypes';
+import type { ConfigCtrlState, Listing } from '../types/controllerTypes';
+import { StorageUtil } from '../utils/StorageUtil';
 
 // -- initial state ------------------------------------------------ //
 const state = proxy<ConfigCtrlState>({
   projectId: '',
   sessionParams: undefined,
-  recentWalletDeepLink: undefined,
+  recentWallet: undefined,
   providerMetadata: undefined,
   explorerRecommendedWalletIds: undefined,
   explorerExcludedWalletIds: undefined,
@@ -16,12 +17,12 @@ const state = proxy<ConfigCtrlState>({
 export const ConfigCtrl = {
   state,
 
-  setRecentWalletDeepLink(deepLink?: string) {
-    state.recentWalletDeepLink = deepLink;
+  setRecentWallet(wallet?: Listing) {
+    state.recentWallet = wallet;
   },
 
-  getRecentWalletDeepLink() {
-    return state.recentWalletDeepLink;
+  getRecentWallet() {
+    return state.recentWallet;
   },
 
   getMetadata() {
@@ -49,7 +50,7 @@ export const ConfigCtrl = {
     state.explorerExcludedWalletIds = config.explorerExcludedWalletIds;
   },
 
-  resetConfig() {
-    state.recentWalletDeepLink = undefined;
+  async loadRecentWallet() {
+    state.recentWallet = await StorageUtil.getRecentWallet();
   },
 };
