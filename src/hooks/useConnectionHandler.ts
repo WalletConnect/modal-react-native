@@ -17,7 +17,7 @@ const FOUR_MIN_MS = 240_000;
 export function useConnectionHandler() {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { isConnected } = useSnapshot(AccountCtrl.state);
-  const { pairingEnabled } = useSnapshot(WcConnectionCtrl.state);
+  const { pairingEnabled, pairingUri } = useSnapshot(WcConnectionCtrl.state);
   const { provider } = useSnapshot(ClientCtrl.state);
   const { sessionParams } = useSnapshot(ConfigCtrl.state);
 
@@ -59,10 +59,10 @@ export function useConnectionHandler() {
   }, [isConnected, provider, sessionParams, pairingEnabled]);
 
   useEffect(() => {
-    if (provider && !isConnected && pairingEnabled) {
+    if (provider && !isConnected && pairingEnabled && !pairingUri) {
       connectAndWait();
     }
-  }, [provider, connectAndWait, isConnected, pairingEnabled]);
+  }, [provider, connectAndWait, isConnected, pairingEnabled, pairingUri]);
 
   return null;
 }
