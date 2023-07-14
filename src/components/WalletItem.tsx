@@ -4,6 +4,7 @@ import type { Listing } from '../types/controllerTypes';
 import { ExplorerUtil } from '../utils/ExplorerUtil';
 import useTheme from '../hooks/useTheme';
 import { ExplorerCtrl } from '../controllers/ExplorerCtrl';
+import { RouterCtrl } from '../controllers/RouterCtrl';
 import { DataUtil } from '../utils/DataUtil';
 import { UiUtil } from '../utils/UiUtil';
 import Touchable from './Touchable';
@@ -33,6 +34,7 @@ function WalletItem({ currentWCURI, walletInfo, style, isRecent }: Props) {
         walletInfo.mobile.native,
         currentWCURI
       );
+      RouterCtrl.push('Connecting');
     }
   };
 

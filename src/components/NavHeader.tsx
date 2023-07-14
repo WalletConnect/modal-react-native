@@ -33,11 +33,11 @@ function NavHeader({
     <View
       style={[
         styles.container,
+        { backgroundColor: Theme.background1 },
         shadow &&
           StyleSheet.flatten([
             styles.shadow,
             {
-              backgroundColor: Theme.background1,
               shadowColor: Theme.background1,
             },
           ]),
@@ -84,11 +84,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 16,
     paddingHorizontal: 24,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
   },
   shadow: {
     zIndex: 1,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
     ...Platform.select({
       ios: {
         shadowOpacity: 1,

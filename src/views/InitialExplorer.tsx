@@ -35,7 +35,12 @@ function InitialExplorer({ isPortrait }: RouterProps) {
           color={Theme.accent}
         />
       ) : (
-        <View style={[styles.explorerContainer, { height: viewHeight }]}>
+        <View
+          style={[
+            styles.explorerContainer,
+            { height: viewHeight, backgroundColor: Theme.background1 },
+          ]}
+        >
           {wallets.slice(0, 7).map((item: Listing) => (
             <WalletItem
               walletInfo={item}

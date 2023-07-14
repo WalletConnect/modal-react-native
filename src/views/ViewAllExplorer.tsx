@@ -60,6 +60,7 @@ function ViewAllExplorer({
           data={DataUtil.getAllWallets({ search })}
           style={{
             height: Math.round(windowHeight * 0.6),
+            backgroundColor: Theme.background1,
           }}
           contentContainerStyle={styles.listContentContainer}
           indicatorStyle={themeMode === 'dark' ? 'white' : 'black'}

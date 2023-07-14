@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, View } from 'react-native';
+import { Linking, Platform, StyleSheet, View } from 'react-native';
 import { useSnapshot } from 'valtio';
 
 import NavHeader from '../components/NavHeader';
@@ -44,6 +44,20 @@ function ConnectingView({ onCopyClipboard }: RouterProps) {
     }
   };
 
+  const onRetry = () => {
+    ExplorerUtil.navigateDeepLink(
+      recentWallet?.mobile.universal,
+      recentWallet?.mobile.native,
+      pairingUri
+    );
+  };
+
+  const onAlternativePress = () => {
+    if (alternateLink) {
+      ExplorerUtil.navigateDeepLink(alternateLink, '', pairingUri);
+    }
+  };
+
   return (
     <>
       <NavHeader
@@ -52,61 +66,61 @@ function ConnectingView({ onCopyClipboard }: RouterProps) {
         actionIcon={<CopyIcon width={22} height={22} fill={Theme.accent} />}
         onActionPress={onCopyClipboard ? onCopy : undefined}
       />
-      <>
-        <View style={styles.walletContainer}>
-          <WalletImage url={imageUrl} size={96} />
-          <Text
-            style={[styles.continueText, { color: Theme.foreground1 }]}
-          >{`Continue in ${walletName}...`}</Text>
-        </View>
-        <View
-          style={[
-            styles.footer,
-            {
-              backgroundColor: Theme.background2,
-            },
-          ]}
-        >
-          <View
-            style={[styles.upperFooter, { borderColor: Theme.foreground3 }]}
+
+      <View
+        style={[styles.walletContainer, { backgroundColor: Theme.background1 }]}
+      >
+        <WalletImage url={imageUrl} size={96} />
+        <Text
+          style={[styles.continueText, { color: Theme.foreground1 }]}
+        >{`Continue in ${walletName}...`}</Text>
+      </View>
+      <View
+        style={[
+          styles.footer,
+          {
+            backgroundColor: Theme.background2,
+          },
+        ]}
+      >
+        <View style={[styles.upperFooter, { borderColor: Theme.foreground3 }]}>
+          <Touchable
+            style={[styles.retryButton, { backgroundColor: Theme.accent }]}
+            onPress={onRetry}
           >
-            <Touchable
-              style={[styles.retryButton, { backgroundColor: Theme.accent }]}
-            >
-              <Text style={styles.text}>Retry</Text>
-              <RetryIcon style={styles.retryIcon} />
-            </Touchable>
-            {alternateLink && (
-              <Text style={[styles.text, { color: Theme.foreground2 }]}>
-                Still doesn't work?{' '}
-                <Text
-                  style={{ color: Theme.accent }}
-                  onPress={() => console.log(alternateLink)}
-                  onPressIn={undefined}
-                >
-                  Try this alternate link
-                </Text>
-              </Text>
-            )}
-          </View>
-          {storeLink && (
-            <View style={styles.lowerFooter}>
-              <View style={styles.row}>
-                <WalletImage url={imageUrl} size={28} />
-                <Text
-                  style={[styles.getText, { color: Theme.foreground1 }]}
-                >{`Get ${walletName}`}</Text>
-              </View>
+            <Text style={styles.text}>Retry</Text>
+            <RetryIcon style={styles.retryIcon} />
+          </Touchable>
+          {alternateLink && (
+            <Text style={[styles.text, { color: Theme.foreground2 }]}>
+              Still doesn't work?{' '}
               <Text
-                style={[styles.storeText, { color: Theme.foreground2 }]}
-                onPress={() => console.log(storeLink)}
+                style={{ color: Theme.accent }}
+                onPress={onAlternativePress}
+                onPressIn={undefined}
               >
-                {storeCaption}
+                Try this alternate link
               </Text>
-            </View>
+            </Text>
           )}
         </View>
-      </>
+        {storeLink && (
+          <View style={styles.lowerFooter}>
+            <View style={styles.row}>
+              <WalletImage url={imageUrl} size={30} />
+              <Text
+                style={[styles.getText, { color: Theme.foreground1 }]}
+              >{`Get ${walletName}`}</Text>
+            </View>
+            <Text
+              style={[styles.storeText, { color: Theme.foreground2 }]}
+              onPress={() => Linking.openURL(storeLink)}
+            >
+              {storeCaption}
+            </Text>
+          </View>
+        )}
+      </View>
     </>
   );
 }
@@ -153,6 +167,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     width: '100%',
+    paddingBottom: 12,
   },
   row: {
     flexDirection: 'row',
