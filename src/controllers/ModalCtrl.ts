@@ -5,6 +5,7 @@ import { ClientCtrl } from './ClientCtrl';
 import { OptionsCtrl } from './OptionsCtrl';
 import { AccountCtrl } from './AccountCtrl';
 import { RouterCtrl } from './RouterCtrl';
+import { WcConnectionCtrl } from './WcConnectionCtrl';
 
 // -- types -------------------------------------------------------- //
 export interface OpenOptions {
@@ -25,6 +26,7 @@ export const ModalCtrl = {
       const { isDataLoaded } = OptionsCtrl.state;
       const { isConnected } = AccountCtrl.state;
       const { initialized } = ClientCtrl.state;
+      WcConnectionCtrl.setPairingEnabled(true);
 
       if (isConnected) {
         // If already connected, do nothing
