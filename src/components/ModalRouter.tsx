@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
 import { useSnapshot } from 'valtio';
 
+import { useOrientation } from '../hooks/useOrientation';
 import QRCodeView from '../views/QRCodeView';
 import ViewAllExplorer from '../views/ViewAllExplorer';
 import { RouterCtrl } from '../controllers/RouterCtrl';
 import InitialExplorer from '../views/InitialExplorer';
-import { useOrientation } from '../hooks/useOrientation';
+import ConnectingView from '../views/ConnectingView';
 
 interface Props {
   onCopyClipboard?: (value: string) => void;
@@ -23,6 +24,8 @@ export function ModalRouter(props: Props) {
         return ViewAllExplorer;
       case 'Qrcode':
         return QRCodeView;
+      case 'Connecting':
+        return ConnectingView;
       default:
         return InitialExplorer;
     }

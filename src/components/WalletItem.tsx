@@ -1,4 +1,4 @@
-import { Image, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 
 import type { Listing } from '../types/controllerTypes';
 import { ExplorerUtil } from '../utils/ExplorerUtil';
@@ -7,6 +7,7 @@ import { ExplorerCtrl } from '../controllers/ExplorerCtrl';
 import { DataUtil } from '../utils/DataUtil';
 import { UiUtil } from '../utils/UiUtil';
 import Touchable from './Touchable';
+import WalletImage from './WalletImage';
 
 interface Props {
   currentWCURI?: string;
@@ -22,6 +23,7 @@ export const WALLET_FULL_HEIGHT = WALLET_HEIGHT + WALLET_MARGIN * 2;
 
 function WalletItem({ currentWCURI, walletInfo, style, isRecent }: Props) {
   const Theme = useTheme();
+  const imageUrl = ExplorerCtrl.getWalletImageUrl(walletInfo.image_id);
 
   const onPress = () => {
     if (currentWCURI) {
@@ -40,13 +42,7 @@ function WalletItem({ currentWCURI, walletInfo, style, isRecent }: Props) {
       key={walletInfo.id}
       style={[styles.container, style]}
     >
-      <Image
-        style={[styles.icon, { borderColor: Theme.overlayThin }]}
-        source={{
-          uri: ExplorerCtrl.getWalletImageUrl(walletInfo.image_id),
-        }}
-      />
-
+      <WalletImage size={60} url={imageUrl} />
       <Text
         style={[styles.name, { color: Theme.foreground1 }]}
         numberOfLines={1}

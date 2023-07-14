@@ -96,7 +96,11 @@ export interface ListingResponse {
 }
 
 // -- RouterCtrl --------------------------------------------- //
-export type RouterView = 'ConnectWallet' | 'Qrcode' | 'WalletExplorer';
+export type RouterView =
+  | 'ConnectWallet'
+  | 'Qrcode'
+  | 'WalletExplorer'
+  | 'Connecting';
 
 export interface RouterCtrlState {
   history: RouterView[];
