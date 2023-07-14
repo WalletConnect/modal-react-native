@@ -8,7 +8,7 @@ import { defaultSessionParams } from '../constants/Config';
 import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import type { ISessionParams } from '../types/coreTypes';
 import type { SessionTypes } from '@walletconnect/types';
-import { setDeepLinkWallet } from '../utils/StorageUtil';
+import { StorageUtil } from '../utils/StorageUtil';
 import { ModalCtrl } from '../controllers/ModalCtrl';
 import { ToastCtrl } from '../controllers/ToastCtrl';
 
@@ -24,16 +24,17 @@ export function useConnectionHandler() {
   const onSessionCreated = async (session: SessionTypes.Struct) => {
     WcConnectionCtrl.setPairingEnabled(false);
     ClientCtrl.setSessionTopic(session.topic);
-    const deepLink = ConfigCtrl.getRecentWalletDeepLink();
+    const recentWallet = ConfigCtrl.getRecentWallet();
     try {
-      if (deepLink) {
-        await setDeepLinkWallet(deepLink);
-        ConfigCtrl.setRecentWalletDeepLink(undefined);
+      if (recentWallet?.mobile) {
+        await StorageUtil.setDeepLinkWallet(
+          recentWallet.mobile.native || recentWallet.mobile.universal
+        );
       }
       AccountCtrl.getAccount();
       ModalCtrl.close();
     } catch (error) {
-      ToastCtrl.openToast("Couldn't save deeplink", 'error');
+      console.info('Unable to save deeplink');
     }
   };
 
@@ -53,7 +54,6 @@ export function useConnectionHandler() {
       }
     } catch (error) {
       WcConnectionCtrl.setPairingUri('');
-      ConfigCtrl.setRecentWalletDeepLink(undefined);
       ToastCtrl.openToast('Connection request declined', 'error');
     }
   }, [isConnected, provider, sessionParams, pairingEnabled]);

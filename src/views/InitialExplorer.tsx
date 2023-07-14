@@ -1,34 +1,26 @@
-import { useMemo } from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import { useSnapshot } from 'valtio';
 
-import WalletItem, { ITEM_HEIGHT } from '../components/WalletItem';
+import WalletItem, { WALLET_FULL_HEIGHT } from '../components/WalletItem';
 import ViewAllBox from '../components/ViewAllBox';
 import QRIcon from '../assets/QRCode';
 import NavHeader from '../components/NavHeader';
 import type { Listing } from '../types/controllerTypes';
 import { RouterCtrl } from '../controllers/RouterCtrl';
-import { ExplorerCtrl } from '../controllers/ExplorerCtrl';
 import { OptionsCtrl } from '../controllers/OptionsCtrl';
 import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 import type { RouterProps } from '../types/routerTypes';
 import useTheme from '../hooks/useTheme';
+import { DataUtil } from '../utils/DataUtil';
 
 function InitialExplorer({ isPortrait }: RouterProps) {
   const Theme = useTheme();
   const { isDataLoaded } = useSnapshot(OptionsCtrl.state);
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
-  const { recommendedWallets } = useSnapshot(ExplorerCtrl.state);
+  const wallets = DataUtil.getInitialWallets();
+  const recentWallet = DataUtil.getRecentWallet();
   const loading = !isDataLoaded || !pairingUri;
-  const viewHeight = isPortrait ? ITEM_HEIGHT * 2 : ITEM_HEIGHT;
-
-  const wallets = useMemo(() => {
-    return recommendedWallets.slice(0, 7);
-  }, [recommendedWallets]);
-
-  const viewAllButtonWallets = useMemo(() => {
-    return recommendedWallets.slice(-4);
-  }, [recommendedWallets]);
+  const viewHeight = isPortrait ? WALLET_FULL_HEIGHT * 2 : WALLET_FULL_HEIGHT;
 
   return (
     <>
@@ -44,17 +36,18 @@ function InitialExplorer({ isPortrait }: RouterProps) {
         />
       ) : (
         <View style={[styles.explorerContainer, { height: viewHeight }]}>
-          {wallets.map((item: Listing) => (
+          {wallets.slice(0, 7).map((item: Listing) => (
             <WalletItem
               walletInfo={item}
               key={item.id}
+              isRecent={item.id === recentWallet?.id}
               currentWCURI={pairingUri}
               style={isPortrait && styles.wallet}
             />
           ))}
           <ViewAllBox
             onPress={() => RouterCtrl.push('WalletExplorer')}
-            wallets={viewAllButtonWallets}
+            wallets={wallets.slice(-4)}
             style={isPortrait && styles.wallet}
           />
         </View>
