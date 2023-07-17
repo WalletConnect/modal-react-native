@@ -8,7 +8,6 @@ import { ToastCtrl } from '../controllers/ToastCtrl';
 import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 import Text from '../components/Text';
 import type { RouterProps } from '../types/routerTypes';
-import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import { ExplorerUtil } from '../utils/ExplorerUtil';
 import { RouterCtrl } from '../controllers/RouterCtrl';
 import Touchable from '../components/Touchable';
@@ -19,17 +18,17 @@ import WalletImage from '../components/WalletImage';
 function ConnectingView({ onCopyClipboard }: RouterProps) {
   const Theme = useTheme();
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
-  const { recentWallet } = useSnapshot(ConfigCtrl.state);
-  const walletName = UiUtil.getWalletName(recentWallet?.name ?? 'Wallet', true);
-  const imageUrl = ExplorerUtil.getWalletImageUrl(recentWallet?.image_id);
+  const { data } = useSnapshot(RouterCtrl.state);
+  const walletName = UiUtil.getWalletName(data?.wallet?.name ?? 'Wallet', true);
+  const imageUrl = ExplorerUtil.getWalletImageUrl(data?.wallet?.image_id);
 
   const alternateLink =
-    recentWallet?.mobile.native && recentWallet.mobile.universal
-      ? recentWallet.mobile.universal
+    data?.wallet?.mobile.native && data.wallet.mobile.universal
+      ? data.wallet.mobile.universal
       : undefined;
   const storeLink = Platform.select({
-    ios: recentWallet?.app.ios,
-    android: recentWallet?.app.android,
+    ios: data?.wallet?.app.ios,
+    android: data?.wallet?.app.android,
   });
 
   const storeCaption = Platform.select({
@@ -46,8 +45,8 @@ function ConnectingView({ onCopyClipboard }: RouterProps) {
 
   const onRetry = () => {
     ExplorerUtil.navigateDeepLink(
-      recentWallet?.mobile.universal,
-      recentWallet?.mobile.native,
+      data?.wallet?.mobile.universal,
+      data?.wallet?.mobile.native,
       pairingUri
     );
   };

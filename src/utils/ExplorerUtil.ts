@@ -64,8 +64,8 @@ export const ExplorerUtil = {
   },
 
   async navigateDeepLink(
-    universalLink: string,
-    deepLink: string,
+    universalLink: string | undefined,
+    deepLink: string | undefined,
     wcURI: string
   ) {
     try {

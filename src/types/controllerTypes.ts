@@ -105,4 +105,7 @@ export type RouterView =
 export interface RouterCtrlState {
   history: RouterView[];
   view: RouterView;
+  data?: {
+    wallet?: Listing;
+  };
 }

@@ -34,7 +34,7 @@ function WalletItem({ currentWCURI, walletInfo, style, isRecent }: Props) {
         walletInfo.mobile.native,
         currentWCURI
       );
-      RouterCtrl.push('Connecting');
+      RouterCtrl.push('Connecting', { wallet: walletInfo });
     }
   };
 

@@ -7,16 +7,20 @@ import type { RouterCtrlState } from '../types/controllerTypes';
 const state = proxy<RouterCtrlState>({
   history: ['ConnectWallet'],
   view: 'ConnectWallet',
+  data: undefined,
 });
 
 // -- controller --------------------------------------------------- //
 export const RouterCtrl = {
   state,
 
-  push(view: RouterCtrlState['view']) {
+  push(view: RouterCtrlState['view'], data?: RouterCtrlState['data']) {
     if (view !== state.view) {
       UiUtil.layoutAnimation();
       state.view = view;
+      if (data) {
+        state.data = data;
+      }
       state.history.push(view);
     }
   },
