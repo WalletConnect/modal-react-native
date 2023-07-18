@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { Alert, useColorScheme } from 'react-native';
+import { useColorScheme } from 'react-native';
 import { SUBSCRIBER_EVENTS } from '@walletconnect/core';
 import { ExplorerCtrl } from '../controllers/ExplorerCtrl';
 import { OptionsCtrl } from '../controllers/OptionsCtrl';
@@ -47,7 +47,7 @@ export function useConfigure(config: Props) {
 
   useEffect(() => {
     if (!projectId) {
-      Alert.alert('Error', 'projectId not found');
+      console.error('projectId not found');
     }
   }, [projectId]);
 
@@ -111,7 +111,7 @@ export function useConfigure(config: Props) {
           ClientCtrl.setInitialized(true);
         }
       } catch (error) {
-        Alert.alert('Error', 'Error initializing WalletConnect SDK');
+        console.error('Error initializing WalletConnect SDK', error);
       }
     }
     if (!ClientCtrl.provider() && projectId && providerMetadata) {
