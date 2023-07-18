@@ -44,7 +44,7 @@ function WalletItem({ currentWCURI, walletInfo, style, isRecent }: Props) {
       key={walletInfo.id}
       style={[styles.container, style]}
     >
-      <WalletImage size={60} url={imageUrl} />
+      <WalletImage size="md" url={imageUrl} />
       <Text
         style={[styles.name, { color: Theme.foreground1 }]}
         numberOfLines={1}

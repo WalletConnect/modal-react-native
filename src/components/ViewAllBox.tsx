@@ -25,13 +25,13 @@ function ViewAllBox({ onPress, wallets, style }: Props) {
           {_wallets.map((wallet) => (
             <WalletImage
               key={wallet.id}
-              size={23}
+              size="xs"
               url={ExplorerCtrl.getWalletImageUrl(wallet.image_id)}
               style={styles.icon}
             />
           ))}
           {_emptyBoxes.map((_, i) => (
-            <WalletImage key={i} size={23} style={styles.icon} />
+            <WalletImage key={i} size="xs" style={styles.icon} />
           ))}
         </View>
       </View>

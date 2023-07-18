@@ -10,7 +10,6 @@ import type { ISessionParams } from '../types/coreTypes';
 import type { SessionTypes } from '@walletconnect/types';
 import { StorageUtil } from '../utils/StorageUtil';
 import { ModalCtrl } from '../controllers/ModalCtrl';
-import { ToastCtrl } from '../controllers/ToastCtrl';
 
 const FOUR_MIN_MS = 240_000;
 
@@ -22,6 +21,7 @@ export function useConnectionHandler() {
   const { sessionParams } = useSnapshot(ConfigCtrl.state);
 
   const onSessionCreated = async (session: SessionTypes.Struct) => {
+    WcConnectionCtrl.setPairingError(false);
     WcConnectionCtrl.setPairingEnabled(false);
     ClientCtrl.setSessionTopic(session.topic);
     const recentWallet = ConfigCtrl.getRecentWallet();
@@ -54,7 +54,7 @@ export function useConnectionHandler() {
       }
     } catch (error) {
       WcConnectionCtrl.setPairingUri('');
-      ToastCtrl.openToast('Connection request declined', 'error');
+      WcConnectionCtrl.setPairingError(true);
     }
   }, [isConnected, provider, sessionParams, pairingEnabled]);
 

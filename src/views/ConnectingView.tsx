@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Linking, Platform, StyleSheet, View } from 'react-native';
 import { useSnapshot } from 'valtio';
 
@@ -14,10 +15,12 @@ import Touchable from '../components/Touchable';
 import { UiUtil } from '../utils/UiUtil';
 import RetryIcon from '../assets/Retry';
 import WalletImage from '../components/WalletImage';
+import WalletLoadingThumbnail from '../components/WalletLoadingThumbnail';
+import Chevron from '../assets/Chevron';
 
 function ConnectingView({ onCopyClipboard }: RouterProps) {
   const Theme = useTheme();
-  const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
+  const { pairingUri, pairingError } = useSnapshot(WcConnectionCtrl.state);
   const { data } = useSnapshot(RouterCtrl.state);
   const walletName = UiUtil.getWalletName(data?.wallet?.name ?? 'Wallet', true);
   const imageUrl = ExplorerUtil.getWalletImageUrl(data?.wallet?.image_id);
@@ -44,6 +47,7 @@ function ConnectingView({ onCopyClipboard }: RouterProps) {
   };
 
   const onRetry = () => {
+    WcConnectionCtrl.setPairingError(false);
     ExplorerUtil.navigateDeepLink(
       data?.wallet?.mobile.universal,
       data?.wallet?.mobile.native,
@@ -53,9 +57,14 @@ function ConnectingView({ onCopyClipboard }: RouterProps) {
 
   const onAlternativePress = () => {
     if (alternateLink) {
+      WcConnectionCtrl.setPairingError(false);
       ExplorerUtil.navigateDeepLink(alternateLink, '', pairingUri);
     }
   };
+
+  useEffect(() => {
+    WcConnectionCtrl.setPairingError(false);
+  }, []);
 
   return (
     <>
@@ -65,14 +74,22 @@ function ConnectingView({ onCopyClipboard }: RouterProps) {
         actionIcon={<CopyIcon width={22} height={22} fill={Theme.accent} />}
         onActionPress={onCopyClipboard ? onCopy : undefined}
       />
-
       <View
         style={[styles.walletContainer, { backgroundColor: Theme.background1 }]}
       >
-        <WalletImage url={imageUrl} size={96} />
+        <WalletLoadingThumbnail showError={pairingError}>
+          <WalletImage url={imageUrl} size="lg" />
+        </WalletLoadingThumbnail>
         <Text
-          style={[styles.continueText, { color: Theme.foreground1 }]}
-        >{`Continue in ${walletName}...`}</Text>
+          style={[
+            styles.continueText,
+            { color: pairingError ? Theme.negative : Theme.foreground1 },
+          ]}
+        >
+          {pairingError
+            ? 'Connection declined'
+            : `Continue in ${walletName}...`}
+        </Text>
       </View>
       <View
         style={[
@@ -91,12 +108,17 @@ function ConnectingView({ onCopyClipboard }: RouterProps) {
             <RetryIcon style={styles.retryIcon} />
           </Touchable>
           {alternateLink && (
-            <Text style={[styles.text, { color: Theme.foreground2 }]}>
+            <Text
+              style={[
+                styles.text,
+                styles.alternateText,
+                { color: Theme.foreground2 },
+              ]}
+            >
               Still doesn't work?{' '}
               <Text
                 style={{ color: Theme.accent }}
                 onPress={onAlternativePress}
-                onPressIn={undefined}
               >
                 Try this alternate link
               </Text>
@@ -106,17 +128,24 @@ function ConnectingView({ onCopyClipboard }: RouterProps) {
         {storeLink && (
           <View style={styles.lowerFooter}>
             <View style={styles.row}>
-              <WalletImage url={imageUrl} size={30} />
+              <WalletImage url={imageUrl} size="sm" />
               <Text
                 style={[styles.getText, { color: Theme.foreground1 }]}
               >{`Get ${walletName}`}</Text>
             </View>
-            <Text
-              style={[styles.storeText, { color: Theme.foreground2 }]}
+            <Touchable
+              style={styles.row}
               onPress={() => Linking.openURL(storeLink)}
             >
-              {storeCaption}
-            </Text>
+              <Text style={[styles.storeText, { color: Theme.foreground2 }]}>
+                {storeCaption}
+              </Text>
+              <Chevron
+                fill={Theme.foreground2}
+                width={6}
+                style={styles.storeIcon}
+              />
+            </Touchable>
           </View>
         )}
       </View>
@@ -145,7 +174,6 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 16,
-    marginBottom: 16,
   },
   retryIcon: {
     marginLeft: 4,
@@ -154,6 +182,9 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '500',
     fontSize: 14,
+  },
+  alternateText: {
+    marginTop: 16,
   },
   getText: {
     fontSize: 16,
@@ -166,7 +197,6 @@ const styles = StyleSheet.create({
   },
   footer: {
     width: '100%',
-    paddingBottom: 12,
   },
   row: {
     flexDirection: 'row',
@@ -179,11 +209,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   lowerFooter: {
-    paddingVertical: 8,
     paddingHorizontal: 20,
+    paddingVertical: 14,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  storeIcon: {
+    marginLeft: 4,
   },
 });
 
