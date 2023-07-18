@@ -29,6 +29,7 @@ function ConnectingView({ onCopyClipboard }: RouterProps) {
     data?.wallet?.mobile.native && data.wallet.mobile.universal
       ? data.wallet.mobile.universal
       : undefined;
+
   const storeLink = Platform.select({
     ios: data?.wallet?.app.ios,
     android: data?.wallet?.app.android,
@@ -171,6 +172,7 @@ const styles = StyleSheet.create({
   },
   retryButton: {
     flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 16,

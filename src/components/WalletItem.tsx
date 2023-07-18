@@ -67,12 +67,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: WALLET_MARGIN,
   },
-  icon: {
-    height: 60,
-    width: 60,
-    borderRadius: 16,
-    borderWidth: 1,
-  },
   name: {
     marginTop: 5,
     maxWidth: 100,
