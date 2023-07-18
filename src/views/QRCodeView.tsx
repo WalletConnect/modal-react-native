@@ -1,10 +1,9 @@
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useSnapshot } from 'valtio';
 
-import NavHeader from '../components/NavHeader';
+import ModalHeader from '../components/ModalHeader';
 import QRCode from '../components/QRCode';
 import CopyIcon from '../assets/CopyLarge';
-import { RouterCtrl } from '../controllers/RouterCtrl';
 import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 import type { RouterProps } from '../types/routerTypes';
 import { ThemeCtrl } from '../controllers/ThemeCtrl';
@@ -40,9 +39,8 @@ function QRCodeView({
 
   return (
     <>
-      <NavHeader
+      <ModalHeader
         title="Scan the code"
-        onBackPress={RouterCtrl.goBack}
         actionIcon={
           <CopyIcon
             width={22}

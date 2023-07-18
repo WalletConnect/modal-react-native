@@ -3,8 +3,7 @@ import { StyleSheet, FlatList, ActivityIndicator, View } from 'react-native';
 import { useSnapshot } from 'valtio';
 
 import WalletItem, { WALLET_FULL_HEIGHT } from '../components/WalletItem';
-import NavHeader from '../components/NavHeader';
-import { RouterCtrl } from '../controllers/RouterCtrl';
+import ModalHeader from '../components/ModalHeader';
 import { ExplorerCtrl } from '../controllers/ExplorerCtrl';
 import { OptionsCtrl } from '../controllers/OptionsCtrl';
 import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
@@ -47,9 +46,9 @@ function ViewAllExplorer({
 
   return (
     <>
-      <NavHeader onBackPress={RouterCtrl.goBack} shadow>
+      <ModalHeader shadow>
         <SearchBar onChangeText={onChangeText} style={styles.searchbar} />
-      </NavHeader>
+      </ModalHeader>
       {loading ? (
         <ActivityIndicator
           style={{ height: Math.round(windowHeight * 0.6) }}
@@ -71,9 +70,7 @@ function ViewAllExplorer({
             <View
               style={[
                 styles.emptyContainer,
-                {
-                  height: Math.round(windowHeight * 0.6),
-                },
+                { height: Math.round(windowHeight * 0.6) },
               ]}
             >
               <Text style={[styles.emptyText, { color: Theme.foreground2 }]}>

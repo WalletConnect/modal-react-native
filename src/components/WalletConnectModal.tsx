@@ -1,17 +1,15 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import { useSnapshot } from 'valtio';
 
-import ModalHeader from './ModalHeader';
+import ModalBackcard from './ModalBackcard';
 import { ModalRouter } from './ModalRouter';
 import { ModalCtrl } from '../controllers/ModalCtrl';
 import { RouterCtrl } from '../controllers/RouterCtrl';
 import { useConnectionHandler } from '../hooks/useConnectionHandler';
-import { useOrientation } from '../hooks/useOrientation';
 import type { ConfigCtrlState, ThemeCtrlState } from '../types/controllerTypes';
 import type { IProviderMetadata, ISessionParams } from '../types/coreTypes';
 import { useConfigure } from '../hooks/useConfigure';
-import useTheme from '../hooks/useTheme';
 import Toast from './Toast';
 
 export type Props = Omit<ConfigCtrlState, 'recentWalletDeepLink'> &
@@ -27,8 +25,6 @@ export function WalletConnectModal(config: Props) {
   useConnectionHandler();
   const { open } = useSnapshot(ModalCtrl.state);
   const { history } = useSnapshot(RouterCtrl.state);
-  const { width } = useOrientation();
-  const Theme = useTheme();
 
   const onBackButtonPress = () => {
     if (history.length > 1) {
@@ -48,20 +44,9 @@ export function WalletConnectModal(config: Props) {
       useNativeDriver
       statusBarTranslucent
     >
-      <View
-        style={[styles.container, { width, backgroundColor: Theme.accent }]}
-      >
-        <ModalHeader onClose={ModalCtrl.close} />
-        <View
-          style={[
-            styles.connectWalletContainer,
-            { backgroundColor: Theme.background1 },
-          ]}
-        >
-          <ModalRouter onCopyClipboard={config.onCopyClipboard} />
-          <Toast />
-        </View>
-      </View>
+      <ModalBackcard onClose={ModalCtrl.close} />
+      <ModalRouter onCopyClipboard={config.onCopyClipboard} />
+      <Toast />
     </Modal>
   );
 }
@@ -70,13 +55,5 @@ const styles = StyleSheet.create({
   modal: {
     margin: 0,
     justifyContent: 'flex-end',
-  },
-  container: {
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-  },
-  connectWalletContainer: {
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
   },
 });
