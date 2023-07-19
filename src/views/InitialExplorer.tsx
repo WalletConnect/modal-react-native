@@ -4,7 +4,7 @@ import { useSnapshot } from 'valtio';
 import WalletItem, { WALLET_FULL_HEIGHT } from '../components/WalletItem';
 import ViewAllBox from '../components/ViewAllBox';
 import QRIcon from '../assets/QRCode';
-import NavHeader from '../components/NavHeader';
+import ModalHeader from '../components/ModalHeader';
 import type { Listing } from '../types/controllerTypes';
 import { RouterCtrl } from '../controllers/RouterCtrl';
 import { OptionsCtrl } from '../controllers/OptionsCtrl';
@@ -24,7 +24,7 @@ function InitialExplorer({ isPortrait }: RouterProps) {
 
   return (
     <>
-      <NavHeader
+      <ModalHeader
         title="Connect your wallet"
         onActionPress={() => RouterCtrl.push('Qrcode')}
         actionIcon={<QRIcon width={22} height={22} fill={Theme.accent} />}

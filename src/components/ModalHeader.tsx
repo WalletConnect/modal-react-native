@@ -1,68 +1,114 @@
-import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
+import { useState, type ReactNode, useEffect } from 'react';
+import { Platform, StyleSheet, Text, View } from 'react-native';
+import { useSnapshot } from 'valtio';
 
-import WCLogo from '../assets/LogoLockup';
-import CloseIcon from '../assets/Close';
 import useTheme from '../hooks/useTheme';
+import Backward from '../assets/Backward';
+import { RouterCtrl } from '../controllers/RouterCtrl';
 import Touchable from './Touchable';
 
-interface ModalHeaderProps {
-  onClose: () => void;
+interface Props {
+  title?: string;
+  onActionPress?: () => void;
+  actionIcon?: ReactNode;
+  actionDisabled?: boolean;
+  shadow?: boolean;
+  children?: ReactNode;
 }
 
-export function ModalHeader({ onClose }: ModalHeaderProps) {
+function ModalHeader({
+  title,
+  onActionPress,
+  actionIcon,
+  actionDisabled,
+  shadow,
+  children,
+}: Props) {
   const Theme = useTheme();
+  const { history } = useSnapshot(RouterCtrl.state);
+  const [showBack, setShowBack] = useState(false);
+
+  useEffect(() => {
+    setShowBack(history.length > 1);
+  }, [history]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <WCLogo width={181} height={28} fill="white" />
-      <View style={styles.row}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: Theme.background1 },
+        shadow &&
+          StyleSheet.flatten([
+            styles.shadow,
+            {
+              shadowColor: Theme.background1,
+            },
+          ]),
+      ]}
+    >
+      {showBack ? (
         <Touchable
-          style={[
-            styles.buttonContainer,
-            { backgroundColor: Theme.background1 },
-          ]}
-          onPress={onClose}
+          style={styles.button}
+          onPress={RouterCtrl.goBack}
+          disabled={actionDisabled}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <CloseIcon height={11} fill={Theme.foreground1} />
+          <Backward height={18} width={10} fill={Theme.accent} />
         </Touchable>
-      </View>
-    </SafeAreaView>
+      ) : (
+        <View style={styles.button} />
+      )}
+      {children}
+      {title && (
+        <Text style={[styles.title, { color: Theme.foreground1 }]}>
+          {title}
+        </Text>
+      )}
+      {actionIcon && onActionPress ? (
+        <Touchable
+          style={styles.button}
+          onPress={onActionPress}
+          disabled={actionDisabled}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          {actionIcon}
+        </Touchable>
+      ) : (
+        <View style={styles.button} />
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: 46,
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    marginHorizontal: 10,
-  },
-  row: {
-    flexDirection: 'row',
-  },
-  buttonContainer: {
-    height: 28,
-    width: 28,
-    borderRadius: 14,
-    display: 'flex',
-    justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 24,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    height: 56,
+  },
+  shadow: {
+    zIndex: 1,
     ...Platform.select({
       ios: {
-        shadowColor: 'rgba(0, 0, 0, 0.12)',
         shadowOpacity: 1,
-        shadowOffset: { width: 0, height: 4 },
-      },
-      android: {
-        borderColor: 'rgba(0, 0, 0, 0.12)',
-        borderWidth: 1,
-        elevation: 4,
+        shadowOffset: { width: 0, height: 6 },
       },
     }),
   },
-  disconnectButton: {
-    marginRight: 16,
+  button: {
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontWeight: '600',
+    fontSize: 20,
+    lineHeight: 24,
   },
 });
 

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Linking, Platform, StyleSheet, View } from 'react-native';
 import { useSnapshot } from 'valtio';
 
-import NavHeader from '../components/NavHeader';
+import ModalHeader from '../components/ModalHeader';
 import CopyIcon from '../assets/CopyLarge';
 import useTheme from '../hooks/useTheme';
 import { ToastCtrl } from '../controllers/ToastCtrl';
@@ -69,9 +69,8 @@ function ConnectingView({ onCopyClipboard }: RouterProps) {
 
   return (
     <>
-      <NavHeader
+      <ModalHeader
         title={walletName}
-        onBackPress={RouterCtrl.goBack}
         actionIcon={<CopyIcon width={22} height={22} fill={Theme.accent} />}
         onActionPress={onCopyClipboard ? onCopy : undefined}
       />
