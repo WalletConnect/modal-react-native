@@ -19,7 +19,7 @@ function WalletLoadingThumbnail({ children, showError }: Props) {
   useEffect(() => {
     const animation = Animated.timing(spinValue.current, {
       toValue: 1,
-      duration: 20000,
+      duration: 1000,
       useNativeDriver: true,
       easing: Easing.linear,
     });
