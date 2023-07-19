@@ -19,7 +19,7 @@ function Touchable({
 
   const onPressIn = () => {
     Animated.spring(scale, {
-      toValue: 0.9,
+      toValue: 0.95,
       useNativeDriver: true,
     }).start();
   };

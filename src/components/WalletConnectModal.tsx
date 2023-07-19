@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
   },
   connectWalletContainer: {
-    paddingBottom: 16,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
   },

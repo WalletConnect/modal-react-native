@@ -1,12 +1,14 @@
-import { Image, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 
 import type { Listing } from '../types/controllerTypes';
 import { ExplorerUtil } from '../utils/ExplorerUtil';
 import useTheme from '../hooks/useTheme';
 import { ExplorerCtrl } from '../controllers/ExplorerCtrl';
+import { RouterCtrl } from '../controllers/RouterCtrl';
 import { DataUtil } from '../utils/DataUtil';
 import { UiUtil } from '../utils/UiUtil';
 import Touchable from './Touchable';
+import WalletImage from './WalletImage';
 
 interface Props {
   currentWCURI?: string;
@@ -22,6 +24,7 @@ export const WALLET_FULL_HEIGHT = WALLET_HEIGHT + WALLET_MARGIN * 2;
 
 function WalletItem({ currentWCURI, walletInfo, style, isRecent }: Props) {
   const Theme = useTheme();
+  const imageUrl = ExplorerCtrl.getWalletImageUrl(walletInfo.image_id);
 
   const onPress = () => {
     if (currentWCURI) {
@@ -31,6 +34,7 @@ function WalletItem({ currentWCURI, walletInfo, style, isRecent }: Props) {
         walletInfo.mobile.native,
         currentWCURI
       );
+      RouterCtrl.push('Connecting', { wallet: walletInfo });
     }
   };
 
@@ -40,13 +44,7 @@ function WalletItem({ currentWCURI, walletInfo, style, isRecent }: Props) {
       key={walletInfo.id}
       style={[styles.container, style]}
     >
-      <Image
-        style={[styles.icon, { borderColor: Theme.overlayThin }]}
-        source={{
-          uri: ExplorerCtrl.getWalletImageUrl(walletInfo.image_id),
-        }}
-      />
-
+      <WalletImage size="md" url={imageUrl} />
       <Text
         style={[styles.name, { color: Theme.foreground1 }]}
         numberOfLines={1}
@@ -68,12 +66,6 @@ const styles = StyleSheet.create({
     height: WALLET_HEIGHT,
     alignItems: 'center',
     marginVertical: WALLET_MARGIN,
-  },
-  icon: {
-    height: 60,
-    width: 60,
-    borderRadius: 16,
-    borderWidth: 1,
   },
   name: {
     marginTop: 5,

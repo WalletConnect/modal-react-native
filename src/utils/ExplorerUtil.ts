@@ -53,7 +53,9 @@ export const ExplorerUtil = {
     );
   },
 
-  getWalletImageUrl(imageId: string) {
+  getWalletImageUrl(imageId?: string) {
+    if (!imageId) return undefined;
+
     return `${W3M_API}/w3m/v1/getWalletImage/${imageId}?projectId=${ConfigCtrl.state.projectId}`;
   },
 
@@ -62,8 +64,8 @@ export const ExplorerUtil = {
   },
 
   async navigateDeepLink(
-    universalLink: string,
-    deepLink: string,
+    universalLink: string | undefined,
+    deepLink: string | undefined,
     wcURI: string
   ) {
     try {

@@ -10,6 +10,7 @@ import type { RouterProps } from '../types/routerTypes';
 import { ThemeCtrl } from '../controllers/ThemeCtrl';
 import useTheme from '../hooks/useTheme';
 import { ToastCtrl } from '../controllers/ToastCtrl';
+import { useEffect } from 'react';
 
 function QRCodeView({
   onCopyClipboard,
@@ -22,7 +23,7 @@ function QRCodeView({
     ? Math.round(windowWidth * 0.8)
     : Math.round(windowHeight * 0.6);
   const themeState = useSnapshot(ThemeCtrl.state);
-  const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
+  const { pairingUri, pairingError } = useSnapshot(WcConnectionCtrl.state);
 
   const onCopy = async () => {
     if (onCopyClipboard && pairingUri) {
@@ -31,8 +32,14 @@ function QRCodeView({
     }
   };
 
+  useEffect(() => {
+    if (pairingError) {
+      ToastCtrl.openToast('Connection request declined', 'error');
+    }
+  }, [pairingError]);
+
   return (
-    <View style={styles.container}>
+    <>
       <NavHeader
         title="Scan the code"
         onBackPress={RouterCtrl.goBack}
@@ -46,23 +53,25 @@ function QRCodeView({
         onActionPress={onCopyClipboard ? onCopy : undefined}
         actionDisabled={!pairingUri}
       />
-      {pairingUri ? (
-        <QRCode uri={pairingUri} size={QRSize} theme={themeState.themeMode} />
-      ) : (
-        <ActivityIndicator
-          style={{
-            height: QRSize,
-          }}
-          color={Theme.accent}
-        />
-      )}
-    </View>
+      <View style={[styles.container, { backgroundColor: Theme.background1 }]}>
+        {pairingUri ? (
+          <QRCode uri={pairingUri} size={QRSize} theme={themeState.themeMode} />
+        ) : (
+          <ActivityIndicator
+            style={{
+              height: QRSize,
+            }}
+            color={Theme.accent}
+          />
+        )}
+      </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: 12,
+    paddingBottom: 16,
     width: '100%',
   },
 });

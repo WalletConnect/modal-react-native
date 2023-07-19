@@ -5,7 +5,10 @@ export const CoreUtil = {
     return url.startsWith('http://') || url.startsWith('https://');
   },
 
-  formatNativeUrl(appUrl: string, wcUri: string): string | undefined {
+  formatNativeUrl(
+    appUrl: string | undefined,
+    wcUri: string
+  ): string | undefined {
     if (!appUrl) return undefined;
 
     if (CoreUtil.isHttpUrl(appUrl)) {
@@ -22,7 +25,10 @@ export const CoreUtil = {
     return `${safeAppUrl}wc?uri=${encodedWcUrl}`;
   },
 
-  formatUniversalUrl(appUrl: string, wcUri: string): string | undefined {
+  formatUniversalUrl(
+    appUrl: string | undefined,
+    wcUri: string
+  ): string | undefined {
     if (!appUrl) return undefined;
 
     if (!CoreUtil.isHttpUrl(appUrl)) {
