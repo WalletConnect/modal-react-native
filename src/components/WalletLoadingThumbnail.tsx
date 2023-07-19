@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   },
   error: {
     position: 'absolute',
-    borderWidth: 3,
+    borderWidth: 2,
     height: 106,
     width: 106,
     borderRadius: 31,
