@@ -19,7 +19,7 @@ function WalletLoadingThumbnail({ children, showError }: Props) {
   useEffect(() => {
     const animation = Animated.timing(spinValue.current, {
       toValue: 1,
-      duration: 1000,
+      duration: 20000,
       useNativeDriver: true,
       easing: Easing.linear,
     });
@@ -34,7 +34,7 @@ function WalletLoadingThumbnail({ children, showError }: Props) {
 
   const spin = spinValue.current.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, -370],
+    outputRange: [0, -371],
   });
 
   return (
