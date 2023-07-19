@@ -19,7 +19,7 @@ function WalletLoadingThumbnail({ children, showError }: Props) {
   useEffect(() => {
     const animation = Animated.timing(spinValue.current, {
       toValue: 1,
-      duration: 1000,
+      duration: 1150,
       useNativeDriver: true,
       easing: Easing.linear,
     });
@@ -47,7 +47,7 @@ function WalletLoadingThumbnail({ children, showError }: Props) {
           height={106}
           rx={31}
           stroke={showError ? 'transparent' : Theme.accent}
-          strokeWidth={3}
+          strokeWidth={2}
           fill="transparent"
           strokeDasharray={'116 255'}
           strokeDashoffset={spin}
