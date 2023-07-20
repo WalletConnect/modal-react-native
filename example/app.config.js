@@ -16,9 +16,6 @@ export default () => ({
     ios: {
       bundleIdentifier: 'com.walletconnect.modal.rnexample',
       supportsTablet: true,
-      infoPlist: {
-        LSApplicationQueriesSchemes: ['metamask', 'rainbow'],
-      },
     },
     android: {
       package: 'com.walletconnect.modal.rnexample',
