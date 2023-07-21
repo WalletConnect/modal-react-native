@@ -2,10 +2,15 @@ import { Linking, Platform } from 'react-native';
 import { version } from '../../package.json';
 import { version as providerVersion } from '@walletconnect/universal-provider/package.json';
 
-import type { ListingParams, ListingResponse } from '../types/controllerTypes';
+import type {
+  Listing,
+  ListingParams,
+  ListingResponse,
+} from '../types/controllerTypes';
 import { CoreUtil } from './CoreUtil';
 import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import { ToastCtrl } from '../controllers/ToastCtrl';
+import { isIOS } from '../constants/Platform';
 
 // -- Helpers -------------------------------------------------------
 const W3M_API = 'https://explorer-api.walletconnect.com';
@@ -89,11 +94,46 @@ export const ExplorerUtil = {
       ToastCtrl.openToast('Unable to open the wallet', 'error');
     }
   },
+
   getCustomHeaders() {
     const referer = ConfigCtrl.getMetadata().name.trim().replace(' ', '');
     return {
       'User-Agent': getUserAgent(),
       'Referer': referer,
     };
+  },
+
+  async isAppInstalled(scheme: string | undefined): Promise<boolean> {
+    let isAppInstalled = false;
+    try {
+      isAppInstalled =
+        scheme && isIOS ? await Linking.canOpenURL(scheme) : false;
+    } catch {
+      isAppInstalled = false;
+    }
+    return isAppInstalled;
+  },
+
+  async sortArrayAsync(array: Listing[]) {
+    const promises = array.map(async (item) => {
+      return {
+        item,
+        isInstalled: await ExplorerUtil.isAppInstalled(item.mobile.native),
+      };
+    });
+
+    const results = await Promise.all(promises);
+
+    results.sort((a, b) => {
+      console.log(a.item.name, a.isInstalled, b.item.name, b.isInstalled);
+      if (a.isInstalled && b.isInstalled) return 0;
+      if (a.isInstalled && !b.isInstalled) return -1;
+      if (!a.isInstalled && b.isInstalled) return 1;
+      return 0;
+    });
+
+    return results.map((item) => {
+      return { ...item.item, isInstalled: item.isInstalled };
+    });
   },
 };

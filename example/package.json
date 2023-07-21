@@ -4,8 +4,10 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "android:binary": "expo run:android",
+    "ios": "expo run:ios",
+    "ios:binary": "expo run:ios",
     "web": "expo start --web"
   },
   "dependencies": {

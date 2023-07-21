@@ -56,7 +56,10 @@ export const ExplorerCtrl = {
           : undefined,
       };
       const { listings } = await ExplorerUtil.getListings(params);
-      state.recommendedWallets = Object.values(listings);
+      const _listings = await ExplorerUtil.sortArrayAsync(
+        Object.values(listings)
+      );
+      state.recommendedWallets = _listings;
     }
 
     return state.recommendedWallets;
@@ -93,7 +96,9 @@ export const ExplorerCtrl = {
     }
 
     const { listings, total } = await ExplorerUtil.getListings(extendedParams);
-    const _listings = Object.values(listings);
+    const _listings = await ExplorerUtil.sortArrayAsync(
+      Object.values(listings)
+    );
     state.wallets = { listings: _listings, page: 1, total };
     return _listings;
   },
