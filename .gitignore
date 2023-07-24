@@ -63,6 +63,7 @@ android/keystores/debug.keystore
 # Expo
 .expo/
 example/dist/
+**/.env
 
 # Turborepo
 .turbo/

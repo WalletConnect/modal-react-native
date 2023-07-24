@@ -1,7 +1,7 @@
 export default () => ({
   expo: {
-    name: 'walletconnect-modal-rn-example',
-    slug: 'walletconnect-modal-rn-example',
+    name: 'walletconnect-modal-react-native-example',
+    slug: 'walletconnect-modal-react-native-example',
     version: '1.0.0',
     orientation: 'default',
     icon: './assets/icon.png',
@@ -14,9 +14,11 @@ export default () => ({
     },
     assetBundlePatterns: ['**/*'],
     ios: {
+      bundleIdentifier: 'com.walletconnect.modal.rnexample',
       supportsTablet: true,
     },
     android: {
+      package: 'com.walletconnect.modal.rnexample',
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',
         backgroundColor: '#ffffff',
@@ -27,16 +29,15 @@ export default () => ({
     },
     extra: {
       eas: {
-        projectId: 'c731a682-cac7-4f3b-838d-bd79ae66b994',
+        projectId: 'f477ced2-c06e-470c-adcc-2c997a90cc4e',
       },
-      PROJECT_ID: process.env.PROJECT_ID || null,
     },
     updates: {
-      url: 'https://u.expo.dev/c731a682-cac7-4f3b-838d-bd79ae66b994',
+      url: 'https://u.expo.dev/f477ced2-c06e-470c-adcc-2c997a90cc4e',
     },
     runtimeVersion: {
       policy: 'sdkVersion',
     },
-    owner: 'nachinn.s',
+    owner: 'nacho.walletconnect',
   },
 });

@@ -11,7 +11,6 @@ import {
   useWalletConnectModal,
 } from '@walletconnect/modal-react-native';
 import { setStringAsync } from 'expo-clipboard';
-import { Env } from '../../env';
 import { sessionParams, providerMetadata } from '../constants/Config';
 import { BlockchainActions } from '../components/BlockchainActions';
 
@@ -43,7 +42,7 @@ export default function App() {
         </View>
       )}
       <WalletConnectModal
-        projectId={Env.PROJECT_ID}
+        projectId={process.env.EXPO_PUBLIC_PROJECT_ID!}
         onCopyClipboard={onCopyClipboard}
         providerMetadata={providerMetadata}
         sessionParams={sessionParams}
