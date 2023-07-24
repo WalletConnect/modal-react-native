@@ -36,7 +36,6 @@ async function fetchListings(
     });
   }
 
-  console.log(url.toString());
   const request = await fetch(url.toString(), { headers });
 
   return request.json() as Promise<ListingResponse>;
