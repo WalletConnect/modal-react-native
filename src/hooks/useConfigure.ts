@@ -12,12 +12,14 @@ import { createUniversalProvider } from '../utils/ProviderUtil';
 import { StorageUtil } from '../utils/StorageUtil';
 import { ThemeCtrl } from '../controllers/ThemeCtrl';
 import { ToastCtrl } from '../controllers/ToastCtrl';
+import type { ThemeCtrlState } from 'src/types/controllerTypes';
 
 interface Props {
   projectId: string;
   providerMetadata: IProviderMetadata;
   relayUrl?: string;
-  themeMode?: 'light' | 'dark';
+  themeMode?: ThemeCtrlState['themeMode'];
+  accentColor?: ThemeCtrlState['accentColor'];
 }
 
 export function useConfigure(config: Props) {
@@ -56,7 +58,8 @@ export function useConfigure(config: Props) {
    */
   useEffect(() => {
     ThemeCtrl.setThemeMode(config.themeMode || colorScheme);
-  }, [config.themeMode, colorScheme]);
+    ThemeCtrl.setAccentColor(config.accentColor);
+  }, [config.themeMode, config.accentColor, colorScheme]);
 
   /**
    * Set config

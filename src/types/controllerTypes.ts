@@ -43,6 +43,7 @@ export interface WcConnectionCtrlState {
 // -- ThemeCtrl --------------------------------------------- //
 export interface ThemeCtrlState {
   themeMode?: 'dark' | 'light';
+  accentColor?: string;
 }
 
 // -- ToastCtrl ------------------------------------------ //
