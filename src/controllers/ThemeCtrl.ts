@@ -5,7 +5,7 @@ import type { ThemeCtrlState } from '../types/controllerTypes';
 // -- initial state ------------------------------------------------ //
 const state = proxy<ThemeCtrlState>({
   themeMode: Appearance.getColorScheme() ?? 'light',
-  themeVariables: undefined,
+  accentColor: undefined,
 });
 
 // -- controller --------------------------------------------------- //
@@ -16,7 +16,7 @@ export const ThemeCtrl = {
     state.themeMode = themeMode ?? Appearance.getColorScheme() ?? 'light';
   },
 
-  setThemeVariables(themeVariables?: ThemeCtrlState['themeVariables']) {
-    state.themeVariables = themeVariables;
+  setAccentColor(accentColor?: ThemeCtrlState['accentColor']) {
+    state.accentColor = accentColor;
   },
 };

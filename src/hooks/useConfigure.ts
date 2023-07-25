@@ -19,7 +19,7 @@ interface Props {
   providerMetadata: IProviderMetadata;
   relayUrl?: string;
   themeMode?: ThemeCtrlState['themeMode'];
-  themeVariables?: ThemeCtrlState['themeVariables'];
+  accentColor?: ThemeCtrlState['accentColor'];
 }
 
 export function useConfigure(config: Props) {
@@ -58,8 +58,8 @@ export function useConfigure(config: Props) {
    */
   useEffect(() => {
     ThemeCtrl.setThemeMode(config.themeMode || colorScheme);
-    ThemeCtrl.setThemeVariables(config.themeVariables);
-  }, [config.themeMode, config.themeVariables, colorScheme]);
+    ThemeCtrl.setAccentColor(config.accentColor);
+  }, [config.themeMode, config.accentColor, colorScheme]);
 
   /**
    * Set config

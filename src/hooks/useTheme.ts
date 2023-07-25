@@ -3,9 +3,9 @@ import { DarkTheme, LightTheme } from '../constants/Colors';
 import { ThemeCtrl } from '../controllers/ThemeCtrl';
 
 function useTheme() {
-  const { themeMode, themeVariables } = useSnapshot(ThemeCtrl.state);
+  const { themeMode, accentColor } = useSnapshot(ThemeCtrl.state);
   const Theme = themeMode === 'dark' ? DarkTheme : LightTheme;
-  if (themeVariables) return Object.assign(Theme, themeVariables);
+  if (accentColor) return Object.assign(Theme, { accent: accentColor });
 
   return themeMode === 'dark' ? DarkTheme : LightTheme;
 }
