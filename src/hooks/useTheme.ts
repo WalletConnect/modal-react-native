@@ -3,8 +3,11 @@ import { DarkTheme, LightTheme } from '../constants/Colors';
 import { ThemeCtrl } from '../controllers/ThemeCtrl';
 
 function useTheme() {
-  const themeState = useSnapshot(ThemeCtrl.state);
-  return themeState.themeMode === 'dark' ? DarkTheme : LightTheme;
+  const { themeMode, accentColor } = useSnapshot(ThemeCtrl.state);
+  const Theme = themeMode === 'dark' ? DarkTheme : LightTheme;
+  if (accentColor) return Object.assign(Theme, { accent: accentColor });
+
+  return themeMode === 'dark' ? DarkTheme : LightTheme;
 }
 
 export default useTheme;

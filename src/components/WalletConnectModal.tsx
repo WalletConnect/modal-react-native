@@ -12,7 +12,7 @@ import type { IProviderMetadata, ISessionParams } from '../types/coreTypes';
 import { useConfigure } from '../hooks/useConfigure';
 import Toast from './Toast';
 
-export type Props = Omit<ConfigCtrlState, 'recentWalletDeepLink'> &
+export type Props = Omit<ConfigCtrlState, 'recentWallet'> &
   ThemeCtrlState & {
     providerMetadata: IProviderMetadata;
     sessionParams?: ISessionParams;

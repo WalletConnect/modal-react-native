@@ -15,8 +15,12 @@ import { isIOS } from '../constants/Platform';
 // -- Helpers -------------------------------------------------------
 const W3M_API = 'https://explorer-api.walletconnect.com';
 
+function getSdkVersion() {
+  return `rn-${version}`;
+}
+
 function getUserAgent() {
-  return `w3m-rn-${version}/js-${providerVersion}/${Platform.OS}-${Platform.Version}`;
+  return `wcm-rn-${version}/js-${providerVersion}/${Platform.OS}-${Platform.Version}`;
 }
 
 async function fetchListings(
@@ -26,6 +30,8 @@ async function fetchListings(
 ): Promise<ListingResponse> {
   const url = new URL(endpoint, W3M_API);
   url.searchParams.append('projectId', ConfigCtrl.state.projectId);
+  url.searchParams.append('sdkType', 'wcm');
+  url.searchParams.append('sdkVersion', getSdkVersion());
 
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -44,7 +50,10 @@ async function fetchListings(
 export const ExplorerUtil = {
   async getListings(params?: ListingParams) {
     const headers = this.getCustomHeaders();
-    const extendedParams: ListingParams = { ...params, version: 2 };
+    const extendedParams: ListingParams = {
+      ...params,
+      version: 2,
+    };
     const platform = Platform.select({
       ios: 'iOS',
       android: 'Android',
