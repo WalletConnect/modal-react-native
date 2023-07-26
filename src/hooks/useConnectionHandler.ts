@@ -10,6 +10,7 @@ import type { ISessionParams } from '../types/coreTypes';
 import type { SessionTypes } from '@walletconnect/types';
 import { StorageUtil } from '../utils/StorageUtil';
 import { ModalCtrl } from '../controllers/ModalCtrl';
+import { RouterCtrl } from '../controllers/RouterCtrl';
 
 const FOUR_MIN_MS = 240_000;
 
@@ -24,9 +25,10 @@ export function useConnectionHandler() {
     WcConnectionCtrl.setPairingError(false);
     WcConnectionCtrl.setPairingEnabled(false);
     ClientCtrl.setSessionTopic(session.topic);
-    const recentWallet = ConfigCtrl.getRecentWallet();
+    const saveDeepLink = RouterCtrl.state.view !== 'Qrcode';
     try {
-      if (recentWallet?.mobile) {
+      const recentWallet = ConfigCtrl.getRecentWallet();
+      if (saveDeepLink && recentWallet?.mobile) {
         await StorageUtil.setDeepLinkWallet(
           recentWallet.mobile.native || recentWallet.mobile.universal
         );
