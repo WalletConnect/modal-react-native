@@ -137,8 +137,8 @@ export const ExplorerUtil = {
 
     results.sort((a, b) => {
       if (a.isInstalled && b.isInstalled) return 0;
-      if (a.isInstalled && !b.isInstalled) return -1;
-      if (!a.isInstalled && b.isInstalled) return 1;
+      if (a.isInstalled) return -1;
+      if (b.isInstalled) return 1;
       return 0;
     });
 
