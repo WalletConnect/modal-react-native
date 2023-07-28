@@ -18,87 +18,49 @@ const state = proxy<ExplorerCtrlState>({
 export const ExplorerCtrl = {
   state,
 
-  async getRecommendedWallets() {
-    const { explorerRecommendedWalletIds, explorerExcludedWalletIds } =
-      ConfigCtrl.state;
-
-    // Don't fetch recomended wallets
-    if (
-      explorerRecommendedWalletIds === 'NONE' ||
-      (explorerExcludedWalletIds === 'ALL' && !explorerRecommendedWalletIds)
-    ) {
-      return state.recommendedWallets;
-    }
-
-    // Fetch only recomended wallets defined in config
-    if (CoreUtil.isArray(explorerRecommendedWalletIds)) {
-      const recommendedIds = explorerRecommendedWalletIds.join(',');
-      const params = { recommendedIds };
-      const { listings } = await ExplorerUtil.getListings(params);
-      const listingsArr = Object.values(listings);
-      listingsArr.sort((a, b) => {
-        const aIndex = explorerRecommendedWalletIds.indexOf(a.id);
-        const bIndex = explorerRecommendedWalletIds.indexOf(b.id);
-
-        return aIndex - bIndex;
-      });
-      state.recommendedWallets = listingsArr;
-    }
-
-    // Fetch default recomended wallets based on user's device and excluded config
-    else {
-      const isExcluded = CoreUtil.isArray(explorerExcludedWalletIds);
-      const params = {
-        page: 1,
-        entries: CoreUtil.RECOMMENDED_WALLET_AMOUNT,
-        excludedIds: isExcluded
-          ? explorerExcludedWalletIds.join(',')
-          : undefined,
-      };
-      const { listings } = await ExplorerUtil.getListings(params);
-      const _listings = await ExplorerUtil.sortArrayAsync(
-        Object.values(listings)
-      );
-      state.recommendedWallets = _listings;
-    }
-
-    return state.recommendedWallets;
-  },
-
   async getWallets(params?: ListingParams) {
     const extendedParams: ListingParams = { ...params };
     const { explorerRecommendedWalletIds, explorerExcludedWalletIds } =
       ConfigCtrl.state;
-    const { recommendedWallets } = state;
 
     // Don't fetch any wallets if all are excluded
     if (explorerExcludedWalletIds === 'ALL') {
       return state.wallets;
     }
 
-    // Don't fetch recommended wallets, as we already have these
-    if (recommendedWallets.length) {
-      extendedParams.excludedIds = recommendedWallets
-        .map((wallet) => wallet.id)
-        .join(',');
-    } else if (CoreUtil.isArray(explorerRecommendedWalletIds)) {
-      extendedParams.excludedIds = explorerRecommendedWalletIds.join(',');
-    }
-
     // Don't fetch user defined excluded wallets
     if (CoreUtil.isArray(explorerExcludedWalletIds)) {
-      extendedParams.excludedIds = [
-        extendedParams.excludedIds,
-        explorerExcludedWalletIds,
-      ]
-        .filter(Boolean)
-        .join(',');
+      extendedParams.excludedIds = explorerExcludedWalletIds.join(',');
     }
 
     const { listings, total } = await ExplorerUtil.getListings(extendedParams);
-    const _listings = await ExplorerUtil.sortArrayAsync(
-      Object.values(listings)
-    );
+
+    // Sort by explorerRecommendedWalletIds
+    let _listings = Object.values(listings);
+    if (CoreUtil.isArray(explorerRecommendedWalletIds)) {
+      _listings.sort((a, b) => {
+        const aRecommended = explorerRecommendedWalletIds.includes(a.id);
+        const bRecommended = explorerRecommendedWalletIds.includes(b.id);
+
+        if (aRecommended && bRecommended) return 0;
+        if (aRecommended) return -1;
+        if (bRecommended) return 1;
+        return 0;
+      });
+    }
+
+    // Sort by installed wallets
+    _listings = await ExplorerUtil.sortInstalled(_listings);
+
+    // Set recommended wallets
+    if (CoreUtil.isArray(explorerRecommendedWalletIds)) {
+      state.recommendedWallets = _listings
+        .filter((wallet) => explorerRecommendedWalletIds.includes(wallet.id))
+        .slice(0, 11);
+    } else {
+      state.recommendedWallets = _listings.slice(0, 11);
+    }
+
     state.wallets = { listings: _listings, page: 1, total };
     return _listings;
   },

@@ -112,37 +112,36 @@ export const ExplorerUtil = {
     };
   },
 
-  async isAppInstalled(scheme: string | undefined): Promise<boolean> {
-    let isAppInstalled = false;
+  async isAppInstalled(wallet: Listing): Promise<boolean> {
+    let isInstalled = false;
+    const scheme = wallet.mobile.native;
     try {
-      isAppInstalled =
-        scheme && isIOS ? await Linking.canOpenURL(scheme) : false;
+      if (isIOS) {
+        isInstalled = scheme ? await Linking.canOpenURL(scheme) : false;
+      }
     } catch {
-      isAppInstalled = false;
+      isInstalled = false;
     }
-    return isAppInstalled;
+    return isInstalled;
   },
 
-  async sortArrayAsync(array: Listing[]) {
+  async sortInstalled(array: Listing[]) {
     const promises = array.map(async (item) => {
       return {
-        item,
-        isInstalled: await ExplorerUtil.isAppInstalled(item.mobile.native),
+        ...item,
+        isInstalled: await ExplorerUtil.isAppInstalled(item),
       };
     });
 
     const results = await Promise.all(promises);
 
     results.sort((a, b) => {
-      console.log(a.item.name, a.isInstalled, b.item.name, b.isInstalled);
       if (a.isInstalled && b.isInstalled) return 0;
       if (a.isInstalled && !b.isInstalled) return -1;
       if (!a.isInstalled && b.isInstalled) return 1;
       return 0;
     });
 
-    return results.map((item) => {
-      return { ...item.item, isInstalled: item.isInstalled };
-    });
+    return results;
   },
 };

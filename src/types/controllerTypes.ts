@@ -89,6 +89,9 @@ export interface Listing {
   };
   mobile: PlatformInfo;
   desktop: PlatformInfo;
+
+  //doesn't come from api
+  isInstalled: boolean;
 }
 
 export interface ListingResponse {

@@ -17,7 +17,14 @@ export default () => ({
       bundleIdentifier: 'com.walletconnect.modal.rnexample',
       supportsTablet: true,
       infoPlist: {
-        LSApplicationQueriesSchemes: ['trust', 'metamask', 'rainbow'],
+        LSApplicationQueriesSchemes: [
+          'trust',
+          'rainbow',
+          'awallet',
+          'uniswap',
+          'zerion',
+          'metamask',
+        ],
       },
     },
     android: {
@@ -30,17 +37,6 @@ export default () => ({
     web: {
       favicon: './assets/favicon.png',
     },
-    plugins: [
-      [
-        './plugins/addWalletsToManifest.js',
-        [
-          'me.rainbow',
-          'com.wallet.crypto.trustapp',
-          'com.alphawallet.app',
-          'im.token.app',
-        ],
-      ],
-    ],
     extra: {
       eas: {
         projectId: 'f477ced2-c06e-470c-adcc-2c997a90cc4e',
