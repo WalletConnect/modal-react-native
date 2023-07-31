@@ -9,7 +9,9 @@ const LINKING_ERROR =
 const isTurboModuleEnabled = global.__turboModuleProxy != null;
 
 const InstalledAppModule = isTurboModuleEnabled
-  ? require('./NativeInstalledApp').default
+  ? Platform.OS === 'android'
+    ? require('./NativeInstalledApp').default
+    : undefined
   : NativeModules.InstalledApp;
 
 const InstalledApp = InstalledAppModule
