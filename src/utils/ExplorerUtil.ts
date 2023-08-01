@@ -10,7 +10,8 @@ import type {
 import { CoreUtil } from './CoreUtil';
 import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import { ToastCtrl } from '../controllers/ToastCtrl';
-import { isIOS } from '../constants/Platform';
+import { isAppInstalled } from '../modules/AppInstalled';
+import { PLAYSTORE_REGEX } from '../constants/Platform';
 
 // -- Helpers -------------------------------------------------------
 const W3M_API = 'https://explorer-api.walletconnect.com';
@@ -44,6 +45,30 @@ async function fetchListings(
   const request = await fetch(url.toString(), { headers });
 
   return request.json() as Promise<ListingResponse>;
+}
+
+function getUrlParams(url: string | null): { [key: string]: string } {
+  if (!url) {
+    return {};
+  }
+  const regex = /[?&]([^=#]+)=([^&#]*)/g;
+  const params: { [key: string]: string } = {};
+  let match: RegExpExecArray | null;
+
+  while ((match = regex.exec(url)) !== null) {
+    params[match[1] as string] = decodeURIComponent(match[2] as string);
+  }
+
+  return params;
+}
+
+function getAppId(playstoreLink?: string | null): string | undefined {
+  if (!playstoreLink || !playstoreLink.match(PLAYSTORE_REGEX)) {
+    return undefined;
+  }
+
+  const applicationId = getUrlParams(playstoreLink)?.id;
+  return applicationId;
 }
 
 // -- Utility -------------------------------------------------------
@@ -115,10 +140,9 @@ export const ExplorerUtil = {
   async isAppInstalled(wallet: Listing): Promise<boolean> {
     let isInstalled = false;
     const scheme = wallet.mobile.native;
+    const appId = getAppId(wallet.app.android);
     try {
-      if (isIOS) {
-        isInstalled = scheme ? await Linking.canOpenURL(scheme) : false;
-      }
+      isInstalled = await isAppInstalled(scheme, appId);
     } catch {
       isInstalled = false;
     }
