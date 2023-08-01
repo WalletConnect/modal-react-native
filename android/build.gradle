@@ -52,10 +52,9 @@ def supportsNamespace() {
 android {
   if (supportsNamespace()) {
     namespace "com.installedapp"
-  } else {
     sourceSets {
       main {
-        manifest.srcFile "src/main/AndroidManifestDeprecated.xml"
+        manifest.srcFile "src/main/AndroidManifestNew.xml"
       }
     }
   }
