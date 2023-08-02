@@ -12,7 +12,7 @@ import { StorageUtil } from '../utils/StorageUtil';
 import { ModalCtrl } from '../controllers/ModalCtrl';
 import { RouterCtrl } from '../controllers/RouterCtrl';
 
-const FOUR_MIN_MS = 240_000;
+const FOUR_MIN_MS = 240000;
 
 export function useConnectionHandler() {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
