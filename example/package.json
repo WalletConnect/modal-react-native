@@ -5,7 +5,9 @@
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
+    "android:binary": "expo run:android",
     "ios": "expo start --ios",
+    "ios:binary": "expo run:ios",
     "web": "expo start --web"
   },
   "dependencies": {
@@ -16,6 +18,7 @@
     "expo-clipboard": "~4.3.0",
     "expo-constants": "~14.4.2",
     "expo-crypto": "~12.4.1",
+    "expo-splash-screen": "~0.20.4",
     "expo-status-bar": "~1.6.0",
     "expo-system-ui": "~2.4.0",
     "expo-updates": "~0.18.10",
@@ -26,8 +29,7 @@
     "react-native-get-random-values": "1.9.0",
     "react-native-modal": "13.0.1",
     "react-native-svg": "13.9.0",
-    "react-native-web": "~0.19.6",
-    "expo-splash-screen": "~0.20.4"
+    "react-native-web": "~0.19.6"
   },
   "expo": {
     "install": {

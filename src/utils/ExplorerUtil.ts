@@ -2,10 +2,16 @@ import { Linking, Platform } from 'react-native';
 import { version } from '../../package.json';
 import { version as providerVersion } from '@walletconnect/universal-provider/package.json';
 
-import type { ListingParams, ListingResponse } from '../types/controllerTypes';
+import type {
+  Listing,
+  ListingParams,
+  ListingResponse,
+} from '../types/controllerTypes';
 import { CoreUtil } from './CoreUtil';
 import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import { ToastCtrl } from '../controllers/ToastCtrl';
+import { isAppInstalled } from '../modules/AppInstalled';
+import { PLAYSTORE_REGEX } from '../constants/Platform';
 
 // -- Helpers -------------------------------------------------------
 const W3M_API = 'https://explorer-api.walletconnect.com';
@@ -39,6 +45,30 @@ async function fetchListings(
   const request = await fetch(url.toString(), { headers });
 
   return request.json() as Promise<ListingResponse>;
+}
+
+function getUrlParams(url: string | null): { [key: string]: string } {
+  if (!url) {
+    return {};
+  }
+  const regex = /[?&]([^=#]+)=([^&#]*)/g;
+  const params: { [key: string]: string } = {};
+  let match: RegExpExecArray | null;
+
+  while ((match = regex.exec(url)) !== null) {
+    params[match[1] as string] = decodeURIComponent(match[2] as string);
+  }
+
+  return params;
+}
+
+function getAppId(playstoreLink?: string | null): string | undefined {
+  if (!playstoreLink || !playstoreLink.match(PLAYSTORE_REGEX)) {
+    return undefined;
+  }
+
+  const applicationId = getUrlParams(playstoreLink)?.id;
+  return applicationId;
 }
 
 // -- Utility -------------------------------------------------------
@@ -98,11 +128,44 @@ export const ExplorerUtil = {
       ToastCtrl.openToast('Unable to open the wallet', 'error');
     }
   },
+
   getCustomHeaders() {
     const referer = ConfigCtrl.getMetadata().name.trim().replace(' ', '');
     return {
       'User-Agent': getUserAgent(),
       'Referer': referer,
     };
+  },
+
+  async isAppInstalled(wallet: Listing): Promise<boolean> {
+    let isInstalled = false;
+    const scheme = wallet.mobile.native;
+    const appId = getAppId(wallet.app.android);
+    try {
+      isInstalled = await isAppInstalled(scheme, appId);
+    } catch {
+      isInstalled = false;
+    }
+    return isInstalled;
+  },
+
+  async sortInstalled(array: Listing[]) {
+    const promises = array.map(async (item) => {
+      return {
+        ...item,
+        isInstalled: await ExplorerUtil.isAppInstalled(item),
+      };
+    });
+
+    const results = await Promise.all(promises);
+
+    results.sort((a, b) => {
+      if (a.isInstalled && b.isInstalled) return 0;
+      if (a.isInstalled) return -1;
+      if (b.isInstalled) return 1;
+      return 0;
+    });
+
+    return results;
   },
 };

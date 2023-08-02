@@ -30,9 +30,9 @@ export const DataUtil = {
   },
 
   getAllWallets({ search }: { search?: string }) {
-    const { wallets, recommendedWallets } = ExplorerCtrl.state;
+    const { wallets } = ExplorerCtrl.state;
     const { recentWallet } = ConfigCtrl.state;
-    const _wallets = [...recommendedWallets, ...wallets.listings];
+    const _wallets = [...wallets.listings];
     if (recentWallet) {
       const recentWalletIndex = _wallets.findIndex(
         (wallet) => wallet.id === recentWallet.id

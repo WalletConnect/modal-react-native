@@ -51,9 +51,9 @@ function WalletItem({ currentWCURI, walletInfo, style, isRecent }: Props) {
       >
         {UiUtil.getWalletName(walletInfo.name, true)}
       </Text>
-      {isRecent && (
-        <Text style={[styles.recent, { color: Theme.foreground3 }]}>
-          RECENT
+      {(isRecent || walletInfo.isInstalled) && (
+        <Text style={[styles.status, { color: Theme.foreground3 }]}>
+          {isRecent ? 'RECENT' : 'INSTALLED'}
         </Text>
       )}
     </Touchable>
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 2,
   },
-  recent: {
+  status: {
     fontSize: 10,
     fontWeight: '700',
     textAlign: 'center',

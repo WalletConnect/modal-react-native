@@ -12,7 +12,7 @@ import { createUniversalProvider } from '../utils/ProviderUtil';
 import { StorageUtil } from '../utils/StorageUtil';
 import { ThemeCtrl } from '../controllers/ThemeCtrl';
 import { ToastCtrl } from '../controllers/ToastCtrl';
-import type { ThemeCtrlState } from 'src/types/controllerTypes';
+import type { ThemeCtrlState } from '../types/controllerTypes';
 
 interface Props {
   projectId: string;
@@ -77,7 +77,7 @@ export function useConfigure(config: Props) {
     async function fetchWallets() {
       try {
         if (!ExplorerCtrl.state.wallets.total) {
-          await ExplorerCtrl.getRecommendedWallets();
+          await ExplorerCtrl.getWallets();
           OptionsCtrl.setIsDataLoaded(true);
         }
       } catch (error) {
