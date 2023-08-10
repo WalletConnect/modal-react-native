@@ -10,21 +10,11 @@ yarn
 
 ## ProjectID setup
 
-The example project has `app.config.js` file. Add your Project ID there
+Create an `.env` file in `<root>/example` with the following content:
 
-``` json
-extra: {
-  ...
-  PROJECT_ID: process.env.PROJECT_ID || "YOUR_PROJECT_ID"
-},
 ```
-
-or add it before running commands in your terminal:
-
-```bash
-PROJECT_ID="YOUR_PROJECT_ID" yarn example ios
+EXPO_PUBLIC_PROJECT_ID="YOUR_CLOUD_ID"
 ```
-
 
 To create your ProjectID, head to [cloud.walletconnect.com](https://cloud.walletconnect.com/)
 
