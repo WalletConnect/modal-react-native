@@ -23,9 +23,21 @@ export const ExplorerCtrl = {
     const { explorerRecommendedWalletIds, explorerExcludedWalletIds } =
       ConfigCtrl.state;
 
-    // Don't fetch any wallets if all are excluded
-    if (explorerExcludedWalletIds === 'ALL') {
+    // Don't fetch any wallets if explorer is disabled or if they are all excluded
+    if (
+      explorerRecommendedWalletIds === 'NONE' ||
+      (explorerExcludedWalletIds === 'ALL' &&
+        !CoreUtil.isArray(explorerRecommendedWalletIds))
+    ) {
       return state.wallets;
+    }
+
+    // Fetch only user recommended wallets if the rest is excluded
+    if (
+      explorerExcludedWalletIds === 'ALL' &&
+      CoreUtil.isArray(explorerRecommendedWalletIds)
+    ) {
+      extendedParams.recommendedIds = explorerRecommendedWalletIds.join(',');
     }
 
     // Don't fetch user defined excluded wallets
@@ -34,18 +46,24 @@ export const ExplorerCtrl = {
     }
 
     const { listings, total } = await ExplorerUtil.getListings(extendedParams);
+    let _listings = Object.values(listings);
 
     // Sort by explorerRecommendedWalletIds
-    let _listings = Object.values(listings);
     if (CoreUtil.isArray(explorerRecommendedWalletIds)) {
       _listings.sort((a, b) => {
-        const aRecommended = explorerRecommendedWalletIds.includes(a.id);
-        const bRecommended = explorerRecommendedWalletIds.includes(b.id);
+        const aIndex = explorerRecommendedWalletIds.indexOf(a.id);
+        const bIndex = explorerRecommendedWalletIds.indexOf(b.id);
 
-        if (aRecommended && bRecommended) return 0;
-        if (aRecommended) return -1;
-        if (bRecommended) return 1;
-        return 0;
+        // Don't sort if both wallets are not recommended
+        if (aIndex === -1 && bIndex === -1) return 0;
+
+        // if a is not recommended, b is first
+        if (aIndex === -1) return 1;
+
+        // if b is not recommended, a is first
+        if (bIndex === -1) return -1;
+
+        return aIndex - bIndex;
       });
     }
 
