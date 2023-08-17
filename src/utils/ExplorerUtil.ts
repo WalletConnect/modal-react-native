@@ -165,10 +165,18 @@ export const ExplorerUtil = {
     return results;
   },
 
-  prefetchWalletImages(wallets: Listing[]) {
+  async prefetchWalletImages(wallets: Listing[]) {
+    const urls = wallets
+      .filter((wallet) => wallet.image_id)
+      .map((wallet) => this.getWalletImageUrl(wallet.image_id) as string);
+
+    const cachedUrls = await Image.queryCache?.(urls);
+
     wallets.forEach((wallet) => {
       try {
         if (wallet.image_id) {
+          const walletImage = this.getWalletImageUrl(wallet.image_id);
+          if (!walletImage || cachedUrls?.[walletImage]) return;
           Image.prefetch(this.getWalletImageUrl(wallet.image_id)!);
         }
       } catch (error) {}
