@@ -1,6 +1,7 @@
-import { Image, ImageStyle, StyleProp, StyleSheet, View } from 'react-native';
+import { ImageStyle, StyleProp, StyleSheet, View } from 'react-native';
 import useTheme from '../hooks/useTheme';
 import WalletIcon from '../assets/WalletIcon';
+import Image from './Image';
 
 interface Props {
   size: 'xs' | 'sm' | 'md' | 'lg';
@@ -31,9 +32,7 @@ function WalletImage({ url, size, style }: Props) {
         },
         style,
       ]}
-      source={{
-        uri: url,
-      }}
+      source={url}
     />
   ) : (
     <View

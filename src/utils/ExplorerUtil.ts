@@ -1,4 +1,4 @@
-import { Linking, Platform } from 'react-native';
+import { Image, Linking, Platform } from 'react-native';
 import { version } from '../../package.json';
 import { version as providerVersion } from '@walletconnect/universal-provider/package.json';
 
@@ -167,5 +167,15 @@ export const ExplorerUtil = {
     });
 
     return results;
+  },
+
+  prefetchWalletImages(wallets: Listing[]) {
+    wallets.forEach((wallet) => {
+      try {
+        if (wallet.image_id) {
+          Image.prefetch(this.getWalletImageUrl(wallet.image_id)!);
+        }
+      } catch (error) {}
+    });
   },
 };
