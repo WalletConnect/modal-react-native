@@ -89,8 +89,4 @@ export const ExplorerCtrl = {
   getWalletImageUrl(imageId: string) {
     return ExplorerUtil.getWalletImageUrl(imageId);
   },
-
-  getAssetImageUrl(imageId: string) {
-    return ExplorerUtil.getAssetImageUrl(imageId);
-  },
 };

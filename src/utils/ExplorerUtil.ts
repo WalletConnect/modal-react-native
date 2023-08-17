@@ -98,10 +98,6 @@ export const ExplorerUtil = {
     return `${W3M_API}/w3m/v1/getWalletImage/${imageId}?projectId=${ConfigCtrl.state.projectId}`;
   },
 
-  getAssetImageUrl(imageId: string) {
-    return `${W3M_API}/w3m/v1/getAssetImage/${imageId}?projectId=${ConfigCtrl.state.projectId}`;
-  },
-
   async navigateDeepLink(
     universalLink: string | undefined,
     deepLink: string | undefined,
