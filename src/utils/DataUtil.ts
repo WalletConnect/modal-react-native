@@ -23,8 +23,9 @@ export const DataUtil = {
       );
       if (recentWalletIndex > -1) {
         _wallets.splice(recentWalletIndex, 1);
-        _wallets.unshift(recentWallet);
       }
+
+      _wallets.unshift(recentWallet);
     }
     return _wallets;
   },
