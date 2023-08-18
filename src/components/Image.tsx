@@ -9,8 +9,9 @@ function Image({ source, style }: ImageProps) {
   const opacity = useRef(new Animated.Value(0));
 
   const onLoadEnd = () => {
-    Animated.spring(opacity.current, {
+    Animated.timing(opacity.current, {
       toValue: 1,
+      duration: 200,
       useNativeDriver: true,
     }).start();
   };
