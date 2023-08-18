@@ -1,4 +1,4 @@
-import { Linking, Platform } from 'react-native';
+import { Image, Linking, Platform } from 'react-native';
 import { version } from '../../package.json';
 import { version as providerVersion } from '@walletconnect/universal-provider/package.json';
 
@@ -98,10 +98,6 @@ export const ExplorerUtil = {
     return `${W3M_API}/w3m/v1/getWalletImage/${imageId}?projectId=${ConfigCtrl.state.projectId}`;
   },
 
-  getAssetImageUrl(imageId: string) {
-    return `${W3M_API}/w3m/v1/getAssetImage/${imageId}?projectId=${ConfigCtrl.state.projectId}`;
-  },
-
   async navigateDeepLink(
     universalLink: string | undefined,
     deepLink: string | undefined,
@@ -167,5 +163,23 @@ export const ExplorerUtil = {
     });
 
     return results;
+  },
+
+  async prefetchWalletImages(wallets: Listing[]) {
+    const urls = wallets
+      .filter((wallet) => wallet.image_id)
+      .map((wallet) => this.getWalletImageUrl(wallet.image_id) as string);
+
+    const cachedUrls = await Image.queryCache?.(urls);
+
+    wallets.forEach((wallet) => {
+      try {
+        if (wallet.image_id) {
+          const walletImage = this.getWalletImageUrl(wallet.image_id);
+          if (!walletImage || cachedUrls?.[walletImage]) return;
+          Image.prefetch(this.getWalletImageUrl(wallet.image_id)!);
+        }
+      } catch (error) {}
+    });
   },
 };
