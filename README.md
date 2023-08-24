@@ -1,6 +1,6 @@
 # WalletConnectModal SDK for React Native
 
-Your on-ramp to web3 multichain. WalletConnect Modal is a versatile library that makes it super easy to connect users with your Dapp and start interacting with the blockchain.
+Simplest and most minimal way to connect your users with WalletConnect.
 
 ### 📚 [Documentation](https://docs.walletconnect.com/2.0/advanced/walletconnectmodal/about?platform=react-native)  
 
