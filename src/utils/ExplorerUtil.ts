@@ -111,9 +111,9 @@ export const ExplorerUtil = {
         StorageUtil.setDeepLinkWallet(deepLink!);
         await Linking.openURL(nativeUrl).catch(() => {
           // Fallback to universal link
-          if (universalUrl) {
+          if (universalUrl && universalLink) {
             Linking.openURL(universalUrl);
-            StorageUtil.setDeepLinkWallet(universalLink!);
+            StorageUtil.setDeepLinkWallet(universalLink);
           } else {
             ToastCtrl.openToast('Unable to open the wallet', 'error');
           }
