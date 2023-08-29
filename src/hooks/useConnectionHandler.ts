@@ -25,19 +25,15 @@ export function useConnectionHandler() {
     WcConnectionCtrl.setPairingError(false);
     WcConnectionCtrl.setPairingEnabled(false);
     ClientCtrl.setSessionTopic(session.topic);
-    const saveDeepLink = RouterCtrl.state.view !== 'Qrcode';
+    const clearDeepLink = RouterCtrl.state.view === 'Qrcode';
+
     try {
-      const recentWallet = ConfigCtrl.getRecentWallet();
-      if (saveDeepLink && recentWallet?.mobile) {
-        await StorageUtil.setDeepLinkWallet(
-          recentWallet.mobile.native || recentWallet.mobile.universal
-        );
+      if (clearDeepLink) {
+        await StorageUtil.removeDeepLinkWallet();
       }
       AccountCtrl.getAccount();
       ModalCtrl.close();
-    } catch (error) {
-      console.info('Unable to save deeplink');
-    }
+    } catch (error) {}
   };
 
   const connectAndWait = useCallback(async () => {

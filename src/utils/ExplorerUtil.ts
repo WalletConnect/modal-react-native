@@ -12,6 +12,7 @@ import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import { ToastCtrl } from '../controllers/ToastCtrl';
 import { isAppInstalled } from '../modules/AppInstalled';
 import { PLAYSTORE_REGEX } from '../constants/Platform';
+import { StorageUtil } from './StorageUtil';
 
 // -- Helpers -------------------------------------------------------
 const W3M_API = 'https://explorer-api.walletconnect.com';
@@ -107,20 +108,24 @@ export const ExplorerUtil = {
       const nativeUrl = CoreUtil.formatNativeUrl(deepLink, wcURI);
       const universalUrl = CoreUtil.formatUniversalUrl(universalLink, wcURI);
       if (nativeUrl) {
+        StorageUtil.setDeepLinkWallet(deepLink!);
         await Linking.openURL(nativeUrl).catch(() => {
           // Fallback to universal link
-          if (universalUrl) {
+          if (universalUrl && universalLink) {
             Linking.openURL(universalUrl);
+            StorageUtil.setDeepLinkWallet(universalLink);
           } else {
             ToastCtrl.openToast('Unable to open the wallet', 'error');
           }
         });
       } else if (universalUrl) {
-        await Linking.openURL(universalUrl);
+        Linking.openURL(universalUrl);
+        StorageUtil.setDeepLinkWallet(universalLink!);
       } else {
         ToastCtrl.openToast('Unable to open the wallet', 'error');
       }
     } catch (error) {
+      StorageUtil.removeDeepLinkWallet();
       ToastCtrl.openToast('Unable to open the wallet', 'error');
     }
   },
