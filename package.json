@@ -1,6 +1,6 @@
 {
   "name": "@walletconnect/modal-react-native",
-  "version": "1.0.0-rc.10",
+  "version": "1.0.0-rc.11",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/src/index.d.ts",
