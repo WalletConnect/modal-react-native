@@ -4,7 +4,7 @@ Simplest and most minimal way to connect your users with WalletConnect.
 
 ### 📚 [Documentation](https://docs.walletconnect.com/2.0/advanced/walletconnectmodal/about?platform=react-native)  
 
-### 🔎 [Examples](https://github.com/WalletConnect/react-native-examples/tree/main/dapps/v2Explorer)
+### 🔎 [Examples](https://github.com/WalletConnect/react-native-examples/tree/main/dapps/ModalUProvider)
 
 ## Development
 
