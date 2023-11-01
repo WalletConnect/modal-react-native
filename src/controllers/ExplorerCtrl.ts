@@ -46,6 +46,9 @@ export const ExplorerCtrl = {
     }
 
     const { listings, total } = await ExplorerUtil.getListings(extendedParams);
+
+    if (!listings) return [];
+
     let _listings = Object.values(listings);
 
     // Sort by explorerRecommendedWalletIds
