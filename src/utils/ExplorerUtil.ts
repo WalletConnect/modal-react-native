@@ -1,6 +1,4 @@
 import { Image, Linking, Platform } from 'react-native';
-import { version } from '../../package.json';
-import { version as providerVersion } from '@walletconnect/universal-provider/package.json';
 
 import type {
   Listing,
@@ -13,16 +11,17 @@ import { ToastCtrl } from '../controllers/ToastCtrl';
 import { isAppInstalled } from '../modules/AppInstalled';
 import { PLAYSTORE_REGEX } from '../constants/Platform';
 import { StorageUtil } from './StorageUtil';
+import { CORE_VERSION, SDK_VERSION } from '../constants/Config';
 
 // -- Helpers -------------------------------------------------------
 const W3M_API = 'https://explorer-api.walletconnect.com';
 
 function getSdkVersion() {
-  return `rn-${version}`;
+  return `rn-${SDK_VERSION}`;
 }
 
 function getUserAgent() {
-  return `wcm-rn-${version}/js-${providerVersion}/${Platform.OS}-${Platform.Version}`;
+  return `wcm-rn-${SDK_VERSION}/js-${CORE_VERSION}/${Platform.OS}-${Platform.Version}`;
 }
 
 async function fetchListings(
@@ -68,7 +67,8 @@ function getAppId(playstoreLink?: string | null): string | undefined {
     return undefined;
   }
 
-  const applicationId = getUrlParams(playstoreLink)?.id;
+  // eslint-disable-next-line dot-notation
+  const applicationId = getUrlParams(playstoreLink)?.['id'];
   return applicationId;
 }
 
