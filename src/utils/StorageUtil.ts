@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { Listing } from 'src/types/controllerTypes';
+import type { Listing } from '../types/controllerTypes';
 
 export const StorageUtil = {
   WALLETCONNECT_DEEPLINK_CHOICE: 'WALLETCONNECT_DEEPLINK_CHOICE',

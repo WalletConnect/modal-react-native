@@ -4,6 +4,12 @@ const DEFAULT_CHAINS = ['eip155:1'];
 const REQUIRED_METHODS = ['eth_sendTransaction', 'personal_sign'];
 const REQUIRED_EVENTS = ['chainChanged', 'accountsChanged'];
 
+// DO NOT REMOVE, SHOULD MATCH CORE PACKAGE VERSION
+export const CORE_VERSION = '2.10.4';
+
+// DO NOT REMOVE, SHOULD MATCH SDK PACKAGE VERSION
+export const SDK_VERSION = '1.0.0-rc.11';
+
 export const defaultSessionParams: ISessionParams = {
   namespaces: {
     eip155: {
