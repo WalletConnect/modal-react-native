@@ -146,7 +146,6 @@
     ]
   },
   "dependencies": {
-    "@ethersproject/shims": "5.7.0",
     "@walletconnect/core": "2.10.4",
     "@walletconnect/react-native-compat": "2.10.4",
     "@walletconnect/universal-provider": "2.10.4",
