@@ -96,7 +96,8 @@
     "react-native": "*",
     "react-native-get-random-values": ">=1.8.0",
     "react-native-modal": ">=13",
-    "react-native-svg": ">=13"
+    "react-native-svg": ">=13",
+    "valtio": ">=1.10.0"
   },
   "engines": {
     "node": ">= 16.0.0"
