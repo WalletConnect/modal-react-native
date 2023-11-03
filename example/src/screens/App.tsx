@@ -10,6 +10,7 @@ import {
   WalletConnectModal,
   useWalletConnectModal,
 } from '@walletconnect/modal-react-native';
+import '@ethersproject/shims';
 import { setStringAsync } from 'expo-clipboard';
 import { sessionParams, providerMetadata } from '../constants/Config';
 import { BlockchainActions } from '../components/BlockchainActions';
