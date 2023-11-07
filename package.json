@@ -96,8 +96,7 @@
     "react-native": "*",
     "react-native-get-random-values": ">=1.8.0",
     "react-native-modal": ">=13",
-    "react-native-svg": ">=13",
-    "valtio": ">=1.10.0"
+    "react-native-svg": ">=13"
   },
   "engines": {
     "node": ">= 16.0.0"
@@ -151,6 +150,6 @@
     "@walletconnect/react-native-compat": "2.10.4",
     "@walletconnect/universal-provider": "2.10.4",
     "qrcode": "1.5.3",
-    "valtio": "1.11.3"
+    "valtio": "1.10.5"
   }
 }
