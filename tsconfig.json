@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "paths": {
+      "@walletconnect/modal-react-native": ["./src/index"]
+    },
     "allowJs": false,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
@@ -17,7 +20,7 @@
     "noImplicitUseStrict": false,
     "noStrictGenericChecks": false,
     "noUncheckedIndexedAccess": true,
-    "noPropertyAccessFromIndexSignature": true,
+    "noPropertyAccessFromIndexSignature": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "resolveJsonModule": true,

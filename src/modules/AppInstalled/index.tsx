@@ -12,8 +12,7 @@ const InstalledAppModule = isTurboModuleEnabled
   ? Platform.OS === 'android'
     ? require('./NativeInstalledApp').default
     : undefined
-  : // @ts-expect-error
-    NativeModules.InstalledApp;
+  : NativeModules.InstalledApp;
 
 const InstalledApp = InstalledAppModule
   ? InstalledAppModule
