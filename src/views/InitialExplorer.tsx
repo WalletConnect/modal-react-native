@@ -5,27 +5,91 @@ import WalletItem, { WALLET_FULL_HEIGHT } from '../components/WalletItem';
 import ViewAllBox from '../components/ViewAllBox';
 import QRIcon from '../assets/QRCode';
 import ModalHeader from '../components/ModalHeader';
-import type { Listing } from '../types/controllerTypes';
+import type { WcWallet } from '../types/controllerTypes';
 import { RouterCtrl } from '../controllers/RouterCtrl';
 import { OptionsCtrl } from '../controllers/OptionsCtrl';
 import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import type { RouterProps } from '../types/routerTypes';
+import { ApiCtrl } from '../controllers/ApiCtrl';
 import useTheme from '../hooks/useTheme';
-import { DataUtil } from '../utils/DataUtil';
 
 function InitialExplorer({ isPortrait }: RouterProps) {
   const Theme = useTheme();
   const { isDataLoaded } = useSnapshot(OptionsCtrl.state);
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
   const { explorerExcludedWalletIds } = useSnapshot(ConfigCtrl.state);
-  const wallets = DataUtil.getInitialWallets();
-  const recentWallet = DataUtil.getRecentWallet();
+  const { recentWallet } = useSnapshot(ConfigCtrl.state);
+  const { recommended, installed } = useSnapshot(ApiCtrl.state);
+
   const loading = !isDataLoaded || !pairingUri;
   const viewHeight = isPortrait ? WALLET_FULL_HEIGHT * 2 : WALLET_FULL_HEIGHT;
 
   const showViewAllButton =
-    wallets.length > 8 || explorerExcludedWalletIds !== 'ALL';
+    recommended.length > 8 || explorerExcludedWalletIds !== 'ALL';
+
+  const recentTemplate = () => {
+    if (!recentWallet) return null;
+
+    return (
+      <WalletItem
+        walletInfo={recentWallet}
+        isRecent
+        currentWCURI={pairingUri}
+        style={isPortrait ? styles.portraitItem : styles.landscapeItem}
+      />
+    );
+  };
+
+  const installedTemplate = () => {
+    if (!installed) return null;
+
+    const list = filterOutRecentWallet(installed as WcWallet[]);
+    return list.map((item: WcWallet) => (
+      <WalletItem
+        walletInfo={item}
+        key={item.id}
+        isRecent={item.id === recentWallet?.id}
+        currentWCURI={pairingUri}
+        style={isPortrait ? styles.portraitItem : styles.landscapeItem}
+      />
+    ));
+  };
+
+  const recommendedTemplate = () => {
+    const list = filterOutRecentWallet(recommended as WcWallet[]);
+    return list
+      .slice(0, showViewAllButton ? 6 : 7)
+      .map((item: WcWallet) => (
+        <WalletItem
+          walletInfo={item}
+          key={item.id}
+          isRecent={item.id === recentWallet?.id}
+          currentWCURI={pairingUri}
+          style={isPortrait ? styles.portraitItem : styles.landscapeItem}
+        />
+      ));
+  };
+
+  const viewAllTemplate = () => {
+    if (!showViewAllButton) return null;
+
+    return (
+      <ViewAllBox
+        onPress={() => RouterCtrl.push('WalletExplorer')}
+        wallets={recommended.slice(-4)}
+        style={isPortrait ? styles.portraitItem : styles.landscapeItem}
+      />
+    );
+  };
+
+  const filterOutRecentWallet = (wallets: WcWallet[]): WcWallet[] => {
+    if (!recentWallet) return wallets;
+
+    const filtered = wallets.filter((wallet) => wallet.id !== recentWallet.id);
+
+    return filtered;
+  };
 
   return (
     <>
@@ -46,22 +110,10 @@ function InitialExplorer({ isPortrait }: RouterProps) {
             { height: viewHeight, backgroundColor: Theme.background1 },
           ]}
         >
-          {wallets.slice(0, showViewAllButton ? 7 : 8).map((item: Listing) => (
-            <WalletItem
-              walletInfo={item}
-              key={item.id}
-              isRecent={item.id === recentWallet?.id}
-              currentWCURI={pairingUri}
-              style={isPortrait ? styles.portraitItem : styles.landscapeItem}
-            />
-          ))}
-          {showViewAllButton && (
-            <ViewAllBox
-              onPress={() => RouterCtrl.push('WalletExplorer')}
-              wallets={wallets.slice(-4)}
-              style={isPortrait ? styles.portraitItem : styles.landscapeItem}
-            />
-          )}
+          {recentTemplate()}
+          {installedTemplate()}
+          {recommendedTemplate()}
+          {viewAllTemplate()}
         </View>
       )}
     </>

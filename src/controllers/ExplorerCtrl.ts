@@ -5,7 +5,7 @@ import type {
   ListingParams,
 } from '../types/controllerTypes';
 import { ExplorerUtil } from '../utils/ExplorerUtil';
-import { CoreUtil } from '../utils/CoreUtil';
+import { CoreHelperUtil } from '../utils/CoreHelperUtil';
 import { ConfigCtrl } from './ConfigCtrl';
 
 // -- initial state ------------------------------------------------ //
@@ -27,7 +27,7 @@ export const ExplorerCtrl = {
     if (
       explorerRecommendedWalletIds === 'NONE' ||
       (explorerExcludedWalletIds === 'ALL' &&
-        !CoreUtil.isArray(explorerRecommendedWalletIds))
+        !CoreHelperUtil.isArray(explorerRecommendedWalletIds))
     ) {
       return state.wallets;
     }
@@ -35,13 +35,13 @@ export const ExplorerCtrl = {
     // Fetch only user recommended wallets if the rest is excluded
     if (
       explorerExcludedWalletIds === 'ALL' &&
-      CoreUtil.isArray(explorerRecommendedWalletIds)
+      CoreHelperUtil.isArray(explorerRecommendedWalletIds)
     ) {
       extendedParams.recommendedIds = explorerRecommendedWalletIds.join(',');
     }
 
     // Don't fetch user defined excluded wallets
-    if (CoreUtil.isArray(explorerExcludedWalletIds)) {
+    if (CoreHelperUtil.isArray(explorerExcludedWalletIds)) {
       extendedParams.excludedIds = explorerExcludedWalletIds.join(',');
     }
 
@@ -52,7 +52,7 @@ export const ExplorerCtrl = {
     let _listings = Object.values(listings);
 
     // Sort by explorerRecommendedWalletIds
-    if (CoreUtil.isArray(explorerRecommendedWalletIds)) {
+    if (CoreHelperUtil.isArray(explorerRecommendedWalletIds)) {
       _listings.sort((a, b) => {
         const aIndex = explorerRecommendedWalletIds.indexOf(a.id);
         const bIndex = explorerRecommendedWalletIds.indexOf(b.id);
@@ -74,7 +74,7 @@ export const ExplorerCtrl = {
     _listings = await ExplorerUtil.sortInstalled(_listings);
 
     // Set recommended wallets
-    if (CoreUtil.isArray(explorerRecommendedWalletIds)) {
+    if (CoreHelperUtil.isArray(explorerRecommendedWalletIds)) {
       state.recommendedWallets = _listings
         .filter((wallet) => explorerRecommendedWalletIds.includes(wallet.id))
         .slice(0, 11);

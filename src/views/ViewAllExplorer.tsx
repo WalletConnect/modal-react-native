@@ -14,6 +14,7 @@ import SearchBar from '../components/SearchBar';
 import { DataUtil } from '../utils/DataUtil';
 import Text from '../components/Text';
 import { useDebounceCallback } from '../hooks/useDebounceCallback';
+import { ConfigCtrl } from '../controllers/ConfigCtrl';
 
 function ViewAllExplorer({
   isPortrait,
@@ -25,7 +26,7 @@ function ViewAllExplorer({
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
   const { themeMode } = useSnapshot(ThemeCtrl.state);
   const { wallets } = useSnapshot(ExplorerCtrl.state);
-  const recentWallet = DataUtil.getRecentWallet();
+  const { recentWallet } = useSnapshot(ConfigCtrl.state);
   const shouldLoadWallets = wallets.listings.length === 0;
   const [walletsLoading, setWalletsLoading] = useState(false);
   const loading = !isDataLoaded || !pairingUri || walletsLoading;

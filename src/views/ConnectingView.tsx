@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Linking, Platform, StyleSheet, View } from 'react-native';
 import { useSnapshot } from 'valtio';
 
@@ -17,6 +17,9 @@ import RetryIcon from '../assets/Retry';
 import WalletImage from '../components/WalletImage';
 import WalletLoadingThumbnail from '../components/WalletLoadingThumbnail';
 import Chevron from '../assets/Chevron';
+import { CoreHelperUtil } from '../utils/CoreHelperUtil';
+import { DataUtil } from '../utils/DataUtil';
+import { StorageUtil } from '../utils/StorageUtil';
 
 function ConnectingView({ onCopyClipboard }: RouterProps) {
   const Theme = useTheme();
@@ -25,14 +28,9 @@ function ConnectingView({ onCopyClipboard }: RouterProps) {
   const walletName = UiUtil.getWalletName(data?.wallet?.name ?? 'Wallet', true);
   const imageUrl = ExplorerUtil.getWalletImageUrl(data?.wallet?.image_id);
 
-  const alternateLink =
-    data?.wallet?.mobile.native && data.wallet.mobile.universal
-      ? data.wallet.mobile.universal
-      : undefined;
-
   const storeLink = Platform.select({
-    ios: data?.wallet?.app.ios,
-    android: data?.wallet?.app.android,
+    ios: data?.wallet?.app_store,
+    android: data?.wallet?.play_store,
   });
 
   const storeCaption = Platform.select({
@@ -47,25 +45,32 @@ function ConnectingView({ onCopyClipboard }: RouterProps) {
     }
   };
 
-  const onRetry = () => {
+  const onRetry = async () => {
     WcConnectionCtrl.setPairingError(false);
-    ExplorerUtil.navigateDeepLink(
-      data?.wallet?.mobile.universal,
-      data?.wallet?.mobile.native,
-      pairingUri
-    );
+    onConnect();
   };
 
-  const onAlternativePress = () => {
-    if (alternateLink) {
-      WcConnectionCtrl.setPairingError(false);
-      ExplorerUtil.navigateDeepLink(alternateLink, '', pairingUri);
+  const onConnect = useCallback(async () => {
+    try {
+      if (!data?.wallet?.mobile_link) return;
+
+      const mobileLink = CoreHelperUtil.formatNativeUrl(
+        data?.wallet?.mobile_link,
+        pairingUri
+      );
+      await CoreHelperUtil.openLink(mobileLink);
+      DataUtil.setRecentWallet(data?.wallet);
+      StorageUtil.setDeepLinkWallet(data?.wallet?.mobile_link);
+    } catch (error) {
+      StorageUtil.removeDeepLinkWallet();
+      ToastCtrl.openToast('Unable to open the wallet', 'error');
     }
-  };
+  }, [data?.wallet, pairingUri]);
 
   useEffect(() => {
     WcConnectionCtrl.setPairingError(false);
-  }, []);
+    onConnect();
+  }, [onConnect]);
 
   return (
     <>
@@ -107,23 +112,6 @@ function ConnectingView({ onCopyClipboard }: RouterProps) {
             <Text style={styles.text}>Retry</Text>
             <RetryIcon style={styles.retryIcon} />
           </Touchable>
-          {alternateLink && (
-            <Text
-              style={[
-                styles.text,
-                styles.alternateText,
-                { color: Theme.foreground2 },
-              ]}
-            >
-              Still doesn't work?{' '}
-              <Text
-                style={{ color: Theme.accent }}
-                onPress={onAlternativePress}
-              >
-                Try this alternate link
-              </Text>
-            </Text>
-          )}
         </View>
         {storeLink && (
           <View style={styles.lowerFooter}>

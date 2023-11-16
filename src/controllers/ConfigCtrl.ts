@@ -1,7 +1,18 @@
 import { proxy } from 'valtio';
 
-import type { ConfigCtrlState, Listing } from '../types/controllerTypes';
+import type { WcWallet } from '../types/controllerTypes';
 import { StorageUtil } from '../utils/StorageUtil';
+import type { IProviderMetadata, ISessionParams } from '../types/coreTypes';
+
+// -- types -------------------------------------------------------- //
+export interface ConfigCtrlState {
+  projectId: string;
+  sessionParams?: ISessionParams;
+  recentWallet?: WcWallet;
+  providerMetadata?: IProviderMetadata;
+  explorerRecommendedWalletIds?: string[] | 'NONE';
+  explorerExcludedWalletIds?: string[] | 'ALL';
+}
 
 // -- initial state ------------------------------------------------ //
 const state = proxy<ConfigCtrlState>({
@@ -17,7 +28,7 @@ const state = proxy<ConfigCtrlState>({
 export const ConfigCtrl = {
   state,
 
-  setRecentWallet(wallet?: Listing) {
+  setRecentWallet(wallet?: WcWallet) {
     state.recentWallet = wallet;
   },
 

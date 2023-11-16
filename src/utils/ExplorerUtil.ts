@@ -5,7 +5,7 @@ import type {
   ListingParams,
   ListingResponse,
 } from '../types/controllerTypes';
-import { CoreUtil } from './CoreUtil';
+import { CoreHelperUtil } from './CoreHelperUtil';
 import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import { ToastCtrl } from '../controllers/ToastCtrl';
 import { isAppInstalled } from '../modules/AppInstalled';
@@ -99,28 +99,12 @@ export const ExplorerUtil = {
     return `${W3M_API}/w3m/v1/getWalletImage/${imageId}?projectId=${ConfigCtrl.state.projectId}`;
   },
 
-  async navigateDeepLink(
-    universalLink: string | undefined,
-    deepLink: string | undefined,
-    wcURI: string
-  ) {
+  async navigateDeepLink(mobileLink: string | undefined, wcURI: string) {
     try {
-      const nativeUrl = CoreUtil.formatNativeUrl(deepLink, wcURI);
-      const universalUrl = CoreUtil.formatUniversalUrl(universalLink, wcURI);
-      if (nativeUrl) {
-        StorageUtil.setDeepLinkWallet(deepLink!);
-        await Linking.openURL(nativeUrl).catch(() => {
-          // Fallback to universal link
-          if (universalUrl && universalLink) {
-            Linking.openURL(universalUrl);
-            StorageUtil.setDeepLinkWallet(universalLink);
-          } else {
-            ToastCtrl.openToast('Unable to open the wallet', 'error');
-          }
-        });
-      } else if (universalUrl) {
-        Linking.openURL(universalUrl);
-        StorageUtil.setDeepLinkWallet(universalLink!);
+      if (mobileLink) {
+        const nativeUrl = CoreHelperUtil.formatNativeUrl(mobileLink, wcURI);
+        StorageUtil.setDeepLinkWallet(mobileLink);
+        await Linking.openURL(nativeUrl);
       } else {
         ToastCtrl.openToast('Unable to open the wallet', 'error');
       }

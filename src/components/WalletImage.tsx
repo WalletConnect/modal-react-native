@@ -6,6 +6,7 @@ import Image from './Image';
 interface Props {
   size: 'xs' | 'sm' | 'md' | 'lg';
   url?: string;
+  imageHeaders?: Record<string, string>;
   style?: StyleProp<ImageStyle>;
 }
 
@@ -16,7 +17,7 @@ const sizeMap = {
   lg: 90,
 };
 
-function WalletImage({ url, size, style }: Props) {
+function WalletImage({ url, imageHeaders, size, style }: Props) {
   const Theme = useTheme();
   const sizeNum = sizeMap[size];
 
@@ -33,6 +34,7 @@ function WalletImage({ url, size, style }: Props) {
         style,
       ]}
       source={url}
+      headers={imageHeaders}
     />
   ) : (
     <View

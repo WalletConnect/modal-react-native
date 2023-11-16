@@ -1,10 +1,11 @@
 import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import { ExplorerCtrl } from '../controllers/ExplorerCtrl';
 import { StorageUtil } from './StorageUtil';
-import type { Listing } from '../types/controllerTypes';
+import type { WcWallet } from '../types/controllerTypes';
+import { ApiCtrl } from '../controllers/ApiCtrl';
 
 export const DataUtil = {
-  setRecentWallet(wallet: Listing) {
+  setRecentWallet(wallet: WcWallet) {
     ConfigCtrl.setRecentWallet(wallet);
     StorageUtil.setRecentWallet(wallet);
   },
@@ -14,9 +15,9 @@ export const DataUtil = {
   },
 
   getInitialWallets() {
-    const { recommendedWallets } = ExplorerCtrl.state;
+    const { recommended } = ApiCtrl.state;
     const { recentWallet } = ConfigCtrl.state;
-    const _wallets = [...recommendedWallets];
+    const _wallets = [...recommended];
     if (recentWallet) {
       const recentWalletIndex = _wallets.findIndex(
         (wallet) => wallet.id === recentWallet.id

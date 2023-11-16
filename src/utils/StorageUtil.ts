@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { Listing } from '../types/controllerTypes';
+import type { WcWallet } from '../types/controllerTypes';
 
 export const StorageUtil = {
   WALLETCONNECT_DEEPLINK_CHOICE: 'WALLETCONNECT_DEEPLINK_CHOICE',
@@ -16,7 +16,7 @@ export const StorageUtil = {
     return AsyncStorage.removeItem(StorageUtil.WALLETCONNECT_DEEPLINK_CHOICE);
   },
 
-  setRecentWallet(wallet: Listing) {
+  setRecentWallet(wallet: WcWallet) {
     try {
       AsyncStorage.setItem(
         StorageUtil.W3M_RECENT_WALLET_INFO,
@@ -27,7 +27,8 @@ export const StorageUtil = {
     }
   },
 
-  async getRecentWallet() {
+  async getRecentWallet(): Promise<WcWallet | undefined> {
+    // MIGRAR OBJETOS
     try {
       const wallet = await AsyncStorage.getItem(
         StorageUtil.W3M_RECENT_WALLET_INFO

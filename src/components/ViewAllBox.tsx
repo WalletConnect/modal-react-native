@@ -1,15 +1,16 @@
 import { StyleSheet, View, Text, StyleProp, ViewStyle } from 'react-native';
 
-import { ExplorerCtrl } from '../controllers/ExplorerCtrl';
 import useTheme from '../hooks/useTheme';
-import type { Listing } from '../types/controllerTypes';
+import type { WcWallet } from '../types/controllerTypes';
 import Touchable from './Touchable';
 import { WALLET_HEIGHT, WALLET_WIDTH, WALLET_MARGIN } from './WalletItem';
 import WalletImage from './WalletImage';
+import { AssetUtil } from '../utils/AssetUtil';
+import { ApiCtrl } from '../controllers/ApiCtrl';
 
 interface Props {
   onPress: any;
-  wallets: Listing[];
+  wallets: WcWallet[];
   style?: StyleProp<ViewStyle>;
 }
 
@@ -26,7 +27,8 @@ function ViewAllBox({ onPress, wallets, style }: Props) {
             <WalletImage
               key={wallet.id}
               size="xs"
-              url={ExplorerCtrl.getWalletImageUrl(wallet.image_id)}
+              url={AssetUtil.getWalletImage(wallet)}
+              imageHeaders={ApiCtrl._getApiHeaders()}
               style={styles.icon}
             />
           ))}
