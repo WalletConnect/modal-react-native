@@ -4,7 +4,6 @@ import { useSnapshot } from 'valtio';
 
 import WalletItem, { WALLET_FULL_HEIGHT } from '../components/WalletItem';
 import ModalHeader from '../components/ModalHeader';
-import { ExplorerCtrl } from '../controllers/ExplorerCtrl';
 import { OptionsCtrl } from '../controllers/OptionsCtrl';
 import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 import type { RouterProps } from '../types/routerTypes';
@@ -15,6 +14,7 @@ import { DataUtil } from '../utils/DataUtil';
 import Text from '../components/Text';
 import { useDebounceCallback } from '../hooks/useDebounceCallback';
 import { ConfigCtrl } from '../controllers/ConfigCtrl';
+import { ApiCtrl } from '../controllers/ApiCtrl';
 
 function ViewAllExplorer({
   isPortrait,
@@ -25,12 +25,13 @@ function ViewAllExplorer({
   const { isDataLoaded } = useSnapshot(OptionsCtrl.state);
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
   const { themeMode } = useSnapshot(ThemeCtrl.state);
-  const { wallets } = useSnapshot(ExplorerCtrl.state);
+  const { wallets, recommended, installed } = useSnapshot(ApiCtrl.state);
   const { recentWallet } = useSnapshot(ConfigCtrl.state);
-  const shouldLoadWallets = wallets.listings.length === 0;
+  const shouldLoadWallets = wallets.length === 0;
   const [walletsLoading, setWalletsLoading] = useState(false);
   const loading = !isDataLoaded || !pairingUri || walletsLoading;
   const [search, setSearch] = useState('');
+  const walletList = [...installed, ...recommended, ...wallets];
 
   const onChangeText = useDebounceCallback({ callback: setSearch });
 
@@ -38,7 +39,7 @@ function ViewAllExplorer({
     async function getWallets() {
       if (shouldLoadWallets) {
         setWalletsLoading(true);
-        await ExplorerCtrl.getWallets();
+        await ApiCtrl.fetchWallets({ page: 1 });
         setWalletsLoading(false);
       }
     }
@@ -57,7 +58,7 @@ function ViewAllExplorer({
         />
       ) : (
         <FlatList
-          data={DataUtil.getAllWallets({ search })}
+          data={walletList}
           style={{
             height: Math.round(windowHeight * 0.6),
             backgroundColor: Theme.background1,
