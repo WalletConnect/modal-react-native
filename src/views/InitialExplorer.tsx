@@ -13,6 +13,7 @@ import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import type { RouterProps } from '../types/routerTypes';
 import { ApiCtrl } from '../controllers/ApiCtrl';
 import useTheme from '../hooks/useTheme';
+import { AssetUtil } from '../utils/AssetUtil';
 
 function InitialExplorer({ isPortrait }: RouterProps) {
   const Theme = useTheme();
@@ -33,7 +34,10 @@ function InitialExplorer({ isPortrait }: RouterProps) {
 
     return (
       <WalletItem
-        walletInfo={recentWallet}
+        name={recentWallet.name}
+        id={recentWallet.id}
+        imageUrl={AssetUtil.getWalletImage(recentWallet)}
+        onPress={() => RouterCtrl.push('Connecting', { wallet: recentWallet })}
         isRecent
         currentWCURI={pairingUri}
         style={isPortrait ? styles.portraitItem : styles.landscapeItem}
@@ -47,7 +51,10 @@ function InitialExplorer({ isPortrait }: RouterProps) {
     const list = filterOutRecentWallet(installed as WcWallet[]);
     return list.map((item: WcWallet) => (
       <WalletItem
-        walletInfo={item}
+        name={item.name}
+        id={item.id}
+        imageUrl={AssetUtil.getWalletImage(item)}
+        onPress={() => RouterCtrl.push('Connecting', { wallet: item })}
         key={item.id}
         isRecent={item.id === recentWallet?.id}
         currentWCURI={pairingUri}
@@ -62,7 +69,10 @@ function InitialExplorer({ isPortrait }: RouterProps) {
       .slice(0, showViewAllButton ? 6 : 7)
       .map((item: WcWallet) => (
         <WalletItem
-          walletInfo={item}
+          name={item.name}
+          id={item.id}
+          imageUrl={AssetUtil.getWalletImage(item)}
+          onPress={() => RouterCtrl.push('Connecting', { wallet: item })}
           key={item.id}
           isRecent={item.id === recentWallet?.id}
           currentWCURI={pairingUri}

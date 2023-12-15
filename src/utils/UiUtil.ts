@@ -8,6 +8,6 @@ export const UiUtil = {
   },
 
   getWalletName(name: string, short = false) {
-    return short ? name.split(' ')[0] : name;
+    return short ? name?.split(' ')[0] : name;
   },
 };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, FlatList, ActivityIndicator, View } from 'react-native';
 import { useSnapshot } from 'valtio';
 
@@ -13,6 +13,7 @@ import SearchBar from '../components/SearchBar';
 import Text from '../components/Text';
 import { useDebounceCallback } from '../hooks/useDebounceCallback';
 import { ApiCtrl } from '../controllers/ApiCtrl';
+import { AssetUtil } from '../utils/AssetUtil';
 
 function ViewAllExplorer({
   isPortrait,
@@ -23,14 +24,32 @@ function ViewAllExplorer({
   const { isDataLoaded } = useSnapshot(OptionsCtrl.state);
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
   const { themeMode } = useSnapshot(ThemeCtrl.state);
-  const { wallets, recommended, installed } = useSnapshot(ApiCtrl.state);
+  const { wallets, recommended, installed, search, count, page } = useSnapshot(
+    ApiCtrl.state
+  );
   const shouldLoadWallets = wallets.length === 0;
   const [walletsLoading, setWalletsLoading] = useState(false);
   const loading = !isDataLoaded || !pairingUri || walletsLoading;
-  const [search, setSearch] = useState('');
+  const [searchValue, setSearch] = useState('');
+  const [pageLoading, setPageLoading] = useState(false);
   const walletList = [...installed, ...recommended, ...wallets];
 
-  const onChangeText = useDebounceCallback({ callback: setSearch });
+  const searchWallets = useCallback((value: string) => {
+    setSearch(value);
+    if (value.length > 0) {
+      ApiCtrl.searchWallet({ search: value });
+    }
+  }, []);
+
+  const fetchNextPage = async () => {
+    if (walletList.length < count && !pageLoading) {
+      setPageLoading(true);
+      await ApiCtrl.fetchWallets({ page: page + 1 });
+      setPageLoading(false);
+    }
+  };
+
+  const onChangeText = useDebounceCallback({ callback: searchWallets });
 
   useEffect(() => {
     async function getWallets() {
@@ -55,7 +74,7 @@ function ViewAllExplorer({
         />
       ) : (
         <FlatList
-          data={walletList}
+          data={searchValue.length ? search : walletList}
           style={{
             height: Math.round(windowHeight * 0.6),
             backgroundColor: Theme.background1,
@@ -65,6 +84,8 @@ function ViewAllExplorer({
           showsVerticalScrollIndicator
           numColumns={isPortrait ? 4 : 7}
           fadingEdgeLength={20}
+          onEndReached={fetchNextPage}
+          onEndReachedThreshold={2}
           ListEmptyComponent={
             <View
               style={[
@@ -86,7 +107,9 @@ function ViewAllExplorer({
           renderItem={({ item }) => (
             <WalletItem
               currentWCURI={pairingUri}
-              walletInfo={item}
+              id={item.id}
+              name={item.name}
+              imageUrl={AssetUtil.getWalletImage(item)}
               style={{
                 width: isPortrait
                   ? Math.round(windowWidth / 4)
