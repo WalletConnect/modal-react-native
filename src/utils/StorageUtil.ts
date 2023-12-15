@@ -28,12 +28,22 @@ export const StorageUtil = {
   },
 
   async getRecentWallet(): Promise<WcWallet | undefined> {
-    // MIGRAR OBJETOS
     try {
       const wallet = await AsyncStorage.getItem(
         StorageUtil.W3M_RECENT_WALLET_INFO
       );
-      return wallet ? JSON.parse(wallet) : undefined;
+
+      if (wallet) {
+        const parsedWallet = JSON.parse(wallet);
+        if (typeof parsedWallet.app === 'object') {
+          // Wallet from old api. Discard it
+          await AsyncStorage.removeItem(StorageUtil.W3M_RECENT_WALLET_INFO);
+          return undefined;
+        }
+        return parsedWallet;
+      }
+
+      return undefined;
     } catch (error) {
       console.info('Unable to get recent wallet');
     }
