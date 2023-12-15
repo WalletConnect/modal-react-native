@@ -9,9 +9,6 @@
   "files": [
     "src",
     "lib",
-    "android",
-    "ios",
-    "cpp",
     "*.podspec",
     "!lib/typescript/example",
     "!ios/build",

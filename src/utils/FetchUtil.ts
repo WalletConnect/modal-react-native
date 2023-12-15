@@ -28,13 +28,6 @@ export class FetchUtil {
     return response.json() as T;
   }
 
-  public async getBlob({ headers, ...args }: RequestArguments) {
-    const url = this.createUrl(args).toString();
-    const response = await fetch(url, { method: 'GET', headers });
-
-    return response.blob();
-  }
-
   public async post<T>({ body, headers, ...args }: PostArguments) {
     const url = this.createUrl(args).toString();
     const response = await fetch(url, {

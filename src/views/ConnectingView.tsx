@@ -9,7 +9,6 @@ import { ToastCtrl } from '../controllers/ToastCtrl';
 import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 import Text from '../components/Text';
 import type { RouterProps } from '../types/routerTypes';
-import { ExplorerUtil } from '../utils/ExplorerUtil';
 import { RouterCtrl } from '../controllers/RouterCtrl';
 import Touchable from '../components/Touchable';
 import { UiUtil } from '../utils/UiUtil';
@@ -18,15 +17,16 @@ import WalletImage from '../components/WalletImage';
 import WalletLoadingThumbnail from '../components/WalletLoadingThumbnail';
 import Chevron from '../assets/Chevron';
 import { CoreHelperUtil } from '../utils/CoreHelperUtil';
-import { DataUtil } from '../utils/DataUtil';
 import { StorageUtil } from '../utils/StorageUtil';
+import { AssetUtil } from '../utils/AssetUtil';
+import { ConfigCtrl } from '../controllers/ConfigCtrl';
 
 function ConnectingView({ onCopyClipboard }: RouterProps) {
   const Theme = useTheme();
   const { pairingUri, pairingError } = useSnapshot(WcConnectionCtrl.state);
   const { data } = useSnapshot(RouterCtrl.state);
   const walletName = UiUtil.getWalletName(data?.wallet?.name ?? 'Wallet', true);
-  const imageUrl = ExplorerUtil.getWalletImageUrl(data?.wallet?.image_id);
+  const imageUrl = AssetUtil.getWalletImage(data?.wallet);
 
   const storeLink = Platform.select({
     ios: data?.wallet?.app_store,
@@ -59,7 +59,8 @@ function ConnectingView({ onCopyClipboard }: RouterProps) {
         pairingUri
       );
       await CoreHelperUtil.openLink(mobileLink);
-      DataUtil.setRecentWallet(data?.wallet);
+      ConfigCtrl.setRecentWallet(data?.wallet);
+      StorageUtil.setRecentWallet(data?.wallet);
       StorageUtil.setDeepLinkWallet(data?.wallet?.mobile_link);
     } catch (error) {
       StorageUtil.removeDeepLinkWallet();

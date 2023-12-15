@@ -10,10 +10,8 @@ import type { RouterProps } from '../types/routerTypes';
 import useTheme from '../hooks/useTheme';
 import { ThemeCtrl } from '../controllers/ThemeCtrl';
 import SearchBar from '../components/SearchBar';
-import { DataUtil } from '../utils/DataUtil';
 import Text from '../components/Text';
 import { useDebounceCallback } from '../hooks/useDebounceCallback';
-import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import { ApiCtrl } from '../controllers/ApiCtrl';
 
 function ViewAllExplorer({
@@ -26,7 +24,6 @@ function ViewAllExplorer({
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
   const { themeMode } = useSnapshot(ThemeCtrl.state);
   const { wallets, recommended, installed } = useSnapshot(ApiCtrl.state);
-  const { recentWallet } = useSnapshot(ConfigCtrl.state);
   const shouldLoadWallets = wallets.length === 0;
   const [walletsLoading, setWalletsLoading] = useState(false);
   const loading = !isDataLoaded || !pairingUri || walletsLoading;
@@ -90,7 +87,6 @@ function ViewAllExplorer({
             <WalletItem
               currentWCURI={pairingUri}
               walletInfo={item}
-              isRecent={item.id === recentWallet?.id}
               style={{
                 width: isPortrait
                   ? Math.round(windowWidth / 4)

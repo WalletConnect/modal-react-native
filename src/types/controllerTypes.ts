@@ -45,52 +45,6 @@ export interface ToastCtrlState {
   variant: 'error' | 'success';
 }
 
-// -- ExplorerCtrl ------------------------------------------- //
-export interface ExplorerCtrlState {
-  wallets: ListingResponse & { page: number };
-  recommendedWallets: Listing[];
-}
-
-export interface ListingParams {
-  page?: number;
-  search?: string;
-  entries?: number;
-  version?: number;
-  chains?: string;
-  recommendedIds?: string;
-  excludedIds?: string;
-}
-
-export interface PlatformInfo {
-  native: string;
-  universal: string;
-}
-
-export interface Listing {
-  id: string;
-  name: string;
-  homepage: string;
-  image_id: string;
-  app: {
-    browser: string;
-    ios: string;
-    android: string;
-    mac: string;
-    window: string;
-    linux: string;
-  };
-  mobile: PlatformInfo;
-  desktop: PlatformInfo;
-
-  //doesn't come from api
-  isInstalled: boolean;
-}
-
-export interface ListingResponse {
-  listings: Listing[];
-  total: number;
-}
-
 // -- RouterCtrl --------------------------------------------- //
 export type RouterView =
   | 'ConnectWallet'
@@ -106,7 +60,7 @@ export interface RouterCtrlState {
   };
 }
 
-// -- ApiController Types -------------------------------------------------------
+// -- ApiCtrl Types -------------------------------------------------------
 export interface WcWallet {
   id: string;
   name: string;
