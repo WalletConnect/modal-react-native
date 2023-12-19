@@ -4,15 +4,16 @@ import { useSnapshot } from 'valtio';
 
 import WalletItem, { WALLET_FULL_HEIGHT } from '../components/WalletItem';
 import ModalHeader from '../components/ModalHeader';
-import { OptionsCtrl } from '../controllers/OptionsCtrl';
-import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
-import type { RouterProps } from '../types/routerTypes';
-import useTheme from '../hooks/useTheme';
-import { ThemeCtrl } from '../controllers/ThemeCtrl';
 import SearchBar from '../components/SearchBar';
 import Text from '../components/Text';
-import { useDebounceCallback } from '../hooks/useDebounceCallback';
+import { OptionsCtrl } from '../controllers/OptionsCtrl';
+import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
+import { ThemeCtrl } from '../controllers/ThemeCtrl';
+import { RouterCtrl } from '../controllers/RouterCtrl';
 import { ApiCtrl } from '../controllers/ApiCtrl';
+import type { RouterProps } from '../types/routerTypes';
+import useTheme from '../hooks/useTheme';
+import { useDebounceCallback } from '../hooks/useDebounceCallback';
 import { AssetUtil } from '../utils/AssetUtil';
 
 function ViewAllExplorer({
@@ -109,6 +110,7 @@ function ViewAllExplorer({
               currentWCURI={pairingUri}
               id={item.id}
               name={item.name}
+              onPress={() => RouterCtrl.push('Connecting', { wallet: item })}
               imageUrl={AssetUtil.getWalletImage(item)}
               style={{
                 width: isPortrait
