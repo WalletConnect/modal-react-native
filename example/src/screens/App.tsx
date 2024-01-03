@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import '@walletconnect/react-native-compat';
 import {
   WalletConnectModal,
   useWalletConnectModal,

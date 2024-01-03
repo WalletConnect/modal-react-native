@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
+    marginBottom: 16,
   },
   portraitItem: {
     width: '25%',
