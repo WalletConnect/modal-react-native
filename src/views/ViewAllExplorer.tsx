@@ -15,6 +15,8 @@ import type { RouterProps } from '../types/routerTypes';
 import useTheme from '../hooks/useTheme';
 import { useDebounceCallback } from '../hooks/useDebounceCallback';
 import { AssetUtil } from '../utils/AssetUtil';
+import { ConfigCtrl } from '../controllers/ConfigCtrl';
+import type { WcWallet } from '../types/controllerTypes';
 
 function ViewAllExplorer({
   isPortrait,
@@ -25,6 +27,7 @@ function ViewAllExplorer({
   const { isDataLoaded } = useSnapshot(OptionsCtrl.state);
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
   const { themeMode } = useSnapshot(ThemeCtrl.state);
+  const { recentWallet } = useSnapshot(ConfigCtrl.state);
   const { wallets, recommended, installed, search, count, page } = useSnapshot(
     ApiCtrl.state
   );
@@ -33,7 +36,20 @@ function ViewAllExplorer({
   const loading = !isDataLoaded || !pairingUri || walletsLoading;
   const [searchValue, setSearch] = useState('');
   const [pageLoading, setPageLoading] = useState(false);
-  const walletList = [...installed, ...recommended, ...wallets];
+
+  const filterOutRecentWallet = (list: WcWallet[]): WcWallet[] => {
+    if (!recentWallet) return list;
+
+    const filtered = list.filter((wallet) => wallet.id !== recentWallet.id);
+    return filtered;
+  };
+
+  const walletList = recentWallet
+    ? [
+        recentWallet,
+        ...filterOutRecentWallet([...installed, ...recommended, ...wallets]),
+      ]
+    : filterOutRecentWallet([...installed, ...recommended, ...wallets]);
 
   const searchWallets = useCallback((value: string) => {
     setSearch(value);
@@ -48,6 +64,39 @@ function ViewAllExplorer({
       await ApiCtrl.fetchWallets({ page: page + 1 });
       setPageLoading(false);
     }
+  };
+
+  const emptyTemplate = () => {
+    return (
+      <View
+        style={[
+          styles.emptyContainer,
+          { height: Math.round(windowHeight * 0.6) },
+        ]}
+      >
+        <Text style={[styles.emptyText, { color: Theme.foreground2 }]}>
+          No results found
+        </Text>
+      </View>
+    );
+  };
+
+  const renderWallet = ({ item }: { item: WcWallet }) => {
+    return (
+      <WalletItem
+        currentWCURI={pairingUri}
+        id={item.id}
+        name={item.name}
+        isRecent={item.id === recentWallet?.id}
+        onPress={() => RouterCtrl.push('Connecting', { wallet: item })}
+        imageUrl={AssetUtil.getWalletImage(item)}
+        style={{
+          width: isPortrait
+            ? Math.round(windowWidth / 4)
+            : Math.round(windowWidth / 7),
+        }}
+      />
+    );
   };
 
   const onChangeText = useDebounceCallback({ callback: searchWallets });
@@ -87,38 +136,14 @@ function ViewAllExplorer({
           fadingEdgeLength={20}
           onEndReached={fetchNextPage}
           onEndReachedThreshold={2}
-          ListEmptyComponent={
-            <View
-              style={[
-                styles.emptyContainer,
-                { height: Math.round(windowHeight * 0.6) },
-              ]}
-            >
-              <Text style={[styles.emptyText, { color: Theme.foreground2 }]}>
-                No results found
-              </Text>
-            </View>
-          }
+          ListEmptyComponent={emptyTemplate()}
           key={isPortrait ? 'portrait' : 'landscape'}
           getItemLayout={(_data, index) => ({
             length: WALLET_FULL_HEIGHT,
             offset: WALLET_FULL_HEIGHT * index,
             index,
           })}
-          renderItem={({ item }) => (
-            <WalletItem
-              currentWCURI={pairingUri}
-              id={item.id}
-              name={item.name}
-              onPress={() => RouterCtrl.push('Connecting', { wallet: item })}
-              imageUrl={AssetUtil.getWalletImage(item)}
-              style={{
-                width: isPortrait
-                  ? Math.round(windowWidth / 4)
-                  : Math.round(windowWidth / 7),
-              }}
-            />
-          )}
+          renderItem={renderWallet}
         />
       )}
     </>

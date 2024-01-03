@@ -27,59 +27,8 @@ function InitialExplorer({ isPortrait }: RouterProps) {
   const viewHeight = isPortrait ? WALLET_FULL_HEIGHT * 2 : WALLET_FULL_HEIGHT;
 
   const showViewAllButton =
-    recommended.length > 8 || explorerExcludedWalletIds !== 'ALL';
-
-  const recentTemplate = () => {
-    if (!recentWallet) return null;
-
-    return (
-      <WalletItem
-        name={recentWallet.name}
-        id={recentWallet.id}
-        imageUrl={AssetUtil.getWalletImage(recentWallet)}
-        onPress={() => RouterCtrl.push('Connecting', { wallet: recentWallet })}
-        isRecent
-        currentWCURI={pairingUri}
-        style={isPortrait ? styles.portraitItem : styles.landscapeItem}
-      />
-    );
-  };
-
-  const installedTemplate = () => {
-    if (!installed) return null;
-
-    const list = filterOutRecentWallet(installed as WcWallet[]);
-    return list.map((item: WcWallet) => (
-      <WalletItem
-        name={item.name}
-        id={item.id}
-        imageUrl={AssetUtil.getWalletImage(item)}
-        onPress={() => RouterCtrl.push('Connecting', { wallet: item })}
-        key={item.id}
-        isRecent={item.id === recentWallet?.id}
-        currentWCURI={pairingUri}
-        style={isPortrait ? styles.portraitItem : styles.landscapeItem}
-      />
-    ));
-  };
-
-  const recommendedTemplate = () => {
-    const list = filterOutRecentWallet(recommended as WcWallet[]);
-    return list
-      .slice(0, showViewAllButton ? 6 : 7)
-      .map((item: WcWallet) => (
-        <WalletItem
-          name={item.name}
-          id={item.id}
-          imageUrl={AssetUtil.getWalletImage(item)}
-          onPress={() => RouterCtrl.push('Connecting', { wallet: item })}
-          key={item.id}
-          isRecent={item.id === recentWallet?.id}
-          currentWCURI={pairingUri}
-          style={isPortrait ? styles.portraitItem : styles.landscapeItem}
-        />
-      ));
-  };
+    installed.length + recommended.length >= 8 ||
+    explorerExcludedWalletIds !== 'ALL';
 
   const viewAllTemplate = () => {
     if (!showViewAllButton) return null;
@@ -97,8 +46,27 @@ function InitialExplorer({ isPortrait }: RouterProps) {
     if (!recentWallet) return wallets;
 
     const filtered = wallets.filter((wallet) => wallet.id !== recentWallet.id);
-
     return filtered;
+  };
+
+  const walletTemplate = () => {
+    const list = recentWallet
+      ? [recentWallet, ...filterOutRecentWallet([...installed, ...recommended])]
+      : filterOutRecentWallet([...installed, ...recommended]);
+    return list
+      .slice(0, showViewAllButton ? 7 : 8)
+      .map((item: WcWallet) => (
+        <WalletItem
+          name={item.name}
+          id={item.id}
+          imageUrl={AssetUtil.getWalletImage(item)}
+          onPress={() => RouterCtrl.push('Connecting', { wallet: item })}
+          key={item.id}
+          currentWCURI={pairingUri}
+          isRecent={item.id === recentWallet?.id}
+          style={isPortrait ? styles.portraitItem : styles.landscapeItem}
+        />
+      ));
   };
 
   return (
@@ -120,9 +88,7 @@ function InitialExplorer({ isPortrait }: RouterProps) {
             { height: viewHeight, backgroundColor: Theme.background1 },
           ]}
         >
-          {recentTemplate()}
-          {installedTemplate()}
-          {recommendedTemplate()}
+          {walletTemplate()}
           {viewAllTemplate()}
         </View>
       )}

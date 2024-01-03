@@ -1,6 +1,6 @@
 {
   "name": "@walletconnect/modal-react-native",
-  "version": "1.0.0-rc.14",
+  "version": "1.0.0",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
@@ -26,7 +26,7 @@
     "test": "yarn jest --clearCache && yarn jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepack": "bob build",
+    "prepack": "./scripts/bump-version.sh && bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn install"

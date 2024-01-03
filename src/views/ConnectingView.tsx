@@ -20,13 +20,16 @@ import { CoreHelperUtil } from '../utils/CoreHelperUtil';
 import { StorageUtil } from '../utils/StorageUtil';
 import { AssetUtil } from '../utils/AssetUtil';
 import { ConfigCtrl } from '../controllers/ConfigCtrl';
+import { ApiCtrl } from '../controllers/ApiCtrl';
 
 function ConnectingView({ onCopyClipboard }: RouterProps) {
   const Theme = useTheme();
   const { pairingUri, pairingError } = useSnapshot(WcConnectionCtrl.state);
   const { data } = useSnapshot(RouterCtrl.state);
+  const { installed } = useSnapshot(ApiCtrl.state);
   const walletName = UiUtil.getWalletName(data?.wallet?.name ?? 'Wallet', true);
   const imageUrl = AssetUtil.getWalletImage(data?.wallet);
+  const isInstalled = !!installed.find((item) => item.id === data?.wallet?.id);
 
   const storeLink = Platform.select({
     ios: data?.wallet?.app_store,
@@ -68,6 +71,48 @@ function ConnectingView({ onCopyClipboard }: RouterProps) {
     }
   }, [data?.wallet, pairingUri]);
 
+  const retryButtonTemplate = () => {
+    return (
+      <View style={[styles.upperFooter, { borderColor: Theme.foreground3 }]}>
+        <Touchable
+          style={[styles.retryButton, { backgroundColor: Theme.accent }]}
+          onPress={onRetry}
+        >
+          <Text style={styles.text}>Retry</Text>
+          <RetryIcon style={styles.retryIcon} />
+        </Touchable>
+      </View>
+    );
+  };
+
+  const storeButtonTemplate = () => {
+    if (!storeLink || isInstalled) return null;
+
+    return (
+      <View style={styles.lowerFooter}>
+        <View style={styles.row}>
+          <WalletImage url={imageUrl} size="sm" />
+          <Text
+            style={[styles.getText, { color: Theme.foreground1 }]}
+          >{`Get ${walletName}`}</Text>
+        </View>
+        <Touchable
+          style={styles.row}
+          onPress={() => Linking.openURL(storeLink)}
+        >
+          <Text style={[styles.storeText, { color: Theme.foreground2 }]}>
+            {storeCaption}
+          </Text>
+          <Chevron
+            fill={Theme.foreground2}
+            width={6}
+            style={styles.storeIcon}
+          />
+        </Touchable>
+      </View>
+    );
+  };
+
   useEffect(() => {
     WcConnectionCtrl.setPairingError(false);
     onConnect();
@@ -105,38 +150,8 @@ function ConnectingView({ onCopyClipboard }: RouterProps) {
           },
         ]}
       >
-        <View style={[styles.upperFooter, { borderColor: Theme.foreground3 }]}>
-          <Touchable
-            style={[styles.retryButton, { backgroundColor: Theme.accent }]}
-            onPress={onRetry}
-          >
-            <Text style={styles.text}>Retry</Text>
-            <RetryIcon style={styles.retryIcon} />
-          </Touchable>
-        </View>
-        {storeLink && (
-          <View style={styles.lowerFooter}>
-            <View style={styles.row}>
-              <WalletImage url={imageUrl} size="sm" />
-              <Text
-                style={[styles.getText, { color: Theme.foreground1 }]}
-              >{`Get ${walletName}`}</Text>
-            </View>
-            <Touchable
-              style={styles.row}
-              onPress={() => Linking.openURL(storeLink)}
-            >
-              <Text style={[styles.storeText, { color: Theme.foreground2 }]}>
-                {storeCaption}
-              </Text>
-              <Chevron
-                fill={Theme.foreground2}
-                width={6}
-                style={styles.storeIcon}
-              />
-            </Touchable>
-          </View>
-        )}
+        {retryButtonTemplate()}
+        {storeButtonTemplate()}
       </View>
     </>
   );
