@@ -75,6 +75,9 @@ export const CoreUtil = {
       safeAppUrl = appUrl.replaceAll('/', '').replaceAll(':', '');
       safeAppUrl = `${safeAppUrl}://`;
     }
+    if (!safeAppUrl.endsWith('/')) {
+      safeAppUrl = `${safeAppUrl}/`;
+    }
 
     const encodedWcUrl = encodeURIComponent(wcUri);
 
