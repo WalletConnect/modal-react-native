@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, FlatList, ActivityIndicator, View } from 'react-native';
+import { StyleSheet, FlatList, View } from 'react-native';
 import { useSnapshot } from 'valtio';
 
-import WalletItem, { WALLET_FULL_HEIGHT } from '../components/WalletItem';
+import WalletItem, {
+  WALLET_FULL_HEIGHT,
+  WALLET_MARGIN,
+} from '../components/WalletItem';
 import ModalHeader from '../components/ModalHeader';
 import SearchBar from '../components/SearchBar';
 import Text from '../components/Text';
@@ -17,6 +20,7 @@ import { useDebounceCallback } from '../hooks/useDebounceCallback';
 import { AssetUtil } from '../utils/AssetUtil';
 import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import type { WcWallet } from '../types/controllerTypes';
+import { WalletItemLoader } from '../components/WalletItemLoader';
 
 function ViewAllExplorer({
   isPortrait,
@@ -36,6 +40,10 @@ function ViewAllExplorer({
   const loading = !isDataLoaded || !pairingUri || walletsLoading;
   const [searchValue, setSearch] = useState('');
   const [pageLoading, setPageLoading] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const itemWidth = isPortrait
+    ? Math.round(windowWidth / 4)
+    : Math.round(windowWidth / 7);
 
   const filterOutRecentWallet = (list: WcWallet[]): WcWallet[] => {
     if (!recentWallet) return list;
@@ -51,10 +59,12 @@ function ViewAllExplorer({
       ]
     : filterOutRecentWallet([...installed, ...recommended, ...wallets]);
 
-  const searchWallets = useCallback((value: string) => {
+  const searchWallets = useCallback(async (value: string) => {
     setSearch(value);
     if (value.length > 0) {
-      ApiCtrl.searchWallet({ search: value });
+      setSearchLoading(true);
+      await ApiCtrl.searchWallet({ search: value });
+      setSearchLoading(false);
     }
   }, []);
 
@@ -64,6 +74,27 @@ function ViewAllExplorer({
       await ApiCtrl.fetchWallets({ page: page + 1 });
       setPageLoading(false);
     }
+  };
+
+  const loadingTemplate = (items: number) => {
+    return (
+      <View
+        style={[
+          styles.loaderContainer,
+          { height: Math.round(windowHeight * 0.6) },
+        ]}
+      >
+        {Array.from({ length: items }).map((_, index) => (
+          <WalletItemLoader
+            key={index}
+            style={{
+              marginBottom: WALLET_MARGIN * 2,
+              width: itemWidth,
+            }}
+          />
+        ))}
+      </View>
+    );
   };
 
   const emptyTemplate = () => {
@@ -90,11 +121,7 @@ function ViewAllExplorer({
         isRecent={item.id === recentWallet?.id}
         onPress={() => RouterCtrl.push('Connecting', { wallet: item })}
         imageUrl={AssetUtil.getWalletImage(item)}
-        style={{
-          width: isPortrait
-            ? Math.round(windowWidth / 4)
-            : Math.round(windowWidth / 7),
-        }}
+        style={{ width: itemWidth }}
       />
     );
   };
@@ -117,11 +144,8 @@ function ViewAllExplorer({
       <ModalHeader shadow>
         <SearchBar onChangeText={onChangeText} style={styles.searchbar} />
       </ModalHeader>
-      {loading ? (
-        <ActivityIndicator
-          style={{ height: Math.round(windowHeight * 0.6) }}
-          color={Theme.accent}
-        />
+      {loading || searchLoading ? (
+        loadingTemplate(20)
       ) : (
         <FlatList
           data={searchValue.length ? search : walletList}
@@ -161,6 +185,10 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 16,
     fontWeight: '600',
+  },
+  loaderContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
 });
 
