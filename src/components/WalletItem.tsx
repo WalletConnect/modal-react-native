@@ -1,18 +1,19 @@
+import { memo } from 'react';
 import { Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 
-import type { Listing } from '../types/controllerTypes';
-import { ExplorerUtil } from '../utils/ExplorerUtil';
 import useTheme from '../hooks/useTheme';
-import { ExplorerCtrl } from '../controllers/ExplorerCtrl';
-import { RouterCtrl } from '../controllers/RouterCtrl';
-import { DataUtil } from '../utils/DataUtil';
 import { UiUtil } from '../utils/UiUtil';
 import Touchable from './Touchable';
 import WalletImage from './WalletImage';
+import { useSnapshot } from 'valtio';
+import { ApiCtrl } from '../controllers/ApiCtrl';
 
 interface Props {
   currentWCURI?: string;
-  walletInfo: Listing;
+  id: string;
+  name: string;
+  imageUrl?: string;
+  onPress?: () => void;
   style?: StyleProp<ViewStyle>;
   isRecent?: boolean;
 }
@@ -22,36 +23,23 @@ export const WALLET_WIDTH = 80;
 export const WALLET_HEIGHT = 98;
 export const WALLET_FULL_HEIGHT = WALLET_HEIGHT + WALLET_MARGIN * 2;
 
-function WalletItem({ currentWCURI, walletInfo, style, isRecent }: Props) {
+function _WalletItem({ id, name, imageUrl, style, isRecent, onPress }: Props) {
   const Theme = useTheme();
-  const imageUrl = ExplorerCtrl.getWalletImageUrl(walletInfo.image_id);
+  const imageHeaders = ApiCtrl._getApiHeaders();
 
-  const onPress = () => {
-    if (currentWCURI) {
-      DataUtil.setRecentWallet(walletInfo);
-      ExplorerUtil.navigateDeepLink(
-        walletInfo.mobile.universal,
-        walletInfo.mobile.native,
-        currentWCURI
-      );
-      RouterCtrl.push('Connecting', { wallet: walletInfo });
-    }
-  };
+  const { installed } = useSnapshot(ApiCtrl.state);
+  const isInstalled = !!installed?.find((wallet) => wallet.id === id);
 
   return (
-    <Touchable
-      onPress={onPress}
-      key={walletInfo.id}
-      style={[styles.container, style]}
-    >
-      <WalletImage size="md" url={imageUrl} />
+    <Touchable onPress={onPress} key={id} style={[styles.container, style]}>
+      <WalletImage size="md" url={imageUrl} imageHeaders={imageHeaders} />
       <Text
         style={[styles.name, { color: Theme.foreground1 }]}
         numberOfLines={1}
       >
-        {UiUtil.getWalletName(walletInfo.name, true)}
+        {UiUtil.getWalletName(name, true)}
       </Text>
-      {(isRecent || walletInfo.isInstalled) && (
+      {(isRecent || isInstalled) && (
         <Text style={[styles.status, { color: Theme.foreground3 }]}>
           {isRecent ? 'RECENT' : 'INSTALLED'}
         </Text>
@@ -80,6 +68,10 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
   },
+});
+
+export const WalletItem = memo(_WalletItem, (prevProps, nextProps) => {
+  return prevProps.name === nextProps.name;
 });
 
 export default WalletItem;

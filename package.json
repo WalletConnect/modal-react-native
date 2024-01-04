@@ -18,7 +18,7 @@
     "test": "yarn jest --clearCache && yarn jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepack": "bob build",
+    "prepack": "./scripts/bump-version.sh && bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn install"

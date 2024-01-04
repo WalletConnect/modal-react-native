@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { SUBSCRIBER_EVENTS } from '@walletconnect/core';
-import { ExplorerCtrl } from '../controllers/ExplorerCtrl';
 import { OptionsCtrl } from '../controllers/OptionsCtrl';
 import { ConfigCtrl } from '../controllers/ConfigCtrl';
 import { ClientCtrl } from '../controllers/ClientCtrl';
@@ -13,6 +12,7 @@ import { StorageUtil } from '../utils/StorageUtil';
 import { ThemeCtrl } from '../controllers/ThemeCtrl';
 import { ToastCtrl } from '../controllers/ToastCtrl';
 import type { ThemeCtrlState } from '../types/controllerTypes';
+import { ApiCtrl } from '../controllers/ApiCtrl';
 
 interface Props {
   projectId: string;
@@ -71,13 +71,13 @@ export function useConfigure(config: Props) {
   }, []);
 
   /**
-   * Fetch wallet list
+   * Fetch initial wallet list
    */
   useEffect(() => {
     async function fetchWallets() {
       try {
-        if (!ExplorerCtrl.state.wallets.total) {
-          await ExplorerCtrl.getWallets();
+        if (!ApiCtrl.state.recommended.length) {
+          await ApiCtrl.prefetch();
           OptionsCtrl.setIsDataLoaded(true);
         }
       } catch (error) {

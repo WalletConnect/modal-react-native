@@ -1,20 +1,12 @@
-import type { IProviderMetadata, IProvider, ISessionParams } from './coreTypes';
+import type { IProvider } from './coreTypes';
+
+export type CaipAddress = `${string}:${string}:${string}`;
 
 // -- ClientCtrl ------------------------------------------- //
 export interface ClientCtrlState {
   initialized: boolean;
   provider?: IProvider;
   sessionTopic?: string;
-}
-
-// -- ConfigCtrl ------------------------------------------- //
-export interface ConfigCtrlState {
-  projectId: string;
-  sessionParams?: ISessionParams;
-  recentWallet?: Listing;
-  providerMetadata?: IProviderMetadata;
-  explorerRecommendedWalletIds?: string[] | 'NONE';
-  explorerExcludedWalletIds?: string[] | 'ALL';
 }
 
 // -- ModalCtrl --------------------------------------- //
@@ -53,52 +45,6 @@ export interface ToastCtrlState {
   variant: 'error' | 'success';
 }
 
-// -- ExplorerCtrl ------------------------------------------- //
-export interface ExplorerCtrlState {
-  wallets: ListingResponse & { page: number };
-  recommendedWallets: Listing[];
-}
-
-export interface ListingParams {
-  page?: number;
-  search?: string;
-  entries?: number;
-  version?: number;
-  chains?: string;
-  recommendedIds?: string;
-  excludedIds?: string;
-}
-
-export interface PlatformInfo {
-  native: string;
-  universal: string;
-}
-
-export interface Listing {
-  id: string;
-  name: string;
-  homepage: string;
-  image_id: string;
-  app: {
-    browser: string;
-    ios: string;
-    android: string;
-    mac: string;
-    window: string;
-    linux: string;
-  };
-  mobile: PlatformInfo;
-  desktop: PlatformInfo;
-
-  //doesn't come from api
-  isInstalled: boolean;
-}
-
-export interface ListingResponse {
-  listings: Listing[];
-  total: number;
-}
-
 // -- RouterCtrl --------------------------------------------- //
 export type RouterView =
   | 'ConnectWallet'
@@ -110,6 +56,45 @@ export interface RouterCtrlState {
   history: RouterView[];
   view: RouterView;
   data?: {
-    wallet?: Listing;
+    wallet?: WcWallet;
   };
+}
+
+// -- ApiCtrl Types -------------------------------------------------------
+export interface WcWallet {
+  id: string;
+  name: string;
+  homepage?: string;
+  image_id?: string;
+  image_url?: string;
+  order?: number;
+  mobile_link?: string | null;
+  desktop_link?: string | null;
+  webapp_link?: string | null;
+  app_store?: string | null;
+  play_store?: string | null;
+}
+
+export interface DataWallet {
+  id: string;
+  ios_schema?: string;
+  android_app_id?: string;
+}
+
+export interface ApiGetWalletsRequest {
+  page: number;
+  entries: number;
+  search?: string;
+  include?: string[];
+  exclude?: string[];
+}
+
+export interface ApiGetWalletsResponse {
+  data: WcWallet[];
+  count: number;
+}
+
+export interface ApiGetDataWalletsResponse {
+  data: DataWallet[];
+  count: number;
 }

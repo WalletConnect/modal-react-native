@@ -7,7 +7,7 @@ import { AccountCtrl } from './AccountCtrl';
 import { RouterCtrl } from './RouterCtrl';
 import { WcConnectionCtrl } from './WcConnectionCtrl';
 import { ConfigCtrl } from './ConfigCtrl';
-import { CoreUtil } from '../utils/CoreUtil';
+import { CoreHelperUtil } from '../utils/CoreHelperUtil';
 
 // -- types -------------------------------------------------------- //
 export interface OpenOptions {
@@ -34,7 +34,7 @@ export const ModalCtrl = {
       const explorerDisabled =
         explorerRecommendedWalletIds === 'NONE' ||
         (explorerExcludedWalletIds === 'ALL' &&
-          !CoreUtil.isArray(explorerRecommendedWalletIds));
+          !CoreHelperUtil.isArray(explorerRecommendedWalletIds));
 
       WcConnectionCtrl.setPairingEnabled(true);
 

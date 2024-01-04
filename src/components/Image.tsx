@@ -8,9 +8,10 @@ import { isIOS } from '../constants/Platform';
 
 export type ImageProps = Omit<NativeProps, 'source'> & {
   source: string;
+  headers?: Record<string, string>;
 };
 
-function Image({ source, style }: ImageProps) {
+function Image({ source, headers, style, ...rest }: ImageProps) {
   const opacity = useRef(new Animated.Value(0));
 
   // Fade in image on load for iOS. Android does this by default.
@@ -24,12 +25,13 @@ function Image({ source, style }: ImageProps) {
 
   return isIOS ? (
     <Animated.Image
-      source={{ uri: source }}
+      source={{ uri: source, headers }}
       onLoadEnd={onLoadEnd}
       style={[{ opacity: opacity.current }, style]}
+      {...rest}
     />
   ) : (
-    <NativeImage source={{ uri: source }} style={style} />
+    <NativeImage source={{ uri: source, headers }} style={style} {...rest} />
   );
 }
 
