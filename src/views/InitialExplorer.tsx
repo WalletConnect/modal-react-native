@@ -1,7 +1,10 @@
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSnapshot } from 'valtio';
 
-import WalletItem, { WALLET_FULL_HEIGHT } from '../components/WalletItem';
+import WalletItem, {
+  WALLET_FULL_HEIGHT,
+  WALLET_MARGIN,
+} from '../components/WalletItem';
 import ViewAllBox from '../components/ViewAllBox';
 import QRIcon from '../assets/QRCode';
 import ModalHeader from '../components/ModalHeader';
@@ -14,6 +17,7 @@ import type { RouterProps } from '../types/routerTypes';
 import { ApiCtrl } from '../controllers/ApiCtrl';
 import useTheme from '../hooks/useTheme';
 import { AssetUtil } from '../utils/AssetUtil';
+import { WalletItemLoader } from '../components/WalletItemLoader';
 
 function InitialExplorer({ isPortrait }: RouterProps) {
   const Theme = useTheme();
@@ -49,6 +53,22 @@ function InitialExplorer({ isPortrait }: RouterProps) {
     return filtered;
   };
 
+  const loadingTemplate = (items: number) => {
+    return (
+      <View style={[styles.loaderContainer, { height: viewHeight }]}>
+        {Array.from({ length: items }).map((_, index) => (
+          <WalletItemLoader
+            key={index}
+            style={[
+              isPortrait ? styles.portraitItem : styles.landscapeItem,
+              { marginBottom: WALLET_MARGIN * 2 },
+            ]}
+          />
+        ))}
+      </View>
+    );
+  };
+
   const walletTemplate = () => {
     const list = recentWallet
       ? [recentWallet, ...filterOutRecentWallet([...installed, ...recommended])]
@@ -77,10 +97,7 @@ function InitialExplorer({ isPortrait }: RouterProps) {
         actionIcon={<QRIcon width={22} height={22} fill={Theme.accent} />}
       />
       {loading ? (
-        <ActivityIndicator
-          style={{ height: viewHeight }}
-          color={Theme.accent}
-        />
+        loadingTemplate(8)
       ) : (
         <View
           style={[
@@ -108,6 +125,11 @@ const styles = StyleSheet.create({
   },
   landscapeItem: {
     width: '12.5%',
+  },
+  loaderContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 16,
   },
 });
 
