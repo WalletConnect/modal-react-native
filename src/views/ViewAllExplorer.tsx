@@ -42,8 +42,8 @@ function ViewAllExplorer({
   const [pageLoading, setPageLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const itemWidth = isPortrait
-    ? Math.round(windowWidth / 4)
-    : Math.round(windowWidth / 7);
+    ? Math.trunc(windowWidth / 4)
+    : Math.trunc(windowWidth / 7);
 
   const filterOutRecentWallet = (list: WcWallet[]): WcWallet[] => {
     if (!recentWallet) return list;
