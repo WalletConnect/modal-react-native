@@ -5,7 +5,7 @@ const REQUIRED_METHODS = ['eth_sendTransaction', 'personal_sign'];
 const REQUIRED_EVENTS = ['chainChanged', 'accountsChanged'];
 
 // DO NOT REMOVE, SHOULD MATCH CORE PACKAGE VERSION
-export const CORE_VERSION = '2.10.4';
+export const CORE_VERSION = '2.11.0';
 
 // DO NOT REMOVE, SHOULD MATCH SDK PACKAGE VERSION
 export const SDK_VERSION = '1.0.0';
