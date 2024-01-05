@@ -1,25 +1,25 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { useSnapshot } from 'valtio';
-
 import WalletItem, {
   WALLET_FULL_HEIGHT,
   WALLET_MARGIN,
-} from '../components/WalletItem';
-import ViewAllBox from '../components/ViewAllBox';
-import QRIcon from '../assets/QRCode';
-import ModalHeader from '../components/ModalHeader';
-import type { WcWallet } from '../types/controllerTypes';
-import { RouterCtrl } from '../controllers/RouterCtrl';
-import { OptionsCtrl } from '../controllers/OptionsCtrl';
-import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
-import { ConfigCtrl } from '../controllers/ConfigCtrl';
-import type { RouterProps } from '../types/routerTypes';
-import { ApiCtrl } from '../controllers/ApiCtrl';
-import useTheme from '../hooks/useTheme';
-import { AssetUtil } from '../utils/AssetUtil';
-import { WalletItemLoader } from '../components/WalletItemLoader';
+} from '../../components/WalletItem';
+import ViewAllBox from '../../components/ViewAllBox';
+import QRIcon from '../../assets/QRCode';
+import ModalHeader from '../../partials/wcm-modal-header';
+import type { WcWallet } from '../../types/controllerTypes';
+import { RouterCtrl } from '../../controllers/RouterCtrl';
+import { OptionsCtrl } from '../../controllers/OptionsCtrl';
+import { WcConnectionCtrl } from '../../controllers/WcConnectionCtrl';
+import { ConfigCtrl } from '../../controllers/ConfigCtrl';
+import type { RouterProps } from '../../types/routerTypes';
+import { ApiCtrl } from '../../controllers/ApiCtrl';
+import useTheme from '../../hooks/useTheme';
+import { AssetUtil } from '../../utils/AssetUtil';
+import { WalletItemLoader } from '../../components/WalletItemLoader';
+import styles from './styles';
 
-function InitialExplorer({ isPortrait }: RouterProps) {
+function ConnectView({ isPortrait }: RouterProps) {
   const Theme = useTheme();
   const { isDataLoaded } = useSnapshot(OptionsCtrl.state);
   const { pairingUri } = useSnapshot(WcConnectionCtrl.state);
@@ -82,7 +82,6 @@ function InitialExplorer({ isPortrait }: RouterProps) {
           imageUrl={AssetUtil.getWalletImage(item)}
           onPress={() => RouterCtrl.push('Connecting', { wallet: item })}
           key={item.id}
-          currentWCURI={pairingUri}
           isRecent={item.id === recentWallet?.id}
           style={isPortrait ? styles.portraitItem : styles.landscapeItem}
         />
@@ -113,24 +112,4 @@ function InitialExplorer({ isPortrait }: RouterProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  explorerContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  portraitItem: {
-    width: '25%',
-  },
-  landscapeItem: {
-    width: '12.5%',
-  },
-  loaderContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 16,
-  },
-});
-
-export default InitialExplorer;
+export default ConnectView;

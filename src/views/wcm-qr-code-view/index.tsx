@@ -1,14 +1,14 @@
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useSnapshot } from 'valtio';
 
-import ModalHeader from '../components/ModalHeader';
-import QRCode from '../components/QRCode';
-import CopyIcon from '../assets/CopyLarge';
-import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
-import type { RouterProps } from '../types/routerTypes';
-import { ThemeCtrl } from '../controllers/ThemeCtrl';
-import useTheme from '../hooks/useTheme';
-import { ToastCtrl } from '../controllers/ToastCtrl';
+import ModalHeader from '../../partials/wcm-modal-header';
+import QRCode from '../../components/QRCode';
+import CopyIcon from '../../assets/CopyLarge';
+import { WcConnectionCtrl } from '../../controllers/WcConnectionCtrl';
+import type { RouterProps } from '../../types/routerTypes';
+import { ThemeCtrl } from '../../controllers/ThemeCtrl';
+import useTheme from '../../hooks/useTheme';
+import { ToastCtrl } from '../../controllers/ToastCtrl';
 import { useEffect } from 'react';
 
 function QRCodeView({

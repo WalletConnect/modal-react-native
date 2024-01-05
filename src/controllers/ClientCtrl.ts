@@ -1,15 +1,21 @@
 import { proxy, ref } from 'valtio';
+import type { IProvider } from '../types/coreTypes';
 
-import type { ClientCtrlState } from '../types/controllerTypes';
+// -- Types ---------------------------------------- //
+export interface ClientCtrlState {
+  initialized: boolean;
+  provider?: IProvider;
+  sessionTopic?: string;
+}
 
-// -- initial state ------------------------------------------------ //
+// -- State ---------------------------------------- //
 const state = proxy<ClientCtrlState>({
   initialized: false,
   provider: undefined,
   sessionTopic: undefined,
 });
 
-// -- controller -------------------------------------------------- //
+// -- Controller ---------------------------------------- //
 export const ClientCtrl = {
   state,
 

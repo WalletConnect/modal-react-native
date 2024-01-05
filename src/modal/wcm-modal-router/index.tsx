@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
 import { useSnapshot } from 'valtio';
 
-import { useOrientation } from '../hooks/useOrientation';
-import QRCodeView from '../views/QRCodeView';
-import ViewAllExplorer from '../views/ViewAllExplorer';
-import { RouterCtrl } from '../controllers/RouterCtrl';
-import InitialExplorer from '../views/InitialExplorer';
-import ConnectingView from '../views/ConnectingView';
-import useTheme from '../hooks/useTheme';
+import { useOrientation } from '../../hooks/useOrientation';
+import QRCodeView from '../../views/wcm-qr-code-view';
+import AllWalletsView from '../../views/wcm-all-wallets-view';
+import { RouterCtrl } from '../../controllers/RouterCtrl';
+import ConnectView from '../../views/wcm-connect-view';
+import ConnectingView from '../../views/wcm-connecting-view';
+import useTheme from '../../hooks/useTheme';
 import { StyleSheet, View } from 'react-native';
 
 interface Props {
@@ -22,15 +22,15 @@ export function ModalRouter(props: Props) {
   const ViewComponent = useMemo(() => {
     switch (routerState.view) {
       case 'ConnectWallet':
-        return InitialExplorer;
+        return ConnectView;
       case 'WalletExplorer':
-        return ViewAllExplorer;
+        return AllWalletsView;
       case 'Qrcode':
         return QRCodeView;
       case 'Connecting':
         return ConnectingView;
       default:
-        return InitialExplorer;
+        return ConnectView;
     }
   }, [routerState.view]);
 

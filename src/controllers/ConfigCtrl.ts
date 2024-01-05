@@ -4,7 +4,7 @@ import type { WcWallet } from '../types/controllerTypes';
 import { StorageUtil } from '../utils/StorageUtil';
 import type { IProviderMetadata, ISessionParams } from '../types/coreTypes';
 
-// -- types -------------------------------------------------------- //
+// -- Types ---------------------------------------- //
 export interface ConfigCtrlState {
   projectId: string;
   sessionParams?: ISessionParams;
@@ -14,7 +14,7 @@ export interface ConfigCtrlState {
   explorerExcludedWalletIds?: string[] | 'ALL';
 }
 
-// -- initial state ------------------------------------------------ //
+// -- State ---------------------------------------- //
 const state = proxy<ConfigCtrlState>({
   projectId: '',
   sessionParams: undefined,
@@ -24,7 +24,7 @@ const state = proxy<ConfigCtrlState>({
   explorerExcludedWalletIds: undefined,
 });
 
-// -- controller --------------------------------------------------- //
+// -- Controller ---------------------------------------- //
 export const ConfigCtrl = {
   state,
 

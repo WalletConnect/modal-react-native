@@ -2,16 +2,16 @@ import { StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import { useSnapshot } from 'valtio';
 
-import ModalBackcard from './ModalBackcard';
-import { ModalRouter } from './ModalRouter';
-import { ModalCtrl } from '../controllers/ModalCtrl';
-import { RouterCtrl } from '../controllers/RouterCtrl';
-import { useConnectionHandler } from '../hooks/useConnectionHandler';
-import type { ConfigCtrlState } from '../controllers/ConfigCtrl';
-import type { ThemeCtrlState } from '../types/controllerTypes';
-import type { IProviderMetadata, ISessionParams } from '../types/coreTypes';
-import { useConfigure } from '../hooks/useConfigure';
-import Toast from './Toast';
+import ModalBackcard from '../../components/ModalBackcard';
+import { ModalRouter } from '../wcm-modal-router';
+import { ModalCtrl } from '../../controllers/ModalCtrl';
+import { RouterCtrl } from '../../controllers/RouterCtrl';
+import { useConnectionHandler } from '../../hooks/useConnectionHandler';
+import type { ConfigCtrlState } from '../../controllers/ConfigCtrl';
+import type { ThemeCtrlState } from '../../types/controllerTypes';
+import type { IProviderMetadata, ISessionParams } from '../../types/coreTypes';
+import { useConfigure } from '../../hooks/useConfigure';
+import Toast from '../../components/Toast';
 
 export type Props = Omit<ConfigCtrlState, 'recentWallet'> &
   ThemeCtrlState & {

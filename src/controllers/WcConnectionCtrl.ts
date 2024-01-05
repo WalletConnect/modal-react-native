@@ -1,14 +1,20 @@
 import { proxy } from 'valtio/vanilla';
-import type { WcConnectionCtrlState } from '../types/controllerTypes';
 
-// -- initial state ------------------------------------------------ //
+// -- Types ---------------------------------------- //
+export interface WcConnectionCtrlState {
+  pairingUri: string;
+  pairingEnabled: boolean;
+  pairingError: boolean;
+}
+
+// -- State ---------------------------------------- //
 const state = proxy<WcConnectionCtrlState>({
   pairingUri: '',
   pairingEnabled: false,
   pairingError: false,
 });
 
-// -- controller --------------------------------------------------- //
+// -- Controller ---------------------------------------- //
 export const WcConnectionCtrl = {
   state,
 

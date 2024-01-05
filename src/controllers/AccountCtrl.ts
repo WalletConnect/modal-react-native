@@ -1,15 +1,20 @@
 import { proxy } from 'valtio';
 
-import type { AccountCtrlState } from '../types/controllerTypes';
 import { ClientCtrl } from './ClientCtrl';
 
-// -- initial state ------------------------------------------------ //
+// -- Types --------------------------------------------- //
+export interface AccountCtrlState {
+  address?: string;
+  isConnected: boolean;
+}
+
+// -- State --------------------------------------------- //
 const state = proxy<AccountCtrlState>({
   address: undefined,
   isConnected: false,
 });
 
-// -- controller --------------------------------------------------- //
+// -- Controller ---------------------------------------- //
 export const AccountCtrl = {
   state,
 

@@ -1,14 +1,19 @@
 import { Appearance } from 'react-native';
 import { proxy } from 'valtio';
-import type { ThemeCtrlState } from '../types/controllerTypes';
 
-// -- initial state ------------------------------------------------ //
+// -- Types ---------------------------------------- //
+export interface ThemeCtrlState {
+  themeMode?: 'dark' | 'light';
+  accentColor?: string;
+}
+
+// -- State ---------------------------------------- //
 const state = proxy<ThemeCtrlState>({
   themeMode: Appearance.getColorScheme() ?? 'light',
   accentColor: undefined,
 });
 
-// -- controller --------------------------------------------------- //
+// -- Controller ---------------------------------------- //
 export const ThemeCtrl = {
   state,
 

@@ -9,7 +9,6 @@ import { useSnapshot } from 'valtio';
 import { ApiCtrl } from '../controllers/ApiCtrl';
 
 interface Props {
-  currentWCURI?: string;
   id: string;
   name: string;
   imageUrl?: string;
