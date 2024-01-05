@@ -8,10 +8,10 @@ import { ModalCtrl } from '../../controllers/ModalCtrl';
 import { RouterCtrl } from '../../controllers/RouterCtrl';
 import { useConnectionHandler } from '../../hooks/useConnectionHandler';
 import type { ConfigCtrlState } from '../../controllers/ConfigCtrl';
-import type { ThemeCtrlState } from '../../types/controllerTypes';
 import type { IProviderMetadata, ISessionParams } from '../../types/coreTypes';
 import { useConfigure } from '../../hooks/useConfigure';
 import Toast from '../../components/Toast';
+import type { ThemeCtrlState } from '../../controllers/ThemeCtrl';
 
 export type Props = Omit<ConfigCtrlState, 'recentWallet'> &
   ThemeCtrlState & {
