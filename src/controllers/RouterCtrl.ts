@@ -1,16 +1,31 @@
 import { proxy } from 'valtio';
 
 import { UiUtil } from '../utils/UiUtil';
-import type { RouterCtrlState } from '../types/controllerTypes';
+import type { WcWallet } from '../types/controllerTypes';
 
-// -- initial state ------------------------------------------------ //
+// -- Types ---------------------------------------- //
+export type RouterView =
+  | 'ConnectWallet'
+  | 'Qrcode'
+  | 'WalletExplorer'
+  | 'Connecting';
+
+export interface RouterCtrlState {
+  history: RouterView[];
+  view: RouterView;
+  data?: {
+    wallet?: WcWallet;
+  };
+}
+
+// -- State ---------------------------------------- //
 const state = proxy<RouterCtrlState>({
   history: ['ConnectWallet'],
   view: 'ConnectWallet',
   data: undefined,
 });
 
-// -- controller --------------------------------------------------- //
+// -- Controller ---------------------------------------- //
 export const RouterCtrl = {
   state,
 

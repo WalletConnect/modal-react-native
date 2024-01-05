@@ -1,14 +1,20 @@
 import { proxy } from 'valtio';
-import type { ToastCtrlState } from '../types/controllerTypes';
 
-// -- initial state ------------------------------------------------ //
+// -- Types ---------------------------------------- //
+export interface ToastCtrlState {
+  open: boolean;
+  message: string;
+  variant: 'error' | 'success';
+}
+
+// -- State ---------------------------------------- //
 const state = proxy<ToastCtrlState>({
   open: false,
   message: '',
   variant: 'success',
 });
 
-// -- controller --------------------------------------------------- //
+// -- Controller ---------------------------------------- //
 export const ToastCtrl = {
   state,
 

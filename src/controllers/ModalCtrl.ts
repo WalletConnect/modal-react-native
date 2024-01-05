@@ -1,6 +1,5 @@
 import { proxy } from 'valtio';
 
-import type { ModalCtrlState } from '../types/controllerTypes';
 import { ClientCtrl } from './ClientCtrl';
 import { OptionsCtrl } from './OptionsCtrl';
 import { AccountCtrl } from './AccountCtrl';
@@ -9,17 +8,21 @@ import { WcConnectionCtrl } from './WcConnectionCtrl';
 import { ConfigCtrl } from './ConfigCtrl';
 import { CoreHelperUtil } from '../utils/CoreHelperUtil';
 
-// -- types -------------------------------------------------------- //
+// -- Types ---------------------------------------- //
+export interface ModalCtrlState {
+  open: boolean;
+}
+
 export interface OpenOptions {
   route?: 'ConnectWallet' | 'Qrcode' | 'WalletExplorer';
 }
 
-// -- initial state ------------------------------------------------ //
+// -- State ---------------------------------------- //
 const state = proxy<ModalCtrlState>({
   open: false,
 });
 
-// -- controller --------------------------------------------------- //
+// -- Controller ---------------------------------------- //
 export const ModalCtrl = {
   state,
 

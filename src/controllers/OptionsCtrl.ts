@@ -1,13 +1,16 @@
 import { proxy } from 'valtio';
 
-import type { OptionsCtrlState } from '../types/controllerTypes';
+// -- Types ---------------------------------------- //
+export interface OptionsCtrlState {
+  isDataLoaded: boolean;
+}
 
-// -- initial state ------------------------------------------------ //
+// -- State ---------------------------------------- //
 const state = proxy<OptionsCtrlState>({
   isDataLoaded: false,
 });
 
-// -- controller --------------------------------------------------- //
+// -- Controller ---------------------------------------- //
 export const OptionsCtrl = {
   state,
 
