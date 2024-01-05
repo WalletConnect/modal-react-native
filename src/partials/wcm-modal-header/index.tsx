@@ -1,11 +1,12 @@
 import { useState, type ReactNode, useEffect } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useSnapshot } from 'valtio';
 
-import useTheme from '../hooks/useTheme';
-import Backward from '../assets/Backward';
-import { RouterCtrl } from '../controllers/RouterCtrl';
-import Touchable from './Touchable';
+import useTheme from '../../hooks/useTheme';
+import Backward from '../../assets/Backward';
+import { RouterCtrl } from '../../controllers/RouterCtrl';
+import Touchable from '../../components/Touchable';
+import styles from './styles';
 
 interface Props {
   title?: string;
@@ -79,37 +80,5 @@ function ModalHeader({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    height: 56,
-  },
-  shadow: {
-    zIndex: 1,
-    ...Platform.select({
-      ios: {
-        shadowOpacity: 1,
-        shadowOffset: { width: 0, height: 6 },
-      },
-    }),
-  },
-  button: {
-    width: 24,
-    height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontWeight: '600',
-    fontSize: 20,
-    lineHeight: 24,
-  },
-});
 
 export default ModalHeader;
