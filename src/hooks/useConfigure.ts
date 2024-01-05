@@ -9,9 +9,8 @@ import { WcConnectionCtrl } from '../controllers/WcConnectionCtrl';
 import type { IProviderMetadata } from '../types/coreTypes';
 import { createUniversalProvider } from '../utils/ProviderUtil';
 import { StorageUtil } from '../utils/StorageUtil';
-import { ThemeCtrl } from '../controllers/ThemeCtrl';
+import { ThemeCtrl, ThemeCtrlState } from '../controllers/ThemeCtrl';
 import { ToastCtrl } from '../controllers/ToastCtrl';
-import type { ThemeCtrlState } from '../types/controllerTypes';
 import { ApiCtrl } from '../controllers/ApiCtrl';
 
 interface Props {
