@@ -8,7 +8,7 @@ const REQUIRED_EVENTS = ['chainChanged', 'accountsChanged'];
 export const CORE_VERSION = '2.11.0';
 
 // DO NOT REMOVE, SHOULD MATCH SDK PACKAGE VERSION
-export const SDK_VERSION = '1.0.0';
+export const SDK_VERSION = '1.1.0';
 
 export const defaultSessionParams: ISessionParams = {
   namespaces: {
