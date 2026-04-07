@@ -1,10 +1,14 @@
 # WalletConnectModal SDK for React Native
 
-Simplest and most minimal way to connect your users with WalletConnect.
+> **Deprecated:** This package is deprecated. For new projects, use [AppKit for React Native](https://github.com/reown-com/appkit-react-native) instead.
 
-### 📚 [Documentation](https://docs.walletconnect.com/2.0/advanced/walletconnectmodal/about?platform=react-native)  
+## Examples
 
-### 🔎 [Examples](https://github.com/WalletConnect/react-native-examples/tree/main/dapps/ModalUProvider)
+This repository contains example apps demonstrating how to use `@walletconnect/modal-react-native`:
+
+- **[with-ethers](./examples/with-ethers)** — WalletConnect Modal + Ethers.js v5
+- **[with-viem](./examples/with-viem)** — WalletConnect Modal + Viem
+- **[with-universal-provider](./examples/with-universal-provider)** — WalletConnect Modal + Universal Provider
 
 ## Development
 
